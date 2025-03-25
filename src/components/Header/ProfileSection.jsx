@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import { useState } from "react";
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Logout"];
 
 export default function ProfileSection() {
   const [anchorElUser, setAnchorElUser] = useState(null);

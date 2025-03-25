@@ -1,5 +1,6 @@
 import Typography from "@mui/material/Typography";
 import { Box, Button, SvgIcon } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export function Logo() {
   return (
@@ -24,6 +25,8 @@ export default function LogoSection() {
       }}
     >
       <Button
+        component={Link}
+        to="/"
         variant="contained"
         startIcon={<Logo />}
         color="primary"
@@ -32,7 +35,7 @@ export default function LogoSection() {
         <Typography
           variant="h6"
           noWrap
-          component="a"
+          component="p"
           href="#"
           sx={{
             letterSpacing: ".3rem",
