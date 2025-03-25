@@ -9,7 +9,7 @@ const ForgotPasswordModal = ({
 }) => {
   return (
     <Modal open={modalOpen} onClose={handleModalClose}>
-      <Box className="p-6 bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded shadow-lg w-96">
+      <Box className="p-6 bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded shadow-lg w-96 flex flex-col gap-4">
         <Typography variant="h6">Reset Password</Typography>
         <TextField
           label="Email"
@@ -24,7 +24,7 @@ const ForgotPasswordModal = ({
         <Button
           variant="contained"
           color="primary"
-          className="mt-4"
+          className="pt-4"
           fullWidth
           onClick={handleResetPassword}
         >

@@ -1,8 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
 import { Paper, TextField, Typography, Button } from "@mui/material";
+import { useNavigate, Link } from "react-router-dom";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,7 +25,6 @@ const RegisterPage = () => {
     }
 
     try {
-      // request na backend
       const response = await axios.post("...", {
         firstName,
         lastName,
@@ -30,12 +32,11 @@ const RegisterPage = () => {
         password,
       });
 
-      // Success handler
       alert(response.data.message || "Registration successful!");
-      // redirect na login ako je success
-      // navigate("/login");
+
+      // Navigate without page reload
+      navigate("/login");
     } catch (error) {
-      // error
       if (error.response) {
         alert(error.response.data.message);
       } else {
@@ -56,7 +57,7 @@ const RegisterPage = () => {
             variant="outlined"
             required
             value={firstName}
-            onChange={() => setFirstName(e.target.value)}
+            onChange={(e) => setFirstName(e.target.value)}
           />
 
           <TextField
@@ -64,7 +65,7 @@ const RegisterPage = () => {
             variant="outlined"
             required
             value={lastName}
-            onChange={() => setLastName(e.target.value)}
+            onChange={(e) => setLastName(e.target.value)}
           />
 
           <TextField
@@ -73,7 +74,7 @@ const RegisterPage = () => {
             variant="outlined"
             required
             value={email}
-            onChange={() => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <TextField
@@ -82,7 +83,7 @@ const RegisterPage = () => {
             variant="outlined"
             required
             value={password}
-            onChange={() => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           <TextField
@@ -91,7 +92,7 @@ const RegisterPage = () => {
             variant="outlined"
             required
             value={confirmPassword}
-            onChange={() => setConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
 
           <Button type="submit" variant="contained" color="primary">
@@ -100,12 +101,9 @@ const RegisterPage = () => {
 
           <Typography variant="body2" className="mt-2 text-center">
             Already have an account?{" "}
-            <a
-              href="/login"
-              style={{ textDecoration: "underline", cursor: "pointer" }}
-            >
+            <Link to="/login" style={{ textDecoration: "underline" }}>
               Login
-            </a>
+            </Link>
           </Typography>
         </form>
       </Paper>
