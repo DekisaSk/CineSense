@@ -7,18 +7,6 @@ import {
   DialogContentText,
   Button,
 } from "@mui/material";
-// const [open, setOpen] = useState(false);
-// const [isFavourite, setIsFavourite] = useState(false);
-
-// const handleClickOpen = () => {
-//   setOpen(true);
-// };
-// const handleClose = () => {
-//   setOpen(false);
-// };
-// const handleFavourite = () => {
-//   setIsFavourite(!isFavourite);
-// };
 
 export default function ModalWindow({ open, handleClose, handleFavourite }) {
   return (

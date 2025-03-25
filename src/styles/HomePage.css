@@ -1,0 +1,44 @@
+.home-container {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+}
+
+.left-section {
+  flex-grow: 1;
+}
+
+.right-section {
+  min-width: 400px;
+  margin-top: 100px;
+  position: sticky;
+  height: 100vh;
+  top: 80px;
+  /* background-color: rgb(219, 219, 219);
+  padding: 20px; */
+}
+
+/* h4 {
+  font-size: 30px;
+  font-weight: bold;
+  color: rgb(124, 124, 124);
+  margin-bottom: 20px;
+} */
+
+@media (max-width: 1024px) {
+  .home-container {
+    display: block;
+  }
+}
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #910101; /* Goldenrod – elegant & cinematic */
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-left: 5px solid #910101; /* Strong visual cue */
+  padding-left: 10px;
+  margin-bottom: 20px;
+}

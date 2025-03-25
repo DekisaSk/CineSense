@@ -10,7 +10,13 @@ import {
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-const settings = ["Profile", "LogIn"];
+import { Logout } from "@mui/icons-material";
+
+// Naknadno nakon što se sredi backend ograničinit settings
+// Ako niko nije ulogovan - prikazuju se opcije registeri Login,
+// Ako je ulogovan korisnik, prikazuju se profile i Logout
+// Ako je ulogovan AdminPage, prikayuje se profile, admin, logout
+const settings = ["Profile", "LogIn", "Register", "Admin", "LogOut"];
 
 export default function ProfileSection() {
   const [anchorElUser, setAnchorElUser] = useState(null);
