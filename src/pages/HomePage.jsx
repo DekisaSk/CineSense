@@ -2,6 +2,8 @@ import "../styles/HomePage.css";
 import MovieSlider from "../components/MovieSlider.jsx";
 import TopRatedContainer from "../components/TopRatedContainer";
 import BestMovieContainer from "../components/BestMovieContainer";
+import ModalWindow from "../components/ModalWindow.jsx";
+
 export default function HomePage() {
   const apiKey = "d9bb4067";
 
@@ -48,6 +50,8 @@ export default function HomePage() {
   return (
     <>
       <MovieSlider movies={movies} />
+
+      <ModalWindow />
 
       <div className="home-container">
         <div className="left-section">
