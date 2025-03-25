@@ -1,4 +1,4 @@
-import "../styles/best-container.css";
+import "../styles/BestMovieContainer.css";
 import BestMovieCard from "./bestMovieCard";
 export default function BestMovieContainer() {
   const movies = [
