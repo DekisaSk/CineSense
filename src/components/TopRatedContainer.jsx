@@ -3,6 +3,8 @@ import MovieCard from "./TopMovieCard";
 import "../styles/TopRatedContainer.css";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import ModalWindow from "./ModalWindow";
+
 export default function TopRatedContainer() {
   const movies = [
     { id: 1, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
@@ -39,12 +41,35 @@ export default function TopRatedContainer() {
     setButtonState(true);
   };
 
+  const [open, setOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+
+  const handleClickOpen = (movie) => {
+    setSelectedMovie({ ...movie });
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedMovie(null);
+  };
+
   return (
     <>
       <div className="top-rated-container">
         {displayedMovies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <MovieCard
+            key={movie.id}
+            movie={movie}
+            moreInfo={() => handleClickOpen(movie)}
+          />
         ))}
+        {selectedMovie && (
+          <ModalWindow
+            open={open}
+            handleClose={handleClose}
+            movie={selectedMovie}
+          />
+        )}
       </div>
       <div className="button-container">
         {buttonState ? (
