@@ -2,7 +2,7 @@ import { Container, Typography, Box } from "@mui/material";
 
 export default function AboutPage() {
   return (
-    <Container maxWidth="md" sx={{ textAlign: "center", py: 4 }}>
+    <Container maxWidth="md" sx={{ textAlign: "center", py: 4, color: "#333" }}>
       <Typography variant="h3" gutterBottom>
         Welcome to Cinsense.
       </Typography>
@@ -17,7 +17,6 @@ export default function AboutPage() {
           src="src/assets/popcorns.svg"
           alt="Illustration of the yellow box of popcorns"
           loading="lazy"
-          maxWidth="100%"
           height="auto"
           width="45%"
         />
@@ -25,7 +24,6 @@ export default function AboutPage() {
           src="src/assets/film-rolls.svg"
           alt="Illustration of the film rolls"
           loading="lazy"
-          maxWidth="100%"
           height="auto"
           width="45%"
         />

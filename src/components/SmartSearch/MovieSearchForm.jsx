@@ -26,6 +26,7 @@ const MovieSearchForm = ({ onSearch }) => {
         className="mt-4"
         fullWidth
         type="submit"
+        sx={{ mt: 1 }}
       >
         Find Movies
       </Button>

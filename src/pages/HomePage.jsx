@@ -4,10 +4,51 @@ import TopRatedContainer from "../components/TopRatedContainer";
 import BestMovieContainer from "../components/BestMovieContainer";
 import ModalWindow from "../components/ModalWindow";
 export default function HomePage() {
+  const apiKey = "d9bb4067";
+
+  // fetch(`https://www.omdbapi.com/?s=inception&apikey=${ap}&page=1`)
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     console.log(data);
+  //   })
+  //   .catch((error) => console.error("Error:", error));
+
+  const movies = [
+    {
+      title: "Movie 1",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+    {
+      title: "Movie 2",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+    {
+      title: "Movie 3",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+    {
+      title: "Movie 4",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+    {
+      title: "Movie 5",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+    {
+      title: "Movie 6",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+  ];
+
   return (
     <>
-      <ModalWindow></ModalWindow>
-      <MovieSlider></MovieSlider>
+      <MovieSlider movies={movies} />
 
       <div className="home-container">
         <div className="left-section">
