@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import MovieCard from "./MovieCard";
@@ -28,13 +28,13 @@ const responsive = {
 };
 
 export default function MovieSlider({ movies }) {
-  const [isSliderActive, setIsSliderActive] = useState(true);
+  // const [isSliderActive, setIsSliderActive] = useState(true);
 
   return (
     <div
       className="py-8 px-4"
-      onMouseEnter={() => setIsSliderActive(true)}
-      onMouseLeave={() => setIsSliderActive(false)}
+      // onMouseEnter={() => setIsSliderActive(true)}
+      // onMouseLeave={() => setIsSliderActive(false)}
     >
       <Carousel
         responsive={responsive}

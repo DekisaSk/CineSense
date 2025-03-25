@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import MovieCard from "./top-movie-card";
-import "../styles/top-rated-container.css";
+import MovieCard from "./TopMovieCard";
+import "../styles/TopRatedContainer.css";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 export default function TopRatedContainer() {
