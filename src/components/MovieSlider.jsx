@@ -1,7 +1,8 @@
-// import React, { useState } from "react";
+import React, { useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import MovieCard from "./MovieCard";
+import ModalWindow from "./ModalWindow";
 
 const responsive = {
   superLargeDesktop: {
@@ -28,6 +29,18 @@ const responsive = {
 };
 
 export default function MovieSlider({ movies }) {
+  const [open, setOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+
+  const handleClickOpen = (movie) => {
+    setSelectedMovie({ ...movie });
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedMovie(null);
+  };
+
   return (
     <div className="w-full">
       <Carousel
@@ -38,15 +51,26 @@ export default function MovieSlider({ movies }) {
         arrows={true}
         keyBoardControl={true}
         tabIndex={0}
+        renderArrowsWhenDisabled={false}
+        partialVisible={false}
       >
         {movies.map((movie, index) => (
-          <MovieCard
-            key={index}
-            title={movie.title}
-            posterUrl={movie.posterUrl}
-            movieLink={movie.movieLink}
-          />
+          <>
+            <MovieCard
+              key={movie.id || index}
+              rating={movie.rating}
+              posterUrl={movie.posterUrl}
+              movieLink={() => handleClickOpen(movie)}
+            />
+          </>
         ))}
+        {selectedMovie && (
+          <ModalWindow
+            open={open}
+            handleClose={handleClose}
+            movie={selectedMovie}
+          />
+        )}
       </Carousel>
     </div>
   );
