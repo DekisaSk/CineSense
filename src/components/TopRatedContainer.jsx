@@ -1,24 +1,22 @@
-import React, { useState } from "react";
 import MovieCard from "./TopMovieCard";
 import "../styles/TopRatedContainer.css";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import { useState, useEffect } from "react";
+import getData from "./GetData";
 export default function TopRatedContainer() {
-  const movies = [
-    { id: 1, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 2, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 3, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 4, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 5, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 6, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 7, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 8, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 9, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 10, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 11, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 12, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-    { id: 13, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
-  ];
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    async function fetchBestMovies() {
+      const movies = await getData();
+      console.log(movies);
+
+      setMovies(movies);
+    }
+
+    fetchBestMovies();
+  }, []);
 
   const [displayedMovies, setDisplayedMovies] = useState(movies.slice(0, 6));
   const [buttonState, setButtonState] = useState(true);
@@ -42,7 +40,7 @@ export default function TopRatedContainer() {
   return (
     <>
       <div className="top-rated-container">
-        {displayedMovies.map((movie) => (
+        {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>

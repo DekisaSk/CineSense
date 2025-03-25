@@ -2,18 +2,11 @@ import "../styles/HomePage.css";
 import MovieSlider from "C:/Users/andri/Coinis Project/CineSense-1/src/components/MovieSlider.jsx";
 import TopRatedContainer from "../components/TopRatedContainer";
 import BestMovieContainer from "../components/BestMovieContainer";
+import ModalWindow from "../components/ModalWindow";
 export default function HomePage() {
-  const apiKey = "d9bb4067";
-
-  // fetch(`https://www.omdbapi.com/?s=inception&apikey=${ap}&page=1`)
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     console.log(data);
-  //   })
-  //   .catch((error) => console.error("Error:", error));
-
   return (
     <>
+      <ModalWindow></ModalWindow>
       <MovieSlider></MovieSlider>
 
       <div className="home-container">

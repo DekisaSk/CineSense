@@ -2,28 +2,30 @@ import "../styles/TopMovieCard.css";
 import StarIcon from "@mui/icons-material/Star";
 
 export default function MovieCard({ movie }) {
+  console.log(movie);
+
   return (
     <>
       <div className="movie-container">
         <div className="img-container">
-          <img src="src\assets\scarface-friend-2__27832.jpg" />
+          <img src={movie.Poster} />
         </div>
         <div className="rating">
           <StarIcon sx={{ color: "yellow" }}></StarIcon>
           <p className="description">
-            <strong className="text-lg">{movie.rating}</strong>
+            <strong className="text-lg">{movie.imdbID}</strong>
           </p>
         </div>
         <div className="description-container">
           <h3>
-            <strong>{movie.title}</strong>
+            <strong>{movie.Title}</strong>
           </h3>
           <p className="description">
-            <strong>Year:</strong> {movie.year}
+            <strong>Year:</strong> {movie.Year}
           </p>
           <p className="description">
             <strong>Genre: </strong>
-            {movie.genre}
+            {movie.Type}
           </p>
         </div>
         <div className="button-container">
