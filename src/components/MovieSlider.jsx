@@ -29,7 +29,7 @@ const responsive = {
 
 export default function MovieSlider({ movies }) {
   return (
-    <div className="py-8 px-4">
+    <div className="w-full">
       <Carousel
         responsive={responsive}
         infinite={true}
@@ -37,7 +37,6 @@ export default function MovieSlider({ movies }) {
         autoPlaySpeed={3000}
         arrows={true}
         keyBoardControl={true}
-        centerMode={true}
         tabIndex={0}
       >
         {movies.map((movie, index) => (

@@ -2,11 +2,12 @@ import React from "react";
 
 export default function MovieCard({ title, posterUrl, movieLink }) {
   return (
-    <div className="relative max-w-[16rem] h-[30rem] rounded-lg overflow-hidden shadow-lg group">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${posterUrl})` }}
-      ></div>
+    <div className="relative w-full h-[40rem] overflow-hidden shadow-lg group">
+      <img
+        src={posterUrl}
+        alt={title + " poster image"}
+        className="absolute inset-0 w-full h-full object-cover object-top"
+      />
       <div className="absolute inset-0 bg-black opacity-40 group-hover:opacity-50 transition-opacity"></div>
       <div className="relative z-10 p-6 flex flex-col justify-between h-full">
         <h2 className="text-white text-2xl font-bold">{title}</h2>

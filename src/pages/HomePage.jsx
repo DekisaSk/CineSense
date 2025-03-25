@@ -17,32 +17,36 @@ export default function HomePage() {
   const movies = [
     {
       title: "Movie 1",
-      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      posterUrl: "https://storage.googleapis.com/pod_public/750/262965.jpg", // Replace with actual movie poster URL
       movieLink: "#",
     },
     {
       title: "Movie 2",
-      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      posterUrl:
+        "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg", // Replace with actual movie poster URL
       movieLink: "#",
     },
     {
       title: "Movie 3",
-      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      posterUrl:
+        "https://cdn.marvel.com/content/1x/marvsmposterbk_intdesign.jpg", // Replace with actual movie poster URL
       movieLink: "#",
     },
     {
       title: "Movie 4",
-      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      posterUrl: "https://m.media-amazon.com/images/I/51AMyXw-IHL.jpg", // Replace with actual movie poster URL
       movieLink: "#",
     },
     {
       title: "Movie 5",
-      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      posterUrl:
+        "https://img.posterstore.com/zoom/wb0039-8batman-redrain50x70_colorcorrectedonlyforweb.jpg?auto=compress%2Cformat&fit=max&w=3840", // Replace with actual movie poster URL
       movieLink: "#",
     },
     {
       title: "Movie 6",
-      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      posterUrl:
+        "https://m.media-amazon.com/images/M/MV5BNzY3OWQ5NDktNWQ2OC00ZjdlLThkMmItMDhhNDk3NTFiZGU4XkEyXkFqcGc@._V1_.jpg", // Replace with actual movie poster URL
       movieLink: "#",
     },
   ];
