@@ -17,11 +17,17 @@ export default function AboutPage() {
           src="src/assets/popcorns.svg"
           alt="Illustration of the yellow box of popcorns"
           loading="lazy"
+          maxWidth="100%"
+          height="auto"
+          width="45%"
         />
         <img
           src="src/assets/film-rolls.svg"
           alt="Illustration of the film rolls"
           loading="lazy"
+          maxWidth="100%"
+          height="auto"
+          width="45%"
         />
       </Box>
       <Typography variant="body1" component="p">
@@ -41,6 +47,8 @@ export default function AboutPage() {
           src="src/assets/movie-night.svg"
           alt="Illustration of the couple on sofa watching TV"
           loading="lazy"
+          width="100%"
+          height="auto"
         />
       </Box>
     </Container>
