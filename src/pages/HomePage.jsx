@@ -12,9 +12,42 @@ export default function HomePage() {
   //   })
   //   .catch((error) => console.error("Error:", error));
 
+  const movies = [
+    {
+      title: "Movie 1",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+    {
+      title: "Movie 2",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+    {
+      title: "Movie 3",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+    {
+      title: "Movie 4",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+    {
+      title: "Movie 5",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+    {
+      title: "Movie 6",
+      posterUrl: "https://via.placeholder.com/400x600", // Replace with actual movie poster URL
+      movieLink: "#",
+    },
+  ];
+
   return (
     <>
-      <MovieSlider></MovieSlider>
+      <MovieSlider movies={movies} />
 
       <div className="home-container">
         <div className="left-section">

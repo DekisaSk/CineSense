@@ -28,14 +28,8 @@ const responsive = {
 };
 
 export default function MovieSlider({ movies }) {
-  // const [isSliderActive, setIsSliderActive] = useState(true);
-
   return (
-    <div
-      className="py-8 px-4"
-      // onMouseEnter={() => setIsSliderActive(true)}
-      // onMouseLeave={() => setIsSliderActive(false)}
-    >
+    <div className="py-8 px-4">
       <Carousel
         responsive={responsive}
         infinite={true}
