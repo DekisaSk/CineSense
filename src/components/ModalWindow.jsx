@@ -8,7 +8,20 @@ import {
   Button,
 } from "@mui/material";
 
-export default function ModalWindow({ open, handleClose, handleFavourite }) {
+export default function ModalWindow() {
+  const [open, setOpen] = useState(false);
+  const [isFavourite, setIsFavourite] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleFavourite = () => {
+    setIsFavourite(!isFavourite);
+  };
+
   return (
     <>
       <Button variant="outlined" onClick={handleClickOpen}>
