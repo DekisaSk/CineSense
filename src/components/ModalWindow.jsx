@@ -27,14 +27,35 @@ export default function ModalWindow({ open, handleClose, movie }) {
           className="absolute top-4 left-4 text-blue-500 hover:text-blue-700"
           onClick={handleFavourite}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-            className="w-6 h-6"
-          >
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23L7 14.14 2 9.27l6.91-1.01z" />
-          </svg>
+          {isFavourite ? (
+            // Golden filled star when movie is a favorite
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+            >
+              <path
+                fill="#FFD700"
+                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+              />
+            </svg>
+          ) : (
+            // Blue outlined star when movie is not a favorite
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+            >
+              <path
+                fill="none"
+                stroke="#1E90FF"
+                strokeWidth="2"
+                d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+              />
+            </svg>
+          )}
         </button>
         <button
           onClick={handleClose}
