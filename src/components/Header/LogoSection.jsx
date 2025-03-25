@@ -1,24 +1,48 @@
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import { Box, Button, SvgIcon } from "@mui/material";
+
+export function Logo() {
+  return (
+    <SvgIcon>
+      <image
+        href="src/assets/icon.png"
+        alt="Custom Icon"
+        height="24"
+        width="24"
+      />
+    </SvgIcon>
+  );
+}
 
 export default function LogoSection() {
   return (
-    <>
-      <IconButton sx={{ display: { xs: "flex", md: "flex" }, mr: 1 }}>
-        <img src="src/assets/icon.png" alt="Custom Icon" className="h-8 w-8" />
-      </IconButton>
-      <Typography
-        variant="h5"
-        noWrap
-        component="a"
-        href="#"
-        sx={{
-          display: { xs: "flex", md: "flex" },
-          flexGrow: 1,
-        }}
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        width: { xs: "100%", md: "auto" }, // Center logo on mobile
+      }}
+    >
+      <Button
+        variant="contained"
+        startIcon={<Logo />}
+        color="primary"
+        disableElevation
       >
-        CineSense
-      </Typography>
-    </>
+        <Typography
+          variant="h6"
+          noWrap
+          component="a"
+          href="#"
+          sx={{
+            letterSpacing: ".3rem",
+            textDecoration: "none",
+            textAlign: "center",
+          }}
+        >
+          CineSense
+        </Typography>
+      </Button>
+    </Box>
   );
 }
