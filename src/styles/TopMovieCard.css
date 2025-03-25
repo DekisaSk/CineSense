@@ -36,13 +36,13 @@
   margin-top: 10px;
 }
 
-h3 {
+.description-container h3 {
   font-size: 20px;
   margin-bottom: 10px;
   margin-top: 10px;
 }
 
-h3:hover {
+.description-container h3:hover {
   text-decoration: underline;
 }
 
@@ -59,7 +59,7 @@ h3:hover {
   color: white;
 }
 
-button:hover {
+.button-container button:hover {
   background-color: #4e9af1;
   cursor: pointer;
 }
