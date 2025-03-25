@@ -1,13 +1,25 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { MenuItem, Menu, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
-const pages = ["Home", "List", "Custom Page", "About Us"];
+const pages = [
+  { name: "Home", path: "/" },
+  { name: "List", path: "/list" },
+  { name: "Smart Search", path: "/smartsearch" },
+  { name: "About Us", path: "/about" },
+];
 
 export default function MobileMenu() {
   const [anchorElNav, setAnchorElNav] = useState(null);
+  const navigate = useNavigate();
+
+  const handleMenuNavigation = (path) => {
+    navigate(path);
+    handleCloseNavMenu();
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -44,12 +56,12 @@ export default function MobileMenu() {
         sx={{ display: { xs: "block", md: "none" } }}
       >
         {pages.map((page) => (
-          <MenuItem key={page}>
+          <MenuItem key={page.name}>
             <Typography
               sx={{ textAlign: "center" }}
-              onClick={handleCloseNavMenu}
+              onClick={() => handleMenuNavigation(page.path)}
             >
-              {page}
+              {page.name}
             </Typography>
           </MenuItem>
         ))}
