@@ -1,5 +1,8 @@
+import { React, useState } from "react";
 import "../styles/BestMovieContainer.css";
 import BestMovieCard from "./bestMovieCard";
+import ModalWindow from "./ModalWindow";
+
 export default function BestMovieContainer() {
   const movies = [
     { id: 1, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
@@ -20,12 +23,35 @@ export default function BestMovieContainer() {
 
   const bestMovies = movies.slice(0, 2);
 
+  const [open, setOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+
+  const handleClickOpen = (movie) => {
+    setSelectedMovie({ ...movie });
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedMovie(null);
+  };
+
   return (
     <>
       <div className="best-rated-container">
         {bestMovies.map((movie) => (
-          <BestMovieCard key={movie.id} movie={movie} />
+          <BestMovieCard
+            key={movie.id}
+            movie={movie}
+            moreInfo={() => handleClickOpen(movie)}
+          />
         ))}
+        {selectedMovie && (
+          <ModalWindow
+            open={open}
+            handleClose={handleClose}
+            movie={selectedMovie}
+          />
+        )}
       </div>
     </>
   );

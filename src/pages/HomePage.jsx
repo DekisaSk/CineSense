@@ -79,8 +79,6 @@ export default function HomePage() {
     <>
       <MovieSlider movies={movies} />
 
-      <ModalWindow />
-
       <div className="home-container">
         <div className="left-section">
           <h4 className="title">Top Rated:</h4>

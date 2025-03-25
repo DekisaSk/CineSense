@@ -1,6 +1,6 @@
 import "../styles/BestMovieCard.css";
 import StarIcon from "@mui/icons-material/Star";
-export default function BestMovieCard({ movie }) {
+export default function BestMovieCard({ movie, moreInfo }) {
   return (
     <>
       <div className="best-movie-container">
@@ -27,7 +27,9 @@ export default function BestMovieCard({ movie }) {
             </p>
           </div>
           <div className="best-button-container">
-            <button className="more-info-button">More info...</button>
+            <button className="more-info-button" onClick={moreInfo}>
+              More info...
+            </button>
           </div>
         </div>
       </div>
