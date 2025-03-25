@@ -1,5 +1,5 @@
-import "../styles/best-container.css";
-import BestMovieCard from "./best-movie-card";
+import "../styles/BestMovieContainer.css";
+import BestMovieCard from "./bestMovieCard";
 export default function BestMovieContainer() {
   const movies = [
     { id: 1, title: "The Scarface", rating: 9.5, genre: "Action", year: 1987 },
