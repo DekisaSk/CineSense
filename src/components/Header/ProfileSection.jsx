@@ -9,13 +9,23 @@ import {
 } from "@mui/material";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import { useState } from "react";
-const settings = ["Profile", "Logout"];
+import { useNavigate } from "react-router-dom";
+const settings = ["Profile", "LogIn"];
 
 export default function ProfileSection() {
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+  };
+
+  const handleMenuNavigation = (event) => {
+    const setting = event.target.innerText.toLowerCase();
+    const path = `/${setting}`;
+
+    navigate(path);
+    handleCloseUserMenu();
   };
 
   const handleCloseUserMenu = () => {
@@ -48,7 +58,10 @@ export default function ProfileSection() {
         onClose={handleCloseUserMenu}
       >
         {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+          <MenuItem
+            key={setting}
+            onClick={(event) => handleMenuNavigation(event)}
+          >
             <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
           </MenuItem>
         ))}
