@@ -8,7 +8,8 @@ export default function NavigationSection() {
     <Box
       sx={{
         flexGrow: 1,
-        display: { xs: "none", md: "flex", justifyContent: "center" },
+        display: { xs: "none", md: "flex" },
+        justifyContent: "center",
       }}
     >
       {pages.map((page) => (
@@ -17,7 +18,6 @@ export default function NavigationSection() {
           sx={{
             my: 2,
             color: "white",
-            display: "block",
           }}
         >
           {page}
