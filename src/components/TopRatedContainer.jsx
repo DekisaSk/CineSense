@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MovieCard from "./top-movie-card";
+import MovieCard from "./TopMovieCard";
 import "../styles/top-rated-container.css";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
