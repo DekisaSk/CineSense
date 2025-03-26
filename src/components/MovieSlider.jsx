@@ -24,8 +24,9 @@ export default function MovieSlider({ movies = [] }) {
             items: 3,
           },
           mobile: {
-            breakpoint: { max: 640, min: 0 },
+            breakpoint: { max: 440, min: 0 },
             items: 1,
+            partialVisibilityGutter: 0,
           },
         }}
       >

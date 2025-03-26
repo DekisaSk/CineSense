@@ -55,7 +55,7 @@ export default function SmallMovieContainer() {
     fetchTrending();
   }, [mediaType]);
 
-  const displayedItems = trendingItems.slice(0, 3);
+  const displayedItems = trendingItems.slice(0, 2);
 
   const handleSwapMediaType = () => {
     setMediaType((prev) => (prev === "movie" ? "tv" : "movie"));
@@ -69,9 +69,12 @@ export default function SmallMovieContainer() {
           : "Show Trending Movies"}
       </Button>
 
-      {displayedItems.map((movie) => (
-        <SmallMovieCard key={movie.id} movie={movie} />
-      ))}
+      {/* Flex container to ensure equal width of cards */}
+      <div className="flex flex-wrap gap-6 justify-start">
+        {displayedItems.map((movie) => (
+          <SmallMovieCard key={movie.id} movie={movie} />
+        ))}
+      </div>
     </div>
   );
 }
