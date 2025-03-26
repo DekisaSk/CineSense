@@ -85,7 +85,7 @@ const SmartSearch = () => {
 
   return (
     <Box
-      className={`min-h-screen bg-gray-100 p-4 flex ${
+      className={`min-h-screen p-4 flex ${
         searched ? "flex-col md:flex-row" : "justify-center items-center"
       } gap-4`}
     >

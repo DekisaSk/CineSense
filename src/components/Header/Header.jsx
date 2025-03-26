@@ -6,9 +6,15 @@ import LogoSection from "./LogoSection";
 import NavigationSection from "./NavigationSection";
 import ProfileSection from "./ProfileSection";
 import MobileMenu from "./MobileMenu";
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
+import { Brightness4, Brightness7 } from "@mui/icons-material";
+import { useTheme } from "@mui/material/styles";
+import { useThemeToggle } from "./ThemeContext";
 
 export default function Header() {
+  const theme = useTheme();
+  const { toggleTheme } = useThemeToggle();
+
   return (
     <AppBar position="sticky">
       <Container maxWidth="xl">
@@ -37,7 +43,15 @@ export default function Header() {
             <NavigationSection />
           </Box>
 
-          <Box sx={{ display: "flex", flexGrow: 0 }}>
+          {/* Theme toggle + Profile section */}
+          <Box sx={{ display: "flex", alignItems: "center", flexGrow: 0 }}>
+            <IconButton onClick={toggleTheme} sx={{ mr: 1 }}>
+              {theme.palette.mode === "dark" ? (
+                <Brightness7 sx={{ color: "primary.main" }} /> // 🌞
+              ) : (
+                <Brightness4 sx={{ color: "secondary.main" }} /> // 🌙
+              )}
+            </IconButton>
             <ProfileSection />
           </Box>
         </Toolbar>

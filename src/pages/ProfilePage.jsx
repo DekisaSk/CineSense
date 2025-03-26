@@ -55,7 +55,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex h-screen justify-center items-center bg-gray-100">
+    <div className="flex h-screen justify-center items-center">
       <Paper
         elevation={4}
         className="p-8 w-full max-w-md flex flex-col items-center"

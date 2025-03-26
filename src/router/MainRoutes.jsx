@@ -16,7 +16,7 @@ export default function MainRoutes() {
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/list" element={<MoviesPage />} />
+        <Route path="/filter" element={<MoviesPage />} />
         <Route path="/smartsearch" element={<SmartSearch />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/profile" element={<ProfilePage />} />

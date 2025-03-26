@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { MenuItem, Menu, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from "react-router-dom";
 
 const pages = [
   { name: "Home", path: "/" },
@@ -41,16 +42,10 @@ export default function MobileMenu() {
       </IconButton>
       <Menu
         id="menu-appbar"
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        keepMounted
         anchorEl={anchorElNav}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        keepMounted
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
         open={Boolean(anchorElNav)}
         onClose={handleCloseNavMenu}
         sx={{ display: { xs: "block", md: "none" } }}
