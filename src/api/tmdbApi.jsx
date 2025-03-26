@@ -52,3 +52,10 @@ export async function getTvGenres() {
   // returns { genres: [ {id, name}, {id, name}, ... ] }
   return response.data.genres;
 }
+
+export async function getMovieDetails(movieId) {
+  const response = await tmdbClient.get(
+    `/movie/${movieId}?append_to_response=credits`
+  );
+  return response.data;
+}

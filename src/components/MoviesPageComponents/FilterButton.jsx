@@ -15,7 +15,7 @@ export default function FilterButton({ isFilterOpen, toggleFilter }) {
       }}
     >
       <Button
-        variant="outlined"
+        variant="contained"
         onClick={toggleFilter}
         startIcon={isFilterOpen ? <FilterListOffIcon /> : <FilterListIcon />}
         sx={{
