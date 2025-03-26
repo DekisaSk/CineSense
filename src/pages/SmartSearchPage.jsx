@@ -1,118 +1,99 @@
 import { useState } from "react";
-import MovieSearchForm from "../components/SmartSearch/MovieSearchForm";
-import MovieList from "../components/SmartSearch/MovieList";
 import { Box, Typography, CircularProgress } from "@mui/material";
+import MovieSlider from "../components/MovieSlider";
+import MovieSearchForm from "../components/SmartSearch/MovieSearchForm";
+import { getNowPlayingMovies } from "../api/tmdbApi";
 
-const SmartSearch = () => {
+export default function SmartSearch() {
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSearch = (prompt) => {
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const handleSearch = async () => {
+    setSearched(true);
     setLoading(true);
     setMovies([]);
-    setSearched(true);
-    // Dummy data sa fake waiting time kako se simuliralo cekanje na backend response
-    setTimeout(() => {
-      setMovies([
-        {
-          id: 1,
-          title: "The Matrix",
-          year: "1999",
-          genre: "Sci-Fi",
-          rating: "8.7",
-        },
-        {
-          id: 2,
-          title: "Titanic",
-          year: "1997",
-          genre: "Romance/Drama",
-          rating: "7.8",
-        },
-        {
-          id: 3,
-          title: "Her",
-          year: "2013",
-          genre: "Romance/Sci-Fi",
-          rating: "8.0",
-        },
-        {
-          id: 4,
-          title: "Inception",
-          year: "2010",
-          genre: "Sci-Fi/Action",
-          rating: "8.8",
-        },
-        {
-          id: 5,
-          title: "The Notebook",
-          year: "2004",
-          genre: "Romance/Drama",
-          rating: "7.8",
-        },
-        {
-          id: 6,
-          title: "Interstellar",
-          year: "2014",
-          genre: "Sci-Fi",
-          rating: "8.6",
-        },
-        {
-          id: 7,
-          title: "Eternal Sunshine",
-          year: "2004",
-          genre: "Romance/Sci-Fi",
-          rating: "8.3",
-        },
-        {
-          id: 8,
-          title: "Blade Runner",
-          year: "1982",
-          genre: "Sci-Fi",
-          rating: "8.1",
-        },
-        {
-          id: 9,
-          title: "La La Land",
-          year: "2016",
-          genre: "Musical/Romance",
-          rating: "8.0",
-        },
-      ]);
+
+    try {
+      await wait(2000);
+
+      const data = await getNowPlayingMovies();
+
+      const mappedMovies = data.results.map((item) => {
+        const chosenPath = item.backdrop_path || item.poster_path || null;
+        return {
+          id: item.id,
+          title: item.title,
+          rating: item.vote_average,
+          posterPath: chosenPath,
+        };
+      });
+
+      setMovies(mappedMovies);
+    } catch (error) {
+      console.error("Error fetching Now Playing:", error);
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   return (
     <Box
-      className={`min-h-screen p-4 flex ${
-        searched ? "flex-col md:flex-row" : "justify-center items-center"
-      } gap-4`}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: searched ? "stretch" : "center",
+        justifyContent: searched ? "flex-start" : "center",
+        px: 2,
+        pt: 2,
+        pb: 2,
+      }}
     >
-      <Box
-        className={`transition-all duration-500 ${
-          searched ? "md:w-1/3 sticky top-4" : "w-full max-w-lg"
-        }`}
-      >
-        <Typography variant="h4" className="mb-4 pb-4 text-center">
-          Smart Search
-        </Typography>
-        <MovieSearchForm onSearch={handleSearch} />
-      </Box>
+      {!searched && (
+        <Box sx={{ width: "100%", maxWidth: 400, textAlign: "center" }}>
+          <Typography variant="h4" sx={{ mb: 3, mt: 3, fontWeight: "bold" }}>
+            Smart Search
+          </Typography>
+          <MovieSearchForm onSearch={handleSearch} />
+        </Box>
+      )}
 
       {searched && (
-        <Box className="md:w-2/3 overflow-auto">
-          {loading ? (
-            <Box className="flex justify-center items-center h-full">
-              <CircularProgress />
-            </Box>
-          ) : (
-            <MovieList movies={movies} />
-          )}
-        </Box>
+        <>
+          <Box sx={{ flex: 1, mb: 6 }}>
+            {loading ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: 300,
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              <MovieSlider movies={movies} />
+            )}
+          </Box>
+
+          <Box
+            sx={{
+              position: "sticky",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              py: 2,
+              bgcolor: "background.paper",
+              boxShadow: 4,
+            }}
+          >
+            <MovieSearchForm onSearch={handleSearch} />
+          </Box>
+        </>
       )}
     </Box>
   );
-};
-
-export default SmartSearch;
+}

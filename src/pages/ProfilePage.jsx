@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Paper, Typography } from "@mui/material";
+import { Box, Container, Grid, Paper, Typography } from "@mui/material";
 
 import ProfileAvatar from "../components/profilePage/ProfileAvatar";
 import ProfileDetails from "../components/profilePage/ProfileDetails";
+import MovieCardContainer from "../components/MovieCardContainer";
 
-// dummy data dok se ne odradi backend
+// Dummy data until backend is implemented
 const initialUserData = {
   firstName: "Pavle",
   lastName: "Dzuverovic",
@@ -21,7 +22,7 @@ const ProfilePage = () => {
   });
 
   useEffect(() => {
-    // naknadno fetching
+    // dummy
     setUserData(initialUserData);
   }, []);
 
@@ -47,7 +48,7 @@ const ProfilePage = () => {
   };
 
   const handleUpdateProfile = () => {
-    //axios.put("...", userData)
+    // axios.put("...", userData)
     alert(
       "Profile updated (dummy). New data: \n" +
         JSON.stringify(userData, null, 2)
@@ -55,27 +56,63 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex h-screen justify-center items-center">
-      <Paper
-        elevation={4}
-        className="p-8 w-full max-w-md flex flex-col items-center"
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        pt: { xs: 2, md: 4 },
+        pb: { xs: 2, md: 4 },
+      }}
+    >
+      <Container
+        disableGutters
+        sx={{
+          px: { xs: 2, md: 2 },
+          maxWidth: { lg: "1200px" },
+          margin: "0 auto",
+        }}
       >
-        <Typography variant="h4" className="mb-4 text-center font-bold">
-          Your Profile
-        </Typography>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={4}>
+            <Paper
+              elevation={4}
+              sx={{
+                p: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="h4"
+                sx={{ mb: 4, textAlign: "center", fontWeight: "bold" }}
+              >
+                Your Profile
+              </Typography>
 
-        <ProfileAvatar
-          avatarSrc={userData.avatar}
-          onAvatarChange={handleAvatarChange}
-        />
+              <ProfileAvatar
+                avatarSrc={userData.avatar}
+                onAvatarChange={handleAvatarChange}
+              />
 
-        <ProfileDetails
-          userData={userData}
-          onInputChange={handleInputChange}
-          onSaveProfile={handleUpdateProfile}
-        />
-      </Paper>
-    </div>
+              <ProfileDetails
+                userData={userData}
+                onInputChange={handleInputChange}
+                onSaveProfile={handleUpdateProfile}
+              />
+            </Paper>
+          </Grid>
+
+          <Grid item xs={12} md={8}>
+            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+              Favourites
+            </Typography>
+
+            <MovieCardContainer category="popular" />
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 
