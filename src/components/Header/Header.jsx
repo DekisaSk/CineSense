@@ -40,7 +40,7 @@ export default function Header() {
               justifyContent: "center",
             }}
           >
-            <NavigationSection />
+            <NavigationSection isHeader />
           </Box>
 
           {/* Theme toggle + Profile section */}

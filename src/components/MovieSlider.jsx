@@ -5,10 +5,6 @@ import SliderMovieCard from "./SliderMovieCard";
 export default function MovieSlider({ movies = [] }) {
   return (
     <section className="w-full px-4 md:px-8 py-10">
-      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-        In Theaters Now
-      </h2>
-
       <Carousel
         infinite
         autoPlay

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Grid, Typography, Divider } from "@mui/material";
+import { Container, Grid2 as Grid, Typography, Divider } from "@mui/material";
 import MovieSlider from "../components/MovieSlider";
 import MovieCardContainer from "../components/MovieCardContainer";
 import SmallMovieContainer from "../components/SmallMovieContainer";
@@ -50,6 +50,7 @@ export default function HomePage() {
             <Typography variant="h5" className="font-bold mb-4">
               Popular
             </Typography>
+
             <Divider className="mb-6" />
             <MovieCardContainer category="popular" />
           </div>
