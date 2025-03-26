@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 const pages = [
   { name: "Home", path: "/" },
-  { name: "List", path: "/list" },
+  { name: "List", path: "/filter" },
   { name: "Smart Search", path: "/smartsearch" },
   { name: "About Us", path: "/about" },
 ];
