@@ -2,7 +2,7 @@ import { Container, Typography, Box } from "@mui/material";
 
 export default function AboutPage() {
   return (
-    <Container maxWidth="md" sx={{ textAlign: "center", py: 4, color: "#333" }}>
+    <Container maxWidth="md" sx={{ textAlign: "center", py: 4 }}>
       <Typography variant="h3" gutterBottom>
         Welcome to Cinsense.
       </Typography>
