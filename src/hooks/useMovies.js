@@ -37,7 +37,10 @@ export default function useMovies() {
 
     if (searchQuery) {
       filtered = filtered.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+        item.title
+          .trim()
+          .toLowerCase()
+          .includes(searchQuery.trim().toLowerCase())
       );
     }
     if (genre) {
