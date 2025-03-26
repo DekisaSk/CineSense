@@ -1,5 +1,11 @@
 import StarIcon from "@mui/icons-material/Star";
 import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 
 export default function SmallMovieCard({ movie }) {
   const posterUrl = movie.posterPath
@@ -7,43 +13,70 @@ export default function SmallMovieCard({ movie }) {
     : "https://via.placeholder.com/400x600";
 
   return (
-    <div className="flex flex-col md:flex-row shadow-md rounded-2xl overflow-hidden p-4 gap-4 max-w-4xl mx-auto">
-      <div className="flex-shrink-0 w-full md:w-1/3">
-        <img
-          src={posterUrl}
-          alt={movie.title}
-          className="object-cover h-full w-full rounded-xl"
-        />
-      </div>
+    <Card
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: 3,
+        borderRadius: 2,
+        overflow: "hidden",
+        maxWidth: 800,
+        mx: "auto",
+        p: 2,
+        height: "100%",
+      }}
+    >
+      <CardMedia
+        component="img"
+        sx={{
+          width: "100%",
+          height: 250,
+          objectFit: "cover",
+          borderRadius: 2,
+        }}
+        image={posterUrl}
+        alt={movie.title}
+      />
 
-      <div className="flex flex-col justify-between w-full md:w-2/3">
-        <div className="flex items-center gap-1 text-yellow-400">
+      <CardContent
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box display="flex" alignItems="center" color="primary" gap={1}>
           <StarIcon />
-          <p className="text-lg font-semibold">{movie.rating}</p>
-        </div>
+          <Typography variant="h6" fontWeight="bold">
+            {movie.rating}
+          </Typography>
+        </Box>
 
-        <div className="mt-2">
-          <h3 className="text-2xl font-bold">{movie.title}</h3>
-          <p>
+        <Box mt={1}>
+          <Typography component="h5" fontWeight="bold" noWrap>
+            {movie.title}
+          </Typography>
+          <Typography variant="body1">
             <strong>Year:</strong> {movie.year}
-          </p>
-          <p>
+          </Typography>
+          <Typography variant="body1">
             <strong>Genre:</strong> {movie.genre}
-          </p>
-        </div>
+          </Typography>
+        </Box>
 
-        <div className="mt-4">
+        <Box mt={2}>
           <Button
             variant="contained"
             color="primary"
-            size="small"
             fullWidth
+            size="small"
             onClick={() => console.log("Selected trending item ID:", movie.id)}
           >
             About
           </Button>
-        </div>
-      </div>
-    </div>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }

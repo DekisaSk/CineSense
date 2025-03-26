@@ -1,32 +1,47 @@
 import React, { useState } from "react";
 import {
   Box,
-  TextField,
-  Button,
-  Typography,
-  Collapse,
-  Select,
-  MenuItem,
+  Container,
+  Grid2 as Grid,
+  Pagination,
+  PaginationItem,
   InputLabel,
+  Select,
+  Menu,
+  MenuItem,
+  Collapse,
+  TextField,
   FormControl as MuiFormControl,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import FilterListOffIcon from "@mui/icons-material/FilterListOff";
-import { Grid2 as Grid } from "@mui/material";
+import useMovies from "../hooks/useMovies.js";
+import SmallMovieCard from "../components/SmallMovieCard";
+import SearchBar from "../components/MoviesPageComponents/SearchBar";
+import FilterButton from "../components/MoviesPageComponents/FilterButton";
+
+const MAX_PAGE_ITEMS = 4;
 
 export default function MoviesPage() {
+  const {
+    filteredItems,
+    setSearchQuery,
+    type,
+    setType,
+    genre,
+    setGenre,
+    year,
+    setYear,
+  } = useMovies();
+  const [page, setPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [type, setType] = useState("movie");
-  const [genre, setGenre] = useState("");
-  const [year, setYear] = useState("");
 
-  const handleToggleFilter = () => {
+  const handlePageChange = (_, value) => setPage(value);
+  const paginatedItems = filteredItems.slice(
+    (page - 1) * MAX_PAGE_ITEMS,
+    page * MAX_PAGE_ITEMS
+  );
+  const toggleFilter = () => {
+    console.log("Jesmo li dobro: " + isFilterOpen);
     setIsFilterOpen((prev) => !prev);
-  };
-
-  const handleApplyFilter = () => {
-    console.log("Filters Applied:", { type, genre, year });
   };
 
   return (
@@ -37,77 +52,14 @@ export default function MoviesPage() {
         justifyContent="space-between"
         mb={2}
       >
-        <Box
-          display="flex"
-          gap={2}
-          sx={{
-            alignItems: "center",
-            height: "100%",
-            width: { xs: "100%", sm: "auto" },
-            borderRadius: 1,
-            padding: 1,
-          }}
-        >
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Serach movies and TV shows"
-            sx={{ height: 54 }}
-          />
-          <Button
-            margin="0.3rem"
-            variant="contained"
-            sx={{
-              display: "flex",
-              height: 54,
-              padding: { xs: "0 1.5rem" },
-              width: { xs: 54, sm: "auto" },
-              minWidth: { xs: 54, sm: "auto" },
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            startIcon={<SearchIcon />}
-          >
-            <Typography
-              sx={{
-                display: { xs: "none", sm: "inline" },
-              }}
-            >
-              Search
-            </Typography>
-          </Button>
-        </Box>
-
-        <Box
-          sx={{
-            width: { xs: "100%", sm: "auto" },
-            mt: { xs: 2, sm: 0 },
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Button
-            variant="outlined"
-            onClick={handleToggleFilter}
-            startIcon={
-              isFilterOpen ? <FilterListOffIcon /> : <FilterListIcon />
-            }
-            sx={{
-              height: 54,
-              width: "100%",
-              borderRadius: 1,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            Filters
-          </Button>
-        </Box>
+        <SearchBar setSearchQuery={setSearchQuery} />
+        <FilterButton isFilterOpen={isFilterOpen} toggleFilter={toggleFilter} />
       </Box>
 
       <Collapse in={isFilterOpen}>
         <Box
-          mb={2}
+          display="flex"
+          gap={2}
           sx={{
             borderRadius: 1,
             padding: 2,
@@ -144,13 +96,36 @@ export default function MoviesPage() {
               />
             </Grid>
           </Grid>
-          <Box mt={2}>
-            <Button variant="contained" onClick={handleApplyFilter}>
-              Apply Filters
-            </Button>
-          </Box>
         </Box>
       </Collapse>
+
+      <Container sx={{ mt: 4 }}>
+        <Grid container spacing={3}>
+          {paginatedItems.map((item) => (
+            <Grid
+              size={{ xs: "12", sm: "6" }}
+              key={item.id}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <SmallMovieCard movie={item} />
+            </Grid>
+          ))}
+        </Grid>
+
+        <Pagination
+          count={Math.ceil(filteredItems.length / MAX_PAGE_ITEMS)}
+          onChange={handlePageChange}
+          showFirstButton
+          showLastButton
+          renderItem={(item) => (
+            <PaginationItem
+              {...item}
+              sx={{ fontWeight: item.page === page ? "bold" : "normal" }}
+            />
+          )}
+          sx={{ display: "flex", justifyContent: "center", mt: 3 }}
+        />
+      </Container>
     </Box>
   );
 }

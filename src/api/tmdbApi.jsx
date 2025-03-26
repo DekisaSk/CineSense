@@ -10,6 +10,16 @@ const tmdbClient = axios.create({
   },
 });
 
+export async function getAllMovies() {
+  const response = await tmdbClient.get("/discover/movie");
+  return response.data.results;
+}
+
+export async function getAllTvShows() {
+  const response = await tmdbClient.get("/discover/tv");
+  return response.data.results;
+}
+
 export async function getNowPlayingMovies() {
   const response = await tmdbClient.get("/movie/now_playing");
   return response.data;
