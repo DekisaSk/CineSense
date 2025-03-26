@@ -17,6 +17,7 @@ import useMovies from "../hooks/useMovies.js";
 import SmallMovieCard from "../components/SmallMovieCard";
 import SearchBar from "../components/MoviesPageComponents/SearchBar";
 import FilterButton from "../components/MoviesPageComponents/FilterButton";
+import ItemCard from "../components/MoviesPageComponents/ItemCard.jsx";
 
 const MAX_PAGE_ITEMS = 4;
 
@@ -107,7 +108,7 @@ export default function MoviesPage() {
               key={item.id}
               sx={{ display: "flex", justifyContent: "center" }}
             >
-              <SmallMovieCard movie={item} />
+              <ItemCard movie={item} />
             </Grid>
           ))}
         </Grid>
