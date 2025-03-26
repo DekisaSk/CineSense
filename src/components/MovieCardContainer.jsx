@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Button, Grid } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -97,7 +97,7 @@ export default function MovieCardContainer({ category = "top_rated" }) {
   return (
     <Container maxWidth="lg" className="py-12">
       <Button
-        variant="outlined"
+        variant="contained"
         onClick={handleSwapMediaType}
         sx={{ marginBottom: 4 }}
       >

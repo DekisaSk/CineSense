@@ -3,7 +3,6 @@ import { Container, Grid2 as Grid, Typography, Divider } from "@mui/material";
 import MovieSlider from "../components/MovieSlider";
 import MovieCardContainer from "../components/MovieCardContainer";
 import SmallMovieContainer from "../components/SmallMovieContainer";
-import ModalWindow from "../components/ModalWindow";
 import { getNowPlayingMovies } from "../api/tmdbApi";
 
 export default function HomePage() {
@@ -31,11 +30,10 @@ export default function HomePage() {
   return (
     <Container maxWidth="xl" className="py-10">
       <section className="mb-12">
+        <Typography variant="h4" className="font-bold mb-4 text-center">
+          In Theaters
+        </Typography>
         <MovieSlider movies={nowPlaying} />
-      </section>
-
-      <section className="flex justify-center mb-16">
-        <ModalWindow />
       </section>
 
       <Grid container spacing={6}>
