@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Grid2 as Grid, Typography, Divider } from "@mui/material";
+import { Container, Grid, Typography, Divider } from "@mui/material";
 import MovieSlider from "../components/MovieSlider";
 import MovieCardContainer from "../components/MovieCardContainer";
 import SmallMovieContainer from "../components/SmallMovieContainer";
