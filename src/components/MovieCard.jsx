@@ -17,10 +17,11 @@ export default function MovieCard({ movie }) {
     <Card
       className="shadow-md rounded-xl transition-transform hover:scale-[1.02]"
       sx={{
-        maxWidth: 300,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        minHeight: "650px",
+        cursor: "pointer",
       }}
     >
       <CardMedia

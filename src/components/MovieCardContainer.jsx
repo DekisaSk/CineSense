@@ -104,7 +104,13 @@ export default function MovieCardContainer({ category = "top_rated" }) {
         {mediaType === "movie" ? "Switch to Series" : "Switch to Movies"}
       </Button>
 
-      <Grid container spacing={3} justifyContent="center" className="mt-4">
+      <Grid
+        container
+        spacing={3}
+        justifyContent="center"
+        className="mt-4"
+        sx={{ justifyContent: "flex-start" }}
+      >
         {displayedItems.map((movie) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
             <MovieCard movie={movie} />

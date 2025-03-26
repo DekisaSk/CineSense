@@ -39,7 +39,7 @@ export default function HomePage() {
       </section>
 
       <Grid container spacing={6}>
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={12} lg={9}>
           <Typography variant="h5" className="font-bold mb-4">
             Top Rated
           </Typography>
@@ -55,7 +55,7 @@ export default function HomePage() {
           </div>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={12} lg={3}>
           <div className="sticky top-28">
             <Typography variant="h5" className="font-bold mb-4">
               Trending

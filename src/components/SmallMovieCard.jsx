@@ -7,7 +7,10 @@ export default function SmallMovieCard({ movie }) {
     : "https://via.placeholder.com/400x600";
 
   return (
-    <div className="flex flex-col md:flex-row shadow-md rounded-2xl overflow-hidden p-4 gap-4 max-w-4xl mx-auto">
+    <div
+      className="flex flex-col md:flex-row shadow-md rounded-2xl overflow-hidden p-4 gap-4 w-full"
+      style={{ cursor: "pointer" }}
+    >
       <div className="flex-shrink-0 w-full md:w-1/3">
         <img
           src={posterUrl}
