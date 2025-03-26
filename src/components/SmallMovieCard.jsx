@@ -33,7 +33,7 @@ export default function SmallMovieCard({ movie }) {
           p: 2,
           height: "100%",
           width: "100%",
-          minWidth: "275px",
+          minWidth: "250px",
         }}
       >
         <CardMedia
