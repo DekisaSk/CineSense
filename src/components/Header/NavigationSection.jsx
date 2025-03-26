@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
@@ -9,7 +10,22 @@ const pages = [
   { name: "About Us", path: "/about" },
 ];
 
-export default function NavigationSection() {
+export default function NavigationSection({ isHeader = false }) {
+  const [highlightedButton, setHighlightedButton] = useState("Home");
+
+  function handleHighlighting(pageName) {
+    if (isHeader) {
+      setHighlightedButton(pageName);
+    }
+  }
+
+  const canHighlight = (name) => {
+    return (
+      isHeader &&
+      highlightedButton.trim().toLowerCase() === name.trim().toLowerCase()
+    );
+  };
+
   return (
     <Box
       sx={{
@@ -27,6 +43,9 @@ export default function NavigationSection() {
           }}
           component={Link}
           to={page.path}
+          variant={canHighlight(page.name) ? "outlined" : "inherit"}
+          color={canHighlight(page.name) ? "highlighted" : "inherit"}
+          onClick={() => handleHighlighting(page.name)}
         >
           {page.name}
         </Button>
