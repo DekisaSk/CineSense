@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -6,88 +6,74 @@ import {
   DialogActions,
   DialogContentText,
   Button,
+  IconButton,
+  Divider,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarIcon from "@mui/icons-material/Star";
 
 export default function ModalWindow() {
   const [open, setOpen] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleFavourite = () => {
-    setIsFavourite(!isFavourite);
-  };
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleFavourite = () => setIsFavourite((prev) => !prev);
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open modal
-      </Button>
+      <div className="flex justify-center mt-4">
+        <Button variant="outlined" onClick={handleClickOpen}>
+          Open Modal
+        </Button>
+      </div>
+
       <Dialog
         open={open}
         onClose={handleClose}
-        scroll="paper"
-        className="max-w-4xl mx-auto"
+        fullWidth
+        PaperProps={{
+          className: "rounded-xl p-4",
+        }}
       >
-        <div className="relative p-4">
-          <button
-            className="absolute top-4 left-4 text-blue-500 hover:text-blue-700"
-            onClick={handleFavourite}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              className="w-6 h-6"
-            >
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77l-6.18 3.23L7 14.14 2 9.27l6.91-1.01z" />
-            </svg>
-          </button>
-          <button
-            onClick={handleClose}
-            className="absolute top-4 right-4 text-blue-500 hover:text-blue-700"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              className="w-6 h-6"
-            >
-              <path
-                d="M6 18L18 6M6 6l12 12"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <DialogTitle className="text-center text-2xl font-bold">
+        <div className="flex justify-between items-center mb-2">
+          <IconButton onClick={handleFavourite}>
+            {isFavourite ? <StarIcon /> : <StarBorderIcon />}
+          </IconButton>
+          <DialogTitle className="text-xl font-semibold text-center -ml-12">
             Avatar
           </DialogTitle>
+          <IconButton onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
         </div>
-        <DialogContent className="flex flex-col items-center gap-4 p-6">
+
+        <Divider className="mb-4" />
+
+        <DialogContent className="flex flex-col md:flex-row gap-6">
           <img
             src="https://storage.googleapis.com/pod_public/750/262965.jpg"
             alt="Movie Poster"
-            className="w-full max-w-xs rounded-lg shadow-lg"
+            className="w-full md:w-1/3 object-cover rounded-md shadow"
           />
-          <DialogContentText className="text-gray-300 text-center space-y-2">
-            <p className="text-sm font-semibold">Genre: Action, Adventure</p>
-            <p className="text-sm font-semibold">Rating: 8.5/10</p>
-            <p className="text-sm font-semibold">Year: 2009</p>
-            <p className="text-sm text-gray-400 leading-relaxed">
-              Opis: Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Modi neque quas incidunt? Amet fugiat illum porro eos saepe nemo
-              cupiditate, est praesentium sunt!
-            </p>
-          </DialogContentText>
+          <div className="flex flex-col justify-between gap-3">
+            <DialogContentText className="text-base">
+              <strong>Genre:</strong> Action, Adventure
+            </DialogContentText>
+            <DialogContentText className="text-base">
+              <strong>Rating:</strong> 8.5/10
+            </DialogContentText>
+            <DialogContentText className="text-base">
+              <strong>Year:</strong> 2009
+            </DialogContentText>
+            <DialogContentText className="text-sm leading-relaxed">
+              <strong>Opis:</strong> Lorem ipsum dolor sit amet consectetur
+              adipisicing elit. Modi neque quas incidunt? Amet fugiat illum
+              porro eos saepe nemo cupiditate, est praesentium sunt!
+            </DialogContentText>
+          </div>
         </DialogContent>
-        <DialogActions className="justify-center pb-4"></DialogActions>
       </Dialog>
     </>
   );

@@ -109,7 +109,6 @@ export default function MoviesPage() {
         <Box
           mb={2}
           sx={{
-            backgroundColor: "#f7f7f7",
             borderRadius: 1,
             padding: 2,
           }}

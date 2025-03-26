@@ -59,7 +59,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex h-screen justify-center items-center bg-gray-100">
+    <div className="flex h-screen justify-center items-center">
       <Paper elevation={4} className="p-8 w-full max-w-md">
         <Typography variant="h4" className="pb-4 text-center font-bold">
           Sign in to your account

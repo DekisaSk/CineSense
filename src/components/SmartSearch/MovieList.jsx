@@ -1,5 +1,5 @@
 import React from "react";
-import MovieCard from "../TopMovieCard";
+import MovieCard from "../MovieCard";
 import { Box } from "@mui/material";
 
 const MovieList = ({ movies }) => {

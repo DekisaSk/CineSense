@@ -3,8 +3,14 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { MenuItem, Menu, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from "react-router-dom";
 
-const pages = ["Home", "List", "Custom Page", "About Us"];
+const pages = [
+  { name: "Home", path: "/" },
+  { name: "List", path: "/list" },
+  { name: "Smart Search", path: "/smartsearch" },
+  { name: "About Us", path: "/about" },
+];
 
 export default function MobileMenu() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -29,28 +35,22 @@ export default function MobileMenu() {
       </IconButton>
       <Menu
         id="menu-appbar"
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        keepMounted
         anchorEl={anchorElNav}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        keepMounted
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
         open={Boolean(anchorElNav)}
         onClose={handleCloseNavMenu}
         sx={{ display: { xs: "block", md: "none" } }}
       >
         {pages.map((page) => (
-          <MenuItem key={page}>
-            <Typography
-              sx={{ textAlign: "center" }}
-              onClick={handleCloseNavMenu}
-            >
-              {page}
-            </Typography>
+          <MenuItem
+            key={page.name}
+            component={Link}
+            to={page.path}
+            onClick={handleCloseNavMenu}
+          >
+            <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
           </MenuItem>
         ))}
       </Menu>

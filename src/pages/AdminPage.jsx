@@ -6,7 +6,7 @@ import StatsCard from "../components/admin/StatsCard";
 
 const AdminPage = () => {
   return (
-    <Box className="p-4 bg-gray-100 min-h-screen">
+    <Box className="p-4 min-h-screen">
       <Typography variant="h4" className="mb-6">
         Admin Dashboard
       </Typography>

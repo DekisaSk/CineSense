@@ -34,7 +34,6 @@ const RegisterPage = () => {
 
       alert(response.data.message || "Registration successful!");
 
-      // Navigate without page reload
       navigate("/login");
     } catch (error) {
       if (error.response) {
@@ -46,7 +45,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100">
+    <div className="flex h-screen items-center justify-center">
       <Paper elevation={4} className="p-8 w-full max-w-md">
         <Typography variant="h4" className="pb-4 text-center font-bold">
           Create Your Account

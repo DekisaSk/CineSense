@@ -13,7 +13,7 @@ const StatsCard = ({ title, data }) => {
         label: title,
         data: data,
         fill: true,
-        borderColor: "#1976D2",
+        borderColor: "primary",
         tension: 0.2,
       },
     ],

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const pages = [
   { name: "Home", path: "/" },
-  { name: "List", path: "/list" },
+  { name: "Movies/Series", path: "/filter" },
   { name: "Smart Search", path: "/smartsearch" },
   { name: "About Us", path: "/about" },
 ];
@@ -23,7 +23,7 @@ export default function NavigationSection() {
           key={page.name}
           sx={{
             my: 2,
-            color: "white",
+            color: "text.primary",
           }}
           component={Link}
           to={page.path}
