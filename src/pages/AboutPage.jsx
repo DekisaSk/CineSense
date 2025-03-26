@@ -14,14 +14,14 @@ export default function AboutPage() {
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "center", gap: 2, my: 2 }}>
         <img
-          src="src/assets/popcorns.svg"
+          src="/public/assets/popcorns.svg"
           alt="Illustration of the yellow box of popcorns"
           loading="lazy"
           height="auto"
           width="45%"
         />
         <img
-          src="src/assets/film-rolls.svg"
+          src="/public/assets/film-rolls.svg"
           alt="Illustration of the film rolls"
           loading="lazy"
           height="auto"
@@ -42,7 +42,7 @@ export default function AboutPage() {
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
         <img
-          src="src/assets/movie-night.svg"
+          src="/public/assets/movie-night.svg"
           alt="Illustration of the couple on sofa watching TV"
           loading="lazy"
           width="100%"

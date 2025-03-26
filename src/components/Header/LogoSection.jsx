@@ -5,12 +5,7 @@ import { Link } from "react-router-dom";
 export function Logo() {
   return (
     <SvgIcon>
-      <image
-        href="src/assets/icon.png"
-        alt="Custom Icon"
-        height="24"
-        width="24"
-      />
+      <image href="/public/icon.png" alt="Custom Icon" height="24" width="24" />
     </SvgIcon>
   );
 }
