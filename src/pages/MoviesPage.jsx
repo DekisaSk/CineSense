@@ -114,7 +114,7 @@ export default function MoviesPage() {
           }}
         >
           <Grid container spacing={2}>
-            <Grid xs={12} sm={4}>
+            <Grid size={{ xs: "100%", sm: "auto" }}>
               <MuiFormControl variant="outlined">
                 <InputLabel>Type</InputLabel>
                 <Select
@@ -127,7 +127,7 @@ export default function MoviesPage() {
                 </Select>
               </MuiFormControl>
             </Grid>
-            <Grid xs={12} sm={4}>
+            <Grid size={{ xs: "100%", sm: "auto" }}>
               <TextField
                 variant="outlined"
                 label="Genre"
@@ -135,7 +135,7 @@ export default function MoviesPage() {
                 onChange={(e) => setGenre(e.target.value)}
               />
             </Grid>
-            <Grid xs={12} sm={4}>
+            <Grid size={{ xs: "100%", sm: "auto" }}>
               <TextField
                 variant="outlined"
                 label="Year"

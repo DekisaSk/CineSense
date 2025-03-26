@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { MenuItem, Menu, IconButton } from "@mui/material";
@@ -14,6 +15,12 @@ const pages = [
 
 export default function MobileMenu() {
   const [anchorElNav, setAnchorElNav] = useState(null);
+  const navigate = useNavigate();
+
+  const handleMenuNavigation = (path) => {
+    navigate(path);
+    handleCloseNavMenu();
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -44,13 +51,13 @@ export default function MobileMenu() {
         sx={{ display: { xs: "block", md: "none" } }}
       >
         {pages.map((page) => (
-          <MenuItem
-            key={page.name}
-            component={Link}
-            to={page.path}
-            onClick={handleCloseNavMenu}
-          >
-            <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
+          <MenuItem key={page.name}>
+            <Typography
+              sx={{ textAlign: "center" }}
+              onClick={() => handleMenuNavigation(page.path)}
+            >
+              {page.name}
+            </Typography>
           </MenuItem>
         ))}
       </Menu>
