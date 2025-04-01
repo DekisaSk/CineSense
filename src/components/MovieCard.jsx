@@ -1,5 +1,3 @@
-// MovieCard.jsx
-import React, { useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import {
   Button,
@@ -10,17 +8,10 @@ import {
   Box,
 } from "@mui/material";
 import MovieDetailsModal from "./MovieDetailsModal";
+import { useModal } from "../hooks/useModal";
 
 export default function MovieCard({ movie }) {
-  const [openDetails, setOpenDetails] = useState(false);
-
-  const handleOpenModal = () => {
-    setOpenDetails(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenDetails(false);
-  };
+  const { isOpen, openModal, closeModal } = useModal();
 
   return (
     <>
@@ -33,7 +24,7 @@ export default function MovieCard({ movie }) {
           minHeight: "650px",
           cursor: "pointer",
         }}
-        onClick={handleOpenModal}
+        onClick={openModal}
       >
         <CardMedia
           component="img"
@@ -45,7 +36,6 @@ export default function MovieCard({ movie }) {
           alt={movie.title}
           sx={{ height: 360, objectFit: "cover" }}
         />
-
         <CardContent className="flex flex-col gap-2">
           <Box className="flex items-center gap-1 text-yellow-400">
             <StarIcon />
@@ -53,11 +43,9 @@ export default function MovieCard({ movie }) {
               {movie.rating}
             </Typography>
           </Box>
-
           <Typography variant="h6" className="font-semibold">
             {movie.title}
           </Typography>
-
           <Typography variant="body2">
             <strong>Year:</strong> {movie.year}
           </Typography>
@@ -65,7 +53,6 @@ export default function MovieCard({ movie }) {
             <strong>Genre:</strong> {movie.genre}
           </Typography>
         </CardContent>
-
         <Box className="px-4 pb-4">
           <Button
             variant="contained"
@@ -79,12 +66,7 @@ export default function MovieCard({ movie }) {
           </Button>
         </Box>
       </Card>
-
-      <MovieDetailsModal
-        open={openDetails}
-        onClose={handleCloseModal}
-        movieId={movie.id}
-      />
+      <MovieDetailsModal open={isOpen} onClose={closeModal} movie={movie} />
     </>
   );
 }

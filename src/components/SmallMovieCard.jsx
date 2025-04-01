@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useModal } from "../hooks/useModal";
 import StarIcon from "@mui/icons-material/Star";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -9,10 +9,7 @@ import Box from "@mui/material/Box";
 import MovieDetailsModal from "./MovieDetailsModal";
 
 export default function SmallMovieCard({ movie }) {
-  const [openModal, setOpenModal] = useState(false);
-
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const { isOpen, openModal, closeModal } = useModal();
 
   const posterUrl = movie.posterPath
     ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
@@ -21,7 +18,7 @@ export default function SmallMovieCard({ movie }) {
   return (
     <>
       <Card
-        onClick={handleOpenModal}
+        onClick={openModal}
         sx={{
           display: "flex",
           flexDirection: "row",
@@ -40,7 +37,6 @@ export default function SmallMovieCard({ movie }) {
           component="img"
           sx={{
             width: "30%",
-            // height: "40%",
             objectFit: "cover",
             borderRadius: 2,
           }}
@@ -83,11 +79,7 @@ export default function SmallMovieCard({ movie }) {
         </CardContent>
       </Card>
 
-      <MovieDetailsModal
-        open={openModal}
-        onClose={handleCloseModal}
-        movieId={movie.id}
-      />
+      <MovieDetailsModal open={isOpen} onClose={closeModal} movie={movie} />
     </>
   );
 }

@@ -1,40 +1,42 @@
-import { useState } from "react";
+import { useModal } from "../hooks/useModal";
 import Button from "@mui/material/Button";
 import MovieDetailsModal from "./MovieDetailsModal";
 
-export default function SliderMovieCard({ id, title, posterPath, rating }) {
-  const [openModal, setOpenModal] = useState(false);
+export default function SliderMovieCard({ movie }) {
+  const { isOpen, openModal, closeModal } = useModal();
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
-  const backgroundUrl = posterPath
-    ? `https://image.tmdb.org/t/p/original${posterPath}`
+  const backgroundUrl = movie.posterPath
+    ? `https://image.tmdb.org/t/p/original${movie.posterPath}`
     : "https://i.ibb.co/Z1HTQRpH/poster-Flashback.jpg";
 
   return (
     <>
       <div
         className="relative w-full max-w-xs h-[30rem] rounded-xl overflow-hidden shadow-md group"
-        onClick={handleOpenModal}
+        onClick={openModal}
       >
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
           style={{ backgroundImage: `url(${backgroundUrl})` }}
         />
-
         <div className="absolute inset-0 bg-opacity-50 group-hover:bg-opacity-60 transition-opacity" />
-
         <div className="relative z-10 h-full flex flex-col justify-between p-5">
-          <h2 className="text-xl font-semibold leading-tight text-yellow-400">
-            {title} <br />
-            <span className="text-sm font-normal text-yellow-400">
-              Rating: {rating.toFixed(1)}
+          <h2
+            className="text-xl font-semibold leading-tight text-yellow-400"
+            style={{
+              textShadow:
+                "-1px -1px 0 rgba(0, 0, 0, 0.18), 1px -1px 0 rgba(0,0,0,0.18), -1px 1px 0 rgba(0,0,0,0.18), 1px 1px 0 rgba(0,0,0,0.18)",
+            }}
+          >
+            {movie.title} <br />
+            <span
+              className="text-sm font-normal text-yellow-400"
+              style={{
+                textShadow:
+                  "-1px -1px 0 rgba(0,0,0,0.18), 1px -1px 0 rgba(0,0,0,0.18), -1px 1px 0 rgba(0,0,0,0.18), 1px 1px 0 rgba(0,0,0,0.18)",
+              }}
+            >
+              rating: {Number(movie.rating).toFixed(1)}
             </span>
           </h2>
 
@@ -51,12 +53,7 @@ export default function SliderMovieCard({ id, title, posterPath, rating }) {
           </Button>
         </div>
       </div>
-
-      <MovieDetailsModal
-        open={openModal}
-        onClose={handleCloseModal}
-        movieId={id}
-      />
+      <MovieDetailsModal open={isOpen} onClose={closeModal} movie={movie} />
     </>
   );
 }

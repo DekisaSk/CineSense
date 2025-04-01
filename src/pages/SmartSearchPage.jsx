@@ -1,43 +1,10 @@
-import { useState } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import MovieSlider from "../components/MovieSlider";
 import MovieSearchForm from "../components/SmartSearch/MovieSearchForm";
-import { getNowPlayingMovies } from "../api/tmdbApi";
+import { useSearch } from "../hooks/useSmartSearch";
 
 export default function SmartSearch() {
-  const [movies, setMovies] = useState([]);
-  const [searched, setSearched] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  const handleSearch = async () => {
-    setSearched(true);
-    setLoading(true);
-    setMovies([]);
-
-    try {
-      await wait(2000);
-
-      const data = await getNowPlayingMovies();
-
-      const mappedMovies = data.results.map((item) => {
-        const chosenPath = item.backdrop_path || item.poster_path || null;
-        return {
-          id: item.id,
-          title: item.title,
-          rating: item.vote_average,
-          posterPath: chosenPath,
-        };
-      });
-
-      setMovies(mappedMovies);
-    } catch (error) {
-      console.error("Error fetching Now Playing:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { searched, loading, error, handleSearch } = useSearch();
 
   return (
     <Box
@@ -51,7 +18,7 @@ export default function SmartSearch() {
         pb: 2,
       }}
     >
-      {!searched && (
+      {!searched && !loading && (
         <Box sx={{ width: "100%", maxWidth: 400, textAlign: "center" }}>
           <Typography variant="h4" sx={{ mb: 3, mt: 3, fontWeight: "bold" }}>
             Smart Search
@@ -60,23 +27,23 @@ export default function SmartSearch() {
         </Box>
       )}
 
-      {searched && (
+      {loading && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 300,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+
+      {searched && !loading && (
         <>
           <Box sx={{ flex: 1, mb: 6 }}>
-            {loading ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: 300,
-                }}
-              >
-                <CircularProgress />
-              </Box>
-            ) : (
-              <MovieSlider movies={movies} />
-            )}
+            <MovieSlider />
           </Box>
 
           <Box
@@ -93,6 +60,12 @@ export default function SmartSearch() {
             <MovieSearchForm onSearch={handleSearch} />
           </Box>
         </>
+      )}
+
+      {error && (
+        <Typography variant="body1" color="error">
+          Error: {error.message}
+        </Typography>
       )}
     </Box>
   );

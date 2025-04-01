@@ -1,24 +1,14 @@
-import { useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import useMovieSearchForm from "../../hooks/useMovieSearchForm";
 
 const MovieSearchForm = ({ onSearch }) => {
-  const [userPrompt, setUserPrompt] = useState("");
-
-  const handleSubmit = (e) => {
-    if (!e.currentTarget.checkValidity()) {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
-    e.preventDefault();
-    onSearch(userPrompt);
-  };
+  const { userPrompt, setUserPrompt, handleSubmit } = useMovieSearchForm();
 
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit}
+      onSubmit={(e) => handleSubmit(e, onSearch)}
       sx={{
         display: "flex",
         alignItems: "center",

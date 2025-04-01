@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 
 const ForgotPasswordModal = ({
@@ -6,14 +5,12 @@ const ForgotPasswordModal = ({
   handleModalClose,
   resetEmail,
   setResetEmail,
+  notification,
+  handleResetPassword,
 }) => {
-  const [notification, setNotification] = useState("");
-
   const onFormSubmit = (event) => {
     event.preventDefault();
-    setNotification(
-      "A password reset link has been sent to your email address. (Simulated)"
-    );
+    handleResetPassword();
   };
 
   return (
@@ -50,10 +47,7 @@ const ForgotPasswordModal = ({
               required
               fullWidth
               value={resetEmail}
-              onChange={(e) => {
-                setResetEmail(e.target.value);
-                setNotification("");
-              }}
+              onChange={(e) => setResetEmail(e.target.value)}
             />
 
             <Button type="submit" variant="contained" color="primary" fullWidth>

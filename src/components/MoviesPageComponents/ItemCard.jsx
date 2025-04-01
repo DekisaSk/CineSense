@@ -1,4 +1,3 @@
-import { useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -7,29 +6,27 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import MovieDetailsModal from "../MovieDetailsModal";
+import { useModal } from "../../hooks/useModal";
 
 export default function ItemCard({ movie }) {
-  const [openModal, setOpenModal] = useState(false);
+  const { isOpen, openModal, closeModal } = useModal();
 
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
-
-  const posterUrl = movie.posterPath
+  const imageUrl = movie.posterPath
     ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
     : "https://i.ibb.co/7NSCb3xf/poster-Flashback.jpg";
 
   return (
     <>
       <Card
-        onClick={handleOpenModal}
+        onClick={openModal}
         sx={{
+          width: "100%",
+          maxWidth: "100%",
           display: "flex",
           flexDirection: "column",
           boxShadow: 3,
           borderRadius: 2,
           overflow: "hidden",
-          maxWidth: 800,
-          mx: "auto",
           p: 2,
           height: "100%",
         }}
@@ -37,12 +34,13 @@ export default function ItemCard({ movie }) {
         <CardMedia
           component="img"
           sx={{
-            width: "100%",
+            width: 500,
             height: 250,
+            maxWidth: "100%",
             objectFit: "cover",
             borderRadius: 2,
           }}
-          image={posterUrl}
+          image={imageUrl}
           alt={movie.title}
         />
 
@@ -54,7 +52,7 @@ export default function ItemCard({ movie }) {
             justifyContent: "space-between",
           }}
         >
-          <Box display="flex" alignItems="center" color="primary" gap={1}>
+          <Box display="flex" alignItems="center" gap={1}>
             <StarIcon />
             <Typography variant="h6" fontWeight="bold">
               {movie.rating}
@@ -62,7 +60,16 @@ export default function ItemCard({ movie }) {
           </Box>
 
           <Box mt={1}>
-            <Typography component="h5" fontWeight="bold" noWrap>
+            <Typography
+              component="h5"
+              fontWeight="bold"
+              noWrap
+              sx={{
+                maxWidth: "80%",
+                overflow: "clip",
+                textOverflow: "ellipsis",
+              }}
+            >
               {movie.title}
             </Typography>
             <Typography variant="body1">
@@ -81,11 +88,7 @@ export default function ItemCard({ movie }) {
         </CardContent>
       </Card>
 
-      <MovieDetailsModal
-        open={openModal}
-        onClose={handleCloseModal}
-        movieId={movie.id}
-      />
+      <MovieDetailsModal open={isOpen} onClose={closeModal} movie={movie} />
     </>
   );
 }

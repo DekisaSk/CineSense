@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Box,
   Container,
@@ -7,43 +7,65 @@ import {
   PaginationItem,
   InputLabel,
   Select,
-  Menu,
   MenuItem,
   Collapse,
   TextField,
   FormControl as MuiFormControl,
+  CircularProgress,
+  Typography,
 } from "@mui/material";
-import useMovies from "../hooks/useMovies.js";
-import SmallMovieCard from "../components/SmallMovieCard";
+import useSearch from "../hooks/useSearch";
+import ItemCard from "../components/MoviesPageComponents/ItemCard";
 import SearchBar from "../components/MoviesPageComponents/SearchBar";
 import FilterButton from "../components/MoviesPageComponents/FilterButton";
-import ItemCard from "../components/MoviesPageComponents/ItemCard.jsx";
 
-const MAX_PAGE_ITEMS = 4;
+const UI_ITEMS_PER_PAGE = 4;
+const UI_PAGES_PER_API_PAGE = 5;
 
 export default function MoviesPage() {
-  const {
-    filteredItems,
-    setSearchQuery,
-    type,
-    setType,
-    genre,
-    setGenre,
-    year,
-    setYear,
-  } = useMovies();
-  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [type, setType] = useState("all");
+  const [genre, setGenre] = useState("");
+  const [year, setYear] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const handlePageChange = (_, value) => setPage(value);
-  const paginatedItems = filteredItems.slice(
-    (page - 1) * MAX_PAGE_ITEMS,
-    page * MAX_PAGE_ITEMS
+  const [uiPage, setUiPage] = useState(1);
+
+  const apiPage = useMemo(
+    () => Math.ceil(uiPage / UI_PAGES_PER_API_PAGE),
+    [uiPage]
   );
-  const toggleFilter = () => {
-    console.log("Jesmo li dobro: " + isFilterOpen);
-    setIsFilterOpen((prev) => !prev);
-  };
+
+  const dynamicMax = uiPage + 50;
+
+  const {
+    items: apiItems,
+    totalPages: apiTotalPages,
+    loading,
+    error,
+  } = useSearch({
+    query: searchQuery,
+    type,
+    genre,
+    year,
+    page: apiPage,
+  });
+
+  const uiTotalPages = useMemo(
+    () => Math.min(apiTotalPages * UI_PAGES_PER_API_PAGE, dynamicMax),
+    [apiTotalPages, dynamicMax]
+  );
+
+  const uiIndex = (uiPage - 1) % UI_PAGES_PER_API_PAGE;
+  const uiItems = useMemo(() => {
+    return apiItems.slice(
+      uiIndex * UI_ITEMS_PER_PAGE,
+      uiIndex * UI_ITEMS_PER_PAGE + UI_ITEMS_PER_PAGE
+    );
+  }, [apiItems, uiIndex]);
+
+  const handlePageChange = (_, value) => setUiPage(value);
+  const toggleFilter = () => setIsFilterOpen((prev) => !prev);
 
   return (
     <Box sx={{ p: 3 }}>
@@ -67,8 +89,8 @@ export default function MoviesPage() {
           }}
         >
           <Grid container spacing={2}>
-            <Grid size={{ xs: "100%", sm: "auto" }}>
-              <MuiFormControl variant="outlined">
+            <Grid item xs={12} sm="auto">
+              <MuiFormControl variant="outlined" fullWidth>
                 <InputLabel>Type</InputLabel>
                 <Select
                   value={type}
@@ -76,24 +98,26 @@ export default function MoviesPage() {
                   label="Type"
                 >
                   <MenuItem value="movie">Movie</MenuItem>
-                  <MenuItem value="tvshow">TV Show</MenuItem>
+                  <MenuItem value="tv">TV Show</MenuItem>
                 </Select>
               </MuiFormControl>
             </Grid>
-            <Grid size={{ xs: "100%", sm: "auto" }}>
+            <Grid item xs={12} sm="auto">
               <TextField
                 variant="outlined"
                 label="Genre"
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
+                fullWidth
               />
             </Grid>
-            <Grid size={{ xs: "100%", sm: "auto" }}>
+            <Grid item xs={12} sm="auto">
               <TextField
                 variant="outlined"
                 label="Year"
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
+                fullWidth
               />
             </Grid>
           </Grid>
@@ -101,31 +125,46 @@ export default function MoviesPage() {
       </Collapse>
 
       <Container sx={{ mt: 4 }}>
-        <Grid container spacing={3}>
-          {paginatedItems.map((item) => (
-            <Grid
-              size={{ xs: "12", sm: "6" }}
-              key={item.id}
-              sx={{ display: "flex", justifyContent: "center" }}
-            >
-              <ItemCard movie={item} />
+        {loading ? (
+          <Box sx={{ textAlign: "center", my: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Box sx={{ textAlign: "center", my: 4 }}>
+            <Typography color="error">Error: {error.message}</Typography>
+          </Box>
+        ) : (
+          <>
+            <Grid container spacing={3}>
+              {uiItems.map((item) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  key={item.id}
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
+                  <ItemCard movie={item} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
 
-        <Pagination
-          count={Math.ceil(filteredItems.length / MAX_PAGE_ITEMS)}
-          onChange={handlePageChange}
-          showFirstButton
-          showLastButton
-          renderItem={(item) => (
-            <PaginationItem
-              {...item}
-              sx={{ fontWeight: item.page === page ? "bold" : "normal" }}
+            <Pagination
+              count={uiTotalPages}
+              page={uiPage}
+              onChange={handlePageChange}
+              showFirstButton
+              showLastButton
+              renderItem={(item) => (
+                <PaginationItem
+                  {...item}
+                  sx={{ fontWeight: item.page === uiPage ? "bold" : "normal" }}
+                />
+              )}
+              sx={{ display: "flex", justifyContent: "center", mt: 3 }}
             />
-          )}
-          sx={{ display: "flex", justifyContent: "center", mt: 3 }}
-        />
+          </>
+        )}
       </Container>
     </Box>
   );

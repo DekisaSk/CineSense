@@ -1,65 +1,18 @@
-import { useState, useEffect } from "react";
-import SmallMovieCard from "./SmallMovieCard";
-import { getTrending, getMovieGenres, getTvGenres } from "../api/tmdbApi";
 import { Button } from "@mui/material";
+import SmallMovieCard from "./SmallMovieCard";
+import { useMovieCards } from "../hooks/useMovieCards";
 
-export default function SmallMovieContainer() {
-  const [mediaType, setMediaType] = useState("movie");
-  const [trendingItems, setTrendingItems] = useState([]);
+export default function SmallMovieContainer({ category = "trending" }) {
+  const {
+    allItems: items,
+    mediaType,
+    error,
+    handleSwapMediaType,
+  } = useMovieCards(category);
 
-  useEffect(() => {
-    async function fetchTrending() {
-      try {
-        let genreList = [];
-        if (mediaType === "movie") {
-          genreList = await getMovieGenres();
-        } else {
-          genreList = await getTvGenres();
-        }
+  if (error) return <div>Error fetching data.</div>;
 
-        const genreMap = {};
-        genreList.forEach((g) => {
-          genreMap[g.id] = g.name;
-        });
-
-        const data = await getTrending(mediaType);
-
-        const mapped = data.results.map((item) => {
-          const title =
-            mediaType === "movie" ? item.title : item.name || "Untitled";
-          const releaseDate =
-            mediaType === "movie" ? item.release_date : item.first_air_date;
-          const year = releaseDate ? releaseDate.slice(0, 4) : "N/A";
-
-          const genreNames = item.genre_ids
-            .map((id) => genreMap[id])
-            .filter(Boolean)
-            .join(", ");
-
-          return {
-            id: item.id,
-            title,
-            posterPath: item.poster_path,
-            rating: item.vote_average?.toFixed(1),
-            year,
-            genre: genreNames || "N/A",
-          };
-        });
-
-        setTrendingItems(mapped);
-      } catch (error) {
-        console.error("Error fetching trending data:", error);
-      }
-    }
-
-    fetchTrending();
-  }, [mediaType]);
-
-  const displayedItems = trendingItems.slice(0, 2);
-
-  const handleSwapMediaType = () => {
-    setMediaType((prev) => (prev === "movie" ? "tv" : "movie"));
-  };
+  const displayedItems = items.slice(0, 2);
 
   return (
     <div className="flex flex-col gap-6 p-4">
@@ -69,10 +22,9 @@ export default function SmallMovieContainer() {
           : "Show Trending Movies"}
       </Button>
 
-      {/* Flex container to ensure equal width of cards */}
       <div className="flex flex-wrap gap-6 justify-start">
         {displayedItems.map((movie) => (
-          <SmallMovieCard key={movie.id} movie={movie} />
+          <SmallMovieCard movie={movie} />
         ))}
       </div>
     </div>

@@ -1,5 +1,3 @@
-import { useState } from "react";
-import axios from "axios";
 import {
   Box,
   Container,
@@ -8,47 +6,23 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import useRegister from "../hooks/useRegister";
 
 const RegisterPage = () => {
-  const navigate = useNavigate();
-
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const handleRegister = async (event) => {
-    event.preventDefault();
-
-    if (password !== confirmPassword) {
-      alert("Passwords do not match.");
-      return;
-    }
-    if (password.length < 8) {
-      alert("Password must be at least 8 characters.");
-      return;
-    }
-
-    try {
-      const response = await axios.post("...", {
-        firstName,
-        lastName,
-        email,
-        password,
-      });
-
-      alert(response.data.message || "Registration successful!");
-      navigate("/login");
-    } catch (error) {
-      if (error.response) {
-        alert(error.response.data.message);
-      } else {
-        console.error("Registration error:", error);
-      }
-    }
-  };
+  const {
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    handleRegister,
+  } = useRegister();
 
   return (
     <Box

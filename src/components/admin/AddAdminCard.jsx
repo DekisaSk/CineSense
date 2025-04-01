@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -8,17 +7,10 @@ import {
   Button,
 } from "@mui/material";
 import { AdminPanelSettings } from "@mui/icons-material";
+import useAddAdmin from "../../hooks/useAddAdmin";
 
 const AddAdminCard = () => {
-  const [email, setEmail] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    console.log("Adding Admin with email:", email);
-
-    setEmail("");
-  };
+  const { email, setEmail, handleSubmit } = useAddAdmin();
 
   return (
     <Card className="mb-4">

@@ -1,39 +1,16 @@
-import { useState, useEffect } from "react";
 import { Container, Grid, Typography, Divider } from "@mui/material";
 import MovieSlider from "../components/MovieSlider";
 import MovieCardContainer from "../components/MovieCardContainer";
 import SmallMovieContainer from "../components/SmallMovieContainer";
-import { getNowPlayingMovies } from "../api/tmdbApi";
 
 export default function HomePage() {
-  const [nowPlaying, setNowPlaying] = useState([]);
-
-  useEffect(() => {
-    async function fetchNowPlaying() {
-      try {
-        const data = await getNowPlayingMovies();
-
-        const mapped = data.results.map((item) => ({
-          id: item.id,
-          title: item.title,
-          posterPath: item.backdrop_path,
-          rating: item.vote_average,
-        }));
-        setNowPlaying(mapped);
-      } catch (error) {
-        console.error("Error fetching Now Playing:", error);
-      }
-    }
-    fetchNowPlaying();
-  }, []);
-
   return (
     <Container maxWidth="xl" className="py-10">
       <section className="mb-12">
         <Typography variant="h4" className="font-bold mb-4 text-center">
           In Theaters
         </Typography>
-        <MovieSlider movies={nowPlaying} />
+        <MovieSlider category="now_playing" />
       </section>
 
       <Grid container spacing={6}>
@@ -48,7 +25,6 @@ export default function HomePage() {
             <Typography variant="h5" className="font-bold mb-4">
               Popular
             </Typography>
-
             <Divider className="mb-6" />
             <MovieCardContainer category="popular" />
           </div>
@@ -60,7 +36,7 @@ export default function HomePage() {
               Trending
             </Typography>
             <Divider className="mb-6" />
-            <SmallMovieContainer />
+            <SmallMovieContainer category="trending" />
           </div>
         </Grid>
       </Grid>

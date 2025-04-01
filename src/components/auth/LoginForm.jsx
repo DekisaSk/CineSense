@@ -7,8 +7,6 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import ForgotPasswordModal from "./ForgotPassword";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const LoginForm = ({
@@ -19,19 +17,8 @@ const LoginForm = ({
   showPassword,
   setShowPassword,
   handleLogin,
+  handleForgotPassword,
 }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [resetEmail, setResetEmail] = useState("");
-
-  const handleModalOpen = () => setModalOpen(true);
-  const handleModalClose = () => setModalOpen(false);
-
-  const handleResetPassword = () => {
-    // reset logic
-    console.log("Send reset link to:", resetEmail);
-    setModalOpen(false);
-  };
-
   return (
     <>
       <form className="flex flex-col gap-4" onSubmit={handleLogin}>
@@ -71,7 +58,7 @@ const LoginForm = ({
             type="button"
             sx={{ cursor: "pointer" }}
             variant="body2"
-            onClick={handleModalOpen}
+            onClick={handleForgotPassword}
           >
             Forgot password?
           </MuiLink>
@@ -84,14 +71,6 @@ const LoginForm = ({
           </Link>
         </Typography>
       </form>
-
-      <ForgotPasswordModal
-        modalOpen={modalOpen}
-        handleModalClose={handleModalClose}
-        resetEmail={resetEmail}
-        setResetEmail={setResetEmail}
-        handleResetPassword={handleResetPassword}
-      />
     </>
   );
 };

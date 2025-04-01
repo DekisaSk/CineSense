@@ -1,59 +1,16 @@
-import { useState, useEffect } from "react";
 import { Box, Container, Grid, Paper, Typography } from "@mui/material";
-
 import ProfileAvatar from "../components/profilePage/ProfileAvatar";
 import ProfileDetails from "../components/profilePage/ProfileDetails";
-import MovieCardContainer from "../components/MovieCardContainer";
-
-// Dummy data until backend is implemented
-const initialUserData = {
-  firstName: "Pavle",
-  lastName: "Dzuverovic",
-  email: "pdzuverovic@gmail.com",
-  avatar: "../assets/dummy.jpg",
-};
+import FavoritesContainer from "../components/FavoritesContainer";
+import useProfile from "../hooks/useProfile";
 
 const ProfilePage = () => {
-  const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    avatar: "",
-  });
-
-  useEffect(() => {
-    // dummy
-    setUserData(initialUserData);
-  }, []);
-
-  const handleInputChange = (key, value) => {
-    setUserData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  const handleAvatarChange = (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setUserData((prev) => ({
-        ...prev,
-        avatar: reader.result,
-      }));
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleUpdateProfile = () => {
-    // axios.put("...", userData)
-    alert(
-      "Profile updated (dummy). New data: \n" +
-        JSON.stringify(userData, null, 2)
-    );
-  };
+  const {
+    userData,
+    handleInputChange,
+    handleAvatarChange,
+    handleUpdateProfile,
+  } = useProfile();
 
   return (
     <Box
@@ -108,7 +65,7 @@ const ProfilePage = () => {
               Favourites
             </Typography>
 
-            <MovieCardContainer category="popular" />
+            <FavoritesContainer category="popular" />
           </Grid>
         </Grid>
       </Container>
