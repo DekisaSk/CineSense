@@ -2,3 +2,5 @@ pydantic
 fastapi
 sqlalchemy
 uvicorn
+alembic
+dotenv
