@@ -8,7 +8,7 @@ class SessionChecker():
     def __init__(self, db: AsyncSession = Depends(get_db), current_user: UserInDB = Depends(get_current_active_user)):
         self.current_user = current_user
         self.db = db
-    def check_acces_by_role(self, required_role: str):
+    def check_access_by_role(self, required_role: str):
         user_role = self.current_user.role
         if user_role != required_role:
             raise HTTPException(
