@@ -1,12 +1,4 @@
-from models.cast_member import CastMember
-from models.credit import Credit
-from models.cast_member import CastMember
-from models.genre import Genre
-from models.movie import movie_genres, Movie
-from models.person import Person
-from models.role import Role
-from models.tv_show import tv_genres, TVShow
-from models.user import user_roles, User
+from models import import_models
 
 from database import Base
 
@@ -22,6 +14,7 @@ from alembic import context
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
+import_models()
 config = context.config
 
 # Interpret the config file for Python logging.
