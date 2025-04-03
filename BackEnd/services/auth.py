@@ -58,7 +58,9 @@ async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depe
     except jwt.InvalidTokenError:
         raise credentials_exception
     user = get_user(db, username=token_data.username)
-    #####LOGIC FOR ADDING USERS PERMISSIONS AS WELL
+
+
+
     if user is None:
         raise credentials_exception
     return user

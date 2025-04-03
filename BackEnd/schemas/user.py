@@ -14,7 +14,7 @@ class UserCreate(UserBase):
 
 class UserInDB(UserBase):
     hashed_password: str
-    permissions: List[str]
+    role: str
 
 class Token(BaseModel):
     access_token: str
