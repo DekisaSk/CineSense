@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   IconButton,
   Typography,
   CircularProgress,
@@ -14,15 +13,15 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import StarBorder from "@mui/icons-material/StarBorder";
 import Star from "@mui/icons-material/Star";
-import { getMovieDetails } from "../api/tmdbApi";
+import { getMovieDetails, getTvDetails } from "../api/tmdbApi";
 
-export default function MovieDetailsModal({ open, onClose, movieId }) {
+export default function MovieDetailsModal({ open, onClose, movie }) {
   const [loading, setLoading] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false);
   const [movieDetails, setMovieDetails] = useState(null);
 
   useEffect(() => {
-    if (!open || !movieId) {
+    if (!open || !movie) {
       setMovieDetails(null);
       return;
     }
@@ -30,27 +29,28 @@ export default function MovieDetailsModal({ open, onClose, movieId }) {
     async function fetchDetails() {
       setLoading(true);
       setMovieDetails(null);
-
       try {
-        const data = await getMovieDetails(movieId);
+        let data;
+        if (movie.mediaType === "tv") {
+          data = await getTvDetails(movie.id);
+        } else {
+          data = await getMovieDetails(movie.id);
+        }
         setMovieDetails(data);
       } catch (error) {
-        console.error("Error fetching movie details:", error);
+        console.error("Error fetching details:", error);
       } finally {
         setLoading(false);
       }
     }
-
     fetchDetails();
-  }, [open, movieId]);
+  }, [open, movie]);
 
   const handleFavourite = () => {
     setIsFavourite((prev) => !prev);
   };
 
-  if (!open) {
-    return null;
-  }
+  if (!open) return null;
 
   const topCast = movieDetails?.credits?.cast?.slice(0, 5) || [];
   const topCrew = movieDetails?.credits?.crew?.slice(0, 5) || [];
@@ -61,9 +61,7 @@ export default function MovieDetailsModal({ open, onClose, movieId }) {
       onClose={onClose}
       fullWidth
       maxWidth="md"
-      PaperProps={{
-        sx: { borderRadius: 3 },
-      }}
+      PaperProps={{ sx: { borderRadius: 3 } }}
     >
       <Box
         sx={{
@@ -78,7 +76,7 @@ export default function MovieDetailsModal({ open, onClose, movieId }) {
           {isFavourite ? <Star /> : <StarBorder />}
         </IconButton>
         <DialogTitle sx={{ flex: 1, textAlign: "center", ml: -4 }}>
-          {movieDetails?.title || "Loading..."}
+          {movieDetails?.title || movieDetails?.name || "Loading..."}
         </DialogTitle>
         <IconButton onClick={onClose}>
           <CloseIcon />
@@ -99,12 +97,7 @@ export default function MovieDetailsModal({ open, onClose, movieId }) {
       ) : (
         movieDetails && (
           <DialogContent sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-            <Box
-              sx={{
-                flex: "0 0 auto",
-                width: { xs: "100%", sm: 200 },
-              }}
-            >
+            <Box sx={{ flex: "0 0 auto", width: { xs: "100%", sm: 200 } }}>
               <img
                 src={
                   movieDetails.poster_path

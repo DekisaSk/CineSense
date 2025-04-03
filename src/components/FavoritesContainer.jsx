@@ -4,7 +4,7 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import MovieCard from "./MovieCard";
 import { useMovieCards } from "../hooks/useMovieCards";
 
-export default function MovieCardContainer({ category }) {
+export default function FavoritesContainer({ category }) {
   const {
     mediaType,
     displayedItems,
@@ -36,7 +36,7 @@ export default function MovieCardContainer({ category }) {
         sx={{ justifyContent: "flex-start" }}
       >
         {displayedItems.map((movie) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
+          <Grid item xs={12} sm={6} md={4} lg={6} key={movie.id}>
             <MovieCard movie={movie} />
           </Grid>
         ))}

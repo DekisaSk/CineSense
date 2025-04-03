@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -11,9 +10,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 import { useTheme } from "@mui/material/styles";
+import { useBigChart } from "../../hooks/useBigChart";
 
 const StatsCard = ({ title, data }) => {
-  const [open, setOpen] = useState(false);
+  const { isOpen, openBigChart, closeBigChart } = useBigChart();
   const theme = useTheme();
 
   const chartData = {
@@ -33,12 +33,9 @@ const StatsCard = ({ title, data }) => {
     maintainAspectRatio: false,
   };
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   return (
     <>
-      <Card onClick={handleOpen} className="cursor-pointer">
+      <Card onClick={openBigChart} className="cursor-pointer">
         <CardContent>
           <Typography variant="h6" className="mb-4">
             {title}
@@ -53,7 +50,7 @@ const StatsCard = ({ title, data }) => {
         </CardContent>
       </Card>
 
-      <Modal open={open} onClose={handleClose}>
+      <Modal open={isOpen} onClose={closeBigChart}>
         <Box
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 rounded shadow-lg w-[90%] max-w-3xl"
           sx={{
@@ -61,10 +58,9 @@ const StatsCard = ({ title, data }) => {
             bgcolor: "background.paper",
           }}
         >
-          {/* Close button on top-right */}
           <IconButton
             aria-label="close"
-            onClick={handleClose}
+            onClick={closeBigChart}
             sx={{ position: "absolute", right: 8, top: 8 }}
           >
             <CloseIcon />

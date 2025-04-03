@@ -1,8 +1,13 @@
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import SliderMovieCard from "./SliderMovieCard";
+import { useMovieCards } from "../hooks/useMovieCards";
 
-export default function MovieSlider({ movies = [] }) {
+export default function MovieSlider({ category }) {
+  const { allItems: movies, error } = useMovieCards(category);
+
+  if (error) return <div>Error loading movies.</div>;
+
   return (
     <section className="w-full px-4 md:px-8 py-10">
       <Carousel
@@ -31,13 +36,7 @@ export default function MovieSlider({ movies = [] }) {
         }}
       >
         {movies.map((movie) => (
-          <SliderMovieCard
-            key={movie.id}
-            id={movie.id}
-            title={movie.title}
-            posterPath={movie.posterPath}
-            rating={movie.rating}
-          />
+          <SliderMovieCard movie={movie} />
         ))}
       </Carousel>
     </section>

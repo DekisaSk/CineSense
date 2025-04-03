@@ -1,16 +1,15 @@
-import { useState } from "react";
 import {
   Card,
   CardContent,
-  Typography,
   Switch,
   FormGroup,
   FormControlLabel,
 } from "@mui/material";
+import useAuthToggle from "../../hooks/useAuthToggle";
 
 const AuthToggle = () => {
-  const [enableLogin, setEnableLogin] = useState(true);
-  const [enableRegister, setEnableRegister] = useState(true);
+  const { enableLogin, toggleLogin, enableRegister, toggleRegister } =
+    useAuthToggle();
 
   return (
     <Card className="mb-4">
@@ -20,7 +19,7 @@ const AuthToggle = () => {
             control={
               <Switch
                 checked={enableLogin}
-                onChange={() => setEnableLogin(!enableLogin)}
+                onChange={toggleLogin}
                 color="primary"
               />
             }
@@ -30,7 +29,7 @@ const AuthToggle = () => {
             control={
               <Switch
                 checked={enableRegister}
-                onChange={() => setEnableRegister(!enableRegister)}
+                onChange={toggleRegister}
                 color="primary"
               />
             }

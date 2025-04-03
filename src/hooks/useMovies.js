@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
-import { getAllMovies, getAllTvShows } from "../api/tmdbApi";
+import {
+  getAllMovies,
+  getAllTvShows,
+  getMovieGenres,
+  getTvGenres,
+} from "../api/tmdbApi";
 
 export default function useMovies() {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [type, setType] = useState("movie");
   const [genre, setGenre] = useState("");
@@ -12,17 +18,44 @@ export default function useMovies() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await (type === "movie"
-          ? getAllMovies()
-          : getAllTvShows());
-        const mappedData = data.map((item) => ({
-          id: item.id,
-          title: item.title || item.name,
-          posterPath: item.backdrop_path,
-          rating: item.vote_average?.toFixed(1),
-          year:
-            item.release_date?.slice(0, 4) || item.first_air_date?.slice(0, 4),
-        }));
+        let genreList = [];
+        if (type === "movie") {
+          genreList = await getMovieGenres();
+        } else {
+          genreList = await getTvGenres();
+        }
+
+        const genreMap = {};
+        genreList.forEach((g) => {
+          genreMap[g.id] = g.name;
+        });
+
+        let data;
+        if (type === "movie") {
+          data = await getAllMovies();
+        } else {
+          data = await getAllTvShows();
+        }
+
+        const mappedData = data.map((item) => {
+          const names = item.genre_ids
+            ?.map((id) => genreMap[id])
+            .filter(Boolean);
+          const genreString = names?.length ? names.join(", ") : "";
+
+          return {
+            id: item.id,
+            title: item.title || item.name,
+            posterPath: item.backdrop_path,
+            rating: item.vote_average?.toFixed(1),
+            year:
+              item.release_date?.slice(0, 4) ||
+              item.first_air_date?.slice(0, 4) ||
+              "",
+            genre: genreString,
+          };
+        });
+
         setItems(mappedData);
         setFilteredItems(mappedData);
       } catch (error) {
@@ -35,19 +68,22 @@ export default function useMovies() {
   useEffect(() => {
     let filtered = items;
 
-    if (searchQuery) {
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
       filtered = filtered.filter((item) =>
-        item.title
-          .trim()
-          .toLowerCase()
-          .includes(searchQuery.trim().toLowerCase())
+        item.title?.toLowerCase().includes(q)
       );
     }
-    if (genre) {
-      filtered = filtered.filter((item) => item.genre?.includes(genre));
+
+    if (genre.trim()) {
+      const g = genre.trim().toLowerCase();
+      filtered = filtered.filter((item) =>
+        item.genre?.toLowerCase().includes(g)
+      );
     }
-    if (year) {
-      filtered = filtered.filter((item) => item.year === year);
+
+    if (year.trim()) {
+      filtered = filtered.filter((item) => item.year === year.trim());
     }
 
     setFilteredItems(filtered);
