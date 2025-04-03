@@ -2,3 +2,7 @@ pydantic
 fastapi
 sqlalchemy
 uvicorn
+jwt
+passlib
+python-multipart
+aiomysql
