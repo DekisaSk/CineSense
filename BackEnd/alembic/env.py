@@ -1,7 +1,18 @@
-from BackEnd.models import genre, movie, tv_show, user  # uvezi sve modele
-from BackEnd.database import Base  # koristiš isti Base
+from models.cast_member import CastMember
+from models.credit import Credit
+from models.cast_member import CastMember
+from models.genre import Genre
+from models.movie import movie_genres, Movie
+from models.person import Person
+from models.role import Role
+from models.tv_show import tv_genres, TVShow
+from models.user import user_roles, User
+
+from database import Base
+
 import os
 import sys
+from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -22,9 +33,17 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+sys.path.append(os.path.abspath('.'))
+
+# Potrebno za Alembic:
+
+config = context.config
+fileConfig(config.config_file_name)
+
+# Ovo je dovoljno za Alembic:
 target_metadata = Base.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
