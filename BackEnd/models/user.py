@@ -1,6 +1,6 @@
 import datetime
 import sqlalchemy as sql
-from database import Base
+from dependecies.db import Base
 
 
 # Konekcione

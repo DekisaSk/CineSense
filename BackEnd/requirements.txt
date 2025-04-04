@@ -7,5 +7,5 @@ passlib
 python-multipart
 aiomysql
 alembic
-dotenv
+pydantic_settings
 psycopg2
