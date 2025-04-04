@@ -8,7 +8,7 @@ from schemas.user import TokenData, UserInDB
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from dependecies.db import get_db
-
+from models.user import User
 
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -26,7 +26,7 @@ def get_password_hash(password):
 
 
 async def get_user(db: AsyncSession, username: str):
-    query = await db.execute(select(UserInDB).filter(UserInDB.username == username))
+    query = await db.execute(select(User).filter(User.email == username))
     return query.scalar_one_or_none()  
 
 async def authenticate_user(db: AsyncSession, username: str, password: str):
@@ -57,9 +57,7 @@ async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depe
         token_data = TokenData(username=username)
     except jwt.InvalidTokenError:
         raise credentials_exception
-    user = get_user(db, username=token_data.username)
-
-
+    user = await get_user(db, username=token_data.username)
 
     if user is None:
         raise credentials_exception

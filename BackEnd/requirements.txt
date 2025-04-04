@@ -9,3 +9,4 @@ aiomysql
 alembic
 dotenv
 psycopg2
+asyncpg
