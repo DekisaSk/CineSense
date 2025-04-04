@@ -106,45 +106,45 @@ async def delete_user( user_id : int, db: AsyncSession = Depends(get_db)):
         return user
     return None
 
-async def get_popular_movies(limit : int = 10, db: AsyncSession = Depends(get_db)) -> list[Movie]:
-    return await get_popular(media_type=Movie.__name__, db=db, limit=limit)
+async def get_popular_movies(db: AsyncSession) -> list[Movie]:
+    return await get_popular(media_type=Movie.__name__, db=db)
 
-async def get_popular_tv_shows(limit : int = 10, db: AsyncSession = Depends(get_db)) -> list[TVShow]:
-    return await get_popular(media_type=TVShow.__name__, db=db, limit=limit)
+async def get_popular_tv_shows(db: AsyncSession) -> list[TVShow]:
+    return await get_popular(media_type=TVShow.__name__, db=db)
 
-async def get_top_rated_movies(limit : int = 10, db: AsyncSession = Depends(get_db)) -> list[Movie]:
-    return await get_top_rated(media_type=Movie.__name__, db=db, limit=limit)
+async def get_top_rated_movies(db: AsyncSession) -> list[Movie]:
+    return await get_top_rated(media_type=Movie.__name__, db=db)
 
-async def get_top_rated_tv_shows(limit : int = 10, db: AsyncSession = Depends(get_db)) -> list[TVShow]:
-    return await get_top_rated(media_type=TVShow.__name__, db=db, limit=limit)
+async def get_top_rated_tv_shows(db: AsyncSession) -> list[TVShow]:
+    return await get_top_rated(media_type=TVShow.__name__, db=db)
 
-async def get_now_playing_movies(limit : int = 10, db: AsyncSession = Depends(get_db))-> list[Movie]:
-    return await get_now_playing(media_type=Movie.__name__, db=db, limit=limit)
+async def get_now_playing_movies(db: AsyncSession)-> list[Movie]:
+    return await get_now_playing(media_type=Movie.__name__, db=db)
 
-async def get_now_playing_tv_shows(limit : int = 10, db: AsyncSession = Depends(get_db)) -> list[TVShow]:
-    return await get_now_playing(media_type=TVShow.__name__, db=db, limit=limit)
+async def get_now_playing_tv_shows(db: AsyncSession) -> list[TVShow]:
+    return await get_now_playing(media_type=TVShow.__name__, db=db)
 
-async def get_all_movies(db: AsyncSession = Depends(get_db)) -> list[Movie]:
+async def get_all_movies(db: AsyncSession) -> list[Movie]:
     return await get_all(media_type=Movie.__name__, db=db)
 
-async def get_all_tv_shows(db: AsyncSession = Depends(get_db)) -> list[TVShow]:
+async def get_all_tv_shows(db: AsyncSession) -> list[TVShow]:
     return await get_all(media_type=TVShow.__name__, db=db)
 
-async def get_trending_movies(db: AsyncSession = Depends(get_db)) -> list[Movie]:
+async def get_trending_movies(db: AsyncSession) -> list[Movie]:
     return await get_trending(media_type=Movie.__name__, db=db)
 
-async def get_trending_tv_shows(db: AsyncSession = Depends(get_db)) -> list[TVShow]:
+async def get_trending_tv_shows(db: AsyncSession) -> list[TVShow]:
     return await get_trending(media_type=TVShow.__name__, db=db)
 
-async def get_movie_genres(db: AsyncSession = Depends(get_db)) -> list[Genre]:
+async def get_movie_genres(db: AsyncSession ) -> list[Genre]:
      return await get_genres(media_type=Movie.__name__,db=db)
 
-async def get_tv_show_genres(db: AsyncSession = Depends(get_db)) -> list[Genre]:
+async def get_tv_show_genres(db: AsyncSession) -> list[Genre]:
     return await get_genres(media_type=TVShow.__name__,db=db)
 
-async def get_movie_details(media_id : int, db: AsyncSession = Depends(get_db)) -> Movie:
+async def get_movie_details(media_id : int, db: AsyncSession) -> Movie:
     return await get_media(media_type=Movie.__name__, media_id=media_id, db=db)
 
-async def get_tv_show_details(media_id : int, db: AsyncSession = Depends(get_db)) -> TVShow:
+async def get_tv_show_details(media_id : int, db: AsyncSession) -> TVShow:
     return await get_media(media_type=TVShow.__name__, media_id=media_id, db=db)
 

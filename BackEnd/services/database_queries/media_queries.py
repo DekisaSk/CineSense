@@ -1,6 +1,9 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timedelta
+
+from sqlalchemy.orm import joinedload
+
 from models.genre import Genre
 from models.movie import Movie, movie_genres
 from models.tv_show import TVShow, tv_genres
@@ -37,7 +40,8 @@ async def get_popular(media_type : str, db: AsyncSession, limit : int = 10):
     query = select(model) \
         .where(model.release_date <= datetime.now()) \
         .order_by(model.popularity.desc()) \
-        .limit(limit)
+        .limit(limit) \
+        .options(joinedload(model.genres))
 
     result = await db.execute(query)
 
@@ -57,7 +61,8 @@ async def get_top_rated(media_type : str, db: AsyncSession, limit : int = 10):
     query = select(model) \
         .where(model.release_date <= datetime.now()) \
         .order_by(model.vote_average.desc()) \
-        .limit(limit)
+        .limit(limit) \
+        .options(joinedload(model.genres))
 
     result = await db.execute(query)
 
@@ -80,7 +85,8 @@ async def get_now_playing(media_type : str, db: AsyncSession, limit : int = 10, 
     query = select(model) \
         .where(time_interval <= model.release_date <= datetime.now()) \
         .order_by(model.release_date.desc()) \
-        .limit(limit)
+        .limit(limit) \
+        .options(joinedload(model.genres))
 
     result = await db.execute(query)
 
@@ -102,7 +108,8 @@ async def get_trending(media_type : str, db: AsyncSession, limit : int = 10, day
     query = select(model) \
         .where(time_interval <= model.release_date <= datetime.now()) \
         .order_by(model.popularity.desc()) \
-        .limit(limit)
+        .limit(limit) \
+        .options(joinedload(model.genres))
 
     result = await db.execute(query)
 
@@ -117,7 +124,7 @@ async def get_all(media_type : str, db: AsyncSession):
     """
     model = _get_media_model(media_type)
 
-    result = await db.execute(select(model))
+    result = await db.execute(select(model).options(joinedload(model.genres)))
     return list(result.scalars().all())
 
 async def get_genres(media_type : str, db: AsyncSession) -> list[Genre]:
@@ -150,7 +157,8 @@ async def get_media(media_type : str, media_id: int, db: AsyncSession):
     model = _get_media_model(media_type)
 
     query = select(model) \
-        .where(media_id == model.tmdb_id)
+        .where(media_id == model.tmdb_id) \
+        .options(joinedload(model.genres))
 
     result = await db.execute(query)
     return result.scalars().first()
