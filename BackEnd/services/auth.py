@@ -9,10 +9,11 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from dependecies.db import get_db
 from models.user import User
+from passlib.context import CryptContext
 
 
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
+SECRET_KEY = "xxx"
+ALGORITHM = "xxx"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
@@ -26,7 +27,12 @@ def get_password_hash(password):
 
 
 async def get_user(db: AsyncSession, username: str):
+    print(f"Auth user: {username}")
+    print("started querying...")
+
     query = await db.execute(select(User).filter(User.email == username))
+    print(f" query done: {query}")
+
     return query.scalar_one_or_none()  
 
 async def authenticate_user(db: AsyncSession, username: str, password: str):
@@ -41,8 +47,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=15))
     to_encode.update({"exp": expire})
+    print(f"Encoding token with data: {to_encode}")
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
 async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=401,
