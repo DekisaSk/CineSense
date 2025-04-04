@@ -1,5 +1,5 @@
 import sqlalchemy as sql
-from database import Base
+from dependecies.db import Base
 
 tv_genres = sql.Table(
     'tv_genres', Base.metadata,
