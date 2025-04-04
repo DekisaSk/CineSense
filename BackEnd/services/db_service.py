@@ -4,8 +4,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 from models.genre import Genre
-from models.movie import Movie, movie_genres
-from models.tv_show import TVShow, tv_genres
+from models.movie import Movie
+from models.tv_show import TVShow
 from models.user import User
 from schemas.user import UserCreate, UserInDB
 from models.role import Role
