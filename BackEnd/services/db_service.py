@@ -74,6 +74,14 @@ async def get_user_by_username( username: str, db: AsyncSession = Depends(get_db
     result = await db.execute(select(User).where(User.username == username))
     return result.scalars().first()
 
+async def get_user_by_email( email: str, db: AsyncSession = Depends(get_db)):
+    """
+        Query's DB to retrieve user based on the email
+        :return: returns the user
+    """
+    result = await db.execute(select(User).filter(User.email == email))
+    return result.scalars().first()
+
 def update_user(user: UserInDB, db: AsyncSession = Depends(get_db)):
     """
     Change the user's information by updating data in DB

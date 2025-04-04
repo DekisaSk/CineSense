@@ -1,7 +1,7 @@
+from models.role import Role
 import datetime
 import sqlalchemy as sql
 from dependecies.db import Base
-
 
 # Konekcione
 user_roles = sql.Table(

@@ -1,28 +1,41 @@
 import { useState, useCallback } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function useLogin(initialEmail = "", initialPassword = "") {
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState(initialPassword);
   const [showPassword, setShowPassword] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-
-  const handleLogin = useCallback(
-    async (event) => {
-      event.preventDefault();
-      try {
-        const { data } = await axios.post("...", { email, password });
-        localStorage.setItem("token", data.token); // JWT
-      } catch (error) {
-        if (error.response) {
-          alert(error.response.data.message);
-        } else {
-          console.error("Error logging in:", error);
-        }
+  const navigate = useNavigate();
+  const handleLogin = async (email, password) => {
+    try {
+      const response = await fetch("http://localhost:8000/auth/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          grant_type: "password",
+          username: email,
+          password: password,
+        }),
+      });
+      console.log(email, password);
+      if (!response.ok) {
+        throw new Error("Login failed");
       }
-    },
-    [email, password]
-  );
+
+      const data = await response.json();
+      const token = data.access_token;
+
+      document.cookie = `access_token=${token}; path=/; secure`;
+      console.log("Login successful:", token);
+      navigate("/");
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Login failed. Please check your credentials.");
+    }
+  };
 
   const handleForgotPassword = useCallback(() => {
     setModalOpen(true);

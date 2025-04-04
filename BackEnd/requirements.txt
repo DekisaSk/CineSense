@@ -2,10 +2,11 @@ pydantic
 fastapi
 sqlalchemy
 uvicorn
-jwt
 passlib
 python-multipart
 aiomysql
 alembic
 pydantic_settings
 psycopg2
+asyncpg
+pyjwt
