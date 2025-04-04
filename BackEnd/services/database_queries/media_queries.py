@@ -5,9 +5,11 @@ from models.genre import Genre
 from models.movie import Movie, movie_genres
 from models.tv_show import TVShow, tv_genres
 
+_model_mapping = {"movie": Movie, "tvshow": TVShow}
+_association_mapping = {"movie" : movie_genres, "tvshow" : tv_genres}
+
 def _get_media_model(media_type : str):
-    model_mapping = {"movie": Movie, "tv": TVShow}
-    model = model_mapping.get(media_type.lower())
+    model = _model_mapping.get(media_type.lower())
 
     if model:
        return model
@@ -15,8 +17,7 @@ def _get_media_model(media_type : str):
         raise ValueError("Invalid media type: adequate model could not be found")
 
 def _get_association_table(media_type : str):
-    association_mapping = {"movie" : movie_genres, "tv" : tv_genres}
-    association_table = association_mapping.get(media_type.lower())
+    association_table = _association_mapping.get(media_type.lower())
 
     if association_table:
        return association_table
