@@ -3,13 +3,14 @@ from database import Base
 
 tv_genres = sql.Table(
     'tv_genres', Base.metadata,
-    sql.Column('tmdb_id', sql.ForeignKey('tv.tmdb_id'), primary_key=True),
+    sql.Column('tmdb_id', sql.ForeignKey(
+        'tv_shows.tmdb_id'), primary_key=True),
     sql.Column('genre_id', sql.ForeignKey('genres.genre_id'), primary_key=True)
 )
 
 
 class TVShow(Base):
-    __tablename__ = 'tv'
+    __tablename__ = 'tv_shows'
     tmdb_id = sql.Column(sql.Integer, primary_key=True, nullable=False)
     name = sql.Column(sql.String(255))
     original_name = sql.Column(sql.String(255))
@@ -24,4 +25,4 @@ class TVShow(Base):
     type = sql.Column(sql.String(100))
 
     genres = sql.orm.relationship(
-        'Genre', secondary=tv_genres, backref='tv')
+        'Genre', secondary=tv_genres, backref='tv_shows')
