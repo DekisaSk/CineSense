@@ -1,6 +1,6 @@
 from models import import_models
 
-from database import Base
+from dependecies.db import Base
 
 import os
 import sys
