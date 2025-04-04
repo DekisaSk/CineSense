@@ -1,16 +1,27 @@
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean
+import datetime
+import sqlalchemy as sql
+from database import Base
 
-Base = declarative_base()
 
+# Konekcione
+user_roles = sql.Table(
+    'user_roles', Base.metadata,
+    sql.Column('user_id', sql.ForeignKey('users.id'), primary_key=True),
+    sql.Column('role_id', sql.ForeignKey('roles.id'), primary_key=True)
+)
+
+
+# Povezana na role preko user_roles
 class User(Base):
-    __tablename__ = "users"
-#NEEDS TO BE CHANGED ACCORDING TO THE DB
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    first_name = Column(String)
-    last_name = Column(String)
-    email = Column(String, unique=True, index=True)
-    role_id = Column(Integer)
-    disabled = Column(Boolean, default=False)
+    __tablename__ = 'users'
+
+    id = sql.Column(sql.Integer, primary_key=True, index=True)
+    username = sql.Column(sql.String(100), unique=True,
+                          index=True, nullable=False)
+    email = sql.Column(sql.String(100), unique=True,
+                       index=True, nullable=False)
+    hashed_password = sql.Column(sql.String, nullable=False)
+    created_at = sql.Column(sql.DateTime, default=datetime.datetime.now)
+
+    roles = sql.orm.relationship(
+        "Role", secondary=user_roles, back_populates="users")

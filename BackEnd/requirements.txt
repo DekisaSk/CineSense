@@ -6,3 +6,6 @@ jwt
 passlib
 python-multipart
 aiomysql
+alembic
+dotenv
+psycopg2
