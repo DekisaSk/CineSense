@@ -137,3 +137,20 @@ async def get_genres(media_type : str, db: AsyncSession) -> list[Genre]:
     result = await db.execute(query)
 
     return list(result.scalars().all())
+
+async def get_media(media_type : str, media_id: int, db: AsyncSession):
+    """
+    Retrieves details about Movie or TvShow based on the media id.
+    Time interval is based on the days, set by default to check past week.
+    :param media_type: represents the media type we want to get - Movies or TV Shows
+    :param media_id: id of the element we are trying to get details about
+    :param db: Async DB Session
+    :return:
+    """
+    model = _get_media_model(media_type)
+
+    query = select(model) \
+        .where(media_id == model.tmdb_id)
+
+    result = await db.execute(query)
+    return result.scalars().first()
