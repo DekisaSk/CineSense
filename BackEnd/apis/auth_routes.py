@@ -25,12 +25,10 @@ async def login_for_access_token(
     access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
     return Token(access_token=access_token, token_type="bearer")
 
-#For testing, will be removed
-# @router.get("/whoami")
-# async def whoami(session: SessionChecker = Depends()):
-#     return {
-#         "email": session.current_user.email,
-#         "id" : session.current_user.id,
-#         "role": session.current_user.role,
-        
-#     }
+
+@router.get("/user-info")
+async def user_info(session: SessionChecker = Depends()):
+   return {
+        "email": session.current_user.email,        
+        "role": session.current_user.role,
+         }
