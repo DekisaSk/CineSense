@@ -1,9 +1,6 @@
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timedelta
-
 from sqlalchemy.orm import selectinload
-
 from models.genre import Genre
 from models.movie import Movie, movie_genres
 from models.tv_show import TVShow, tv_genres
@@ -27,13 +24,12 @@ def _get_association_table(media_type : str):
     else:
         raise ValueError("Invalid media type: adequate association table could not be found")
 
-async def get_popular(media_type : str, db: AsyncSession, limit : int = 10):
+def get_popular(media_type : str, limit : int = 10):
     """
-    Retrieves popular movies or TV Shows
+    Creates query for popular movies or TV Shows
     :param media_type: represents the media type we want to get - Movies or TV Shows
-    :param db: Async DB Session
     :param limit: Set the amount of elements desired to be returned. If omitted, 10 will be retrieved.
-    :return: A list of Movies or TV Shows
+    :return: Select query
     """
     model = _get_media_model(media_type)
 
@@ -43,18 +39,15 @@ async def get_popular(media_type : str, db: AsyncSession, limit : int = 10):
         .limit(limit) \
         .options(selectinload(model.genres))
 
-    result = await db.execute(query)
+    return query
 
-    return list(result.scalars().all())
-
-async def get_top_rated(media_type : str, db: AsyncSession, limit : int = 10):
+def get_top_rated(media_type : str, limit : int = 10):
     """
-    Retrieves top-rated Movies or TvShows based on the average vote.
+    Creates query for top-rated Movies or TvShows based on the average vote.
     Time interval is based on the days, set by default to check past week.
     :param media_type: represents the media type we want to get - Movies or TV Shows
-    :param db: Async DB Session
     :param limit: Set the amount of elements desired to be returned. If omitted, 10 will be retrieved.
-    :return: list of top-rated elements
+    :return: Select query
     """
     model = _get_media_model(media_type)
 
@@ -64,19 +57,16 @@ async def get_top_rated(media_type : str, db: AsyncSession, limit : int = 10):
         .limit(limit) \
         .options(selectinload(model.genres))
 
-    result = await db.execute(query)
+    return query
 
-    return list(result.scalars().all())
-
-async def get_now_playing(media_type : str, db: AsyncSession, limit : int = 10, days : int = 7):
+def get_now_playing(media_type : str, limit : int = 10, days : int = 7):
     """
-    Retrieves Movies or TvShows now playing.
+    Creates query for Movies or TvShows now playing.
     Time interval is based on the days, set by default to check past week.
     :param media_type: represents the media type we want to get - Movies or TV Shows
-    :param db: Async DB Session
     :param limit: Set the amount of elements desired to be returned. If omitted, 10 will be retrieved.
     :param days: Set the time interval. If omitted, 7 will be set as default.
-    :return: list of elements playing in the set time interval.
+    :return: Select query
     """
     time_interval = datetime.now() - timedelta(days=days)
 
@@ -88,19 +78,16 @@ async def get_now_playing(media_type : str, db: AsyncSession, limit : int = 10, 
         .limit(limit) \
         .options(selectinload(model.genres))
 
-    result = await db.execute(query)
+    return query
 
-    return result.scalars().all()
-
-async def get_trending(media_type : str, db: AsyncSession, limit : int = 10, days : int = 7):
+def get_trending(media_type : str, limit : int = 10, days : int = 7):
     """
-    Retrieves Movies or TvShows that are on the rise of popularity in the given time interval.
+    Creates query for Movies or TvShows that are on the rise of popularity in the given time interval.
     Time interval is based on the days, set by default to check past week.
     :param media_type: represents the media type we want to get - Movies or TV Shows
-    :param db: Async DB Session
     :param limit: Set the amount of elements desired to be returned. If omitted, 10 will be retrieved.
     :param days: Set the time interval. If omitted, 7 will be set as default.
-    :return: list of trending elements.
+    :return: Select query
     """
     model = _get_media_model(media_type)
     time_interval = datetime.now() - timedelta(days=days)
@@ -111,28 +98,24 @@ async def get_trending(media_type : str, db: AsyncSession, limit : int = 10, day
         .limit(limit) \
         .options(selectinload(model.genres))
 
-    result = await db.execute(query)
+    return query
 
-    return list(result.scalars().all())
-
-async def get_all(media_type : str, db: AsyncSession):
+def get_all(media_type : str):
     """
-    Retrieves all Movies or TV Shows from the database
-    :param db: Async DB Session
+    Creates query for all Movies or TV Shows from the databse
     :param media_type:  represents the media type we want to get - Movies or TV Shows
-    :return: A list of elements
+    :return: Select query
     """
     model = _get_media_model(media_type)
+    query = select(model).options(selectinload(model.genres))
 
-    result = await db.execute(select(model).options(selectinload(model.genres)))
-    return list(result.scalars().all())
+    return query
 
-async def get_genres(media_type : str, db: AsyncSession) -> list[Genre]:
+def get_genres(media_type : str):
     """
-    Retrieves all genres for movies
-    :param db: Async DB Session
+    Creates query for all genres for movies
     :param media_type:  represents the media type we want to get - Movies or TV Shows
-    :return: A list of genres
+    :return: Select query
     """
     model = _get_media_model(media_type)
     association_table = _get_association_table(media_type)
@@ -141,18 +124,15 @@ async def get_genres(media_type : str, db: AsyncSession) -> list[Genre]:
         .join(association_table, Genre.genre_id == association_table.c.genre_id) \
         .join(model, model.tmdb_id == movie_genres.c.tmdb_id)
 
-    result = await db.execute(query)
+    return query
 
-    return list(result.scalars().all())
-
-async def get_media(media_type : str, media_id: int, db: AsyncSession):
+def get_media(media_type : str, media_id: int):
     """
-    Retrieves details about Movie or TvShow based on the media id.
+    Creates query for details about Movie or TvShow based on the media id.
     Time interval is based on the days, set by default to check past week.
     :param media_type: represents the media type we want to get - Movies or TV Shows
     :param media_id: id of the element we are trying to get details about
-    :param db: Async DB Session
-    :return:
+    :return: Select query
     """
     model = _get_media_model(media_type)
 
@@ -160,5 +140,4 @@ async def get_media(media_type : str, media_id: int, db: AsyncSession):
         .where(media_id == model.tmdb_id) \
         .options(selectinload(model.genres))
 
-    result = await db.execute(query)
-    return result.scalars().first()
+    return query
