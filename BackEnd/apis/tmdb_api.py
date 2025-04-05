@@ -1,6 +1,5 @@
-from ipaddress import summarize_address_range
-from typing import List
-from fastapi import APIRouter, Depends, status
+from typing import List, Optional
+from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from dependecies.db import get_db
 import services.db_service as db_service
@@ -12,16 +11,20 @@ router = APIRouter()
 @router.get("/movies",
             status_code=status.HTTP_200_OK,
             response_model=List[MovieRead],
-            summary="Get all movies")
-async def get_all_movies(db: AsyncSession = Depends(get_db)):
-    return await db_service.get_all_movies(db)
+            summary="Get all movies or filter them by year and/or genre")
+async def get_all_movies(genre: Optional[str] = Query(None, description="Filter by genre name"),
+                         year: Optional[int] = Query(None, description="Filter by release year"),
+                         db: AsyncSession = Depends(get_db)):
+    return await db_service.get_movies(genre=genre, year=year, db=db)
 
 @router.get("/tv-shows",
             status_code=status.HTTP_200_OK,
             response_model=List[TVShowRead],
-            summary="Get all TV Shows")
-async def get_all_tv_shows(db: AsyncSession = Depends(get_db)):
-    return await db_service.get_all_tv_shows(db)
+            summary="Get all TV Shows or filter them by year and/or genre")
+async def get_all_tv_shows(genre: Optional[str] = Query(None, description="Filter by genre name"),
+                           year: Optional[int] = Query(None, description="Filter by release year"),
+                           db: AsyncSession = Depends(get_db)):
+    return await db_service.get_tv_shows(genre=genre, year=year, db=db)
 
 @router.get("/movies/popular",
             status_code=status.HTTP_200_OK,

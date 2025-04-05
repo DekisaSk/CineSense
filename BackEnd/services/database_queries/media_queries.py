@@ -1,4 +1,6 @@
-from sqlalchemy import select
+from typing import Optional
+
+from sqlalchemy import select, extract
 from datetime import datetime, timedelta
 from sqlalchemy.orm import selectinload
 from models.genre import Genre
@@ -6,7 +8,6 @@ from models.movie import Movie, movie_genres
 from models.tv_show import TVShow, tv_genres
 
 _model_mapping = {"movie": Movie, "tvshow": TVShow}
-_association_mapping = {"movie" : movie_genres, "tvshow" : tv_genres}
 
 def _get_media_model(media_type : str):
     model = _model_mapping.get(media_type.lower())
@@ -15,14 +16,6 @@ def _get_media_model(media_type : str):
        return model
     else:
         raise ValueError("Invalid media type: adequate model could not be found")
-
-def _get_association_table(media_type : str):
-    association_table = _association_mapping.get(media_type.lower())
-
-    if association_table:
-       return association_table
-    else:
-        raise ValueError("Invalid media type: adequate association table could not be found")
 
 def get_popular(media_type : str, limit : int = 10):
     """
@@ -107,7 +100,7 @@ def get_all(media_type : str):
     :return: Select query
     """
     model = _get_media_model(media_type)
-    query = select(model).options(selectinload(model.genres))
+    query = select(model).limit(100).options(selectinload(model.genres))
 
     return query
 
@@ -118,11 +111,9 @@ def get_genres(media_type : str):
     :return: Select query
     """
     model = _get_media_model(media_type)
-    association_table = _get_association_table(media_type)
 
     query = select(Genre) \
-        .join(association_table, Genre.genre_id == association_table.c.genre_id) \
-        .join(model, model.tmdb_id == movie_genres.c.tmdb_id)
+        .where(model.genres.any())
 
     return query
 
@@ -139,5 +130,16 @@ def get_media(media_type : str, media_id: int):
     query = select(model) \
         .where(media_id == model.tmdb_id) \
         .options(selectinload(model.genres))
+
+    return query
+
+def get_all_or_filter(media_type: str, genre: str = None, year: int = None):
+    query = get_all(media_type)
+
+    if genre:
+        query = query.where(genre == Genre.name)
+
+    if year:
+        query = query.where(extract('year', Movie.release_date) == year)
 
     return query

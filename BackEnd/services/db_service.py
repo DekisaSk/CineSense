@@ -17,7 +17,7 @@ from services.database_queries.media_queries import (
     get_now_playing,
     get_popular,
     get_top_rated,
-    get_trending, get_media
+    get_trending, get_media, get_all_or_filter
 )
 
 
@@ -139,13 +139,12 @@ async def get_now_playing_tv_shows(db: AsyncSession) -> list[TVShow]:
     query = get_now_playing(media_type=TVShow.__name__)
     return await _execute_all(db, query)
 
-async def get_all_movies(db: AsyncSession) -> list[Movie]:
-
-    query = get_all(media_type=Movie.__name__)
+async def get_movies(db: AsyncSession, genre: str = None, year: int = None) -> list[Movie]:
+    query = get_all_or_filter(media_type=Movie.__name__, genre=genre, year=year)
     return await _execute_all(db, query)
 
-async def get_all_tv_shows(db: AsyncSession) -> list[TVShow]:
-    query = get_all(media_type=TVShow.__name__)
+async def get_tv_shows(db: AsyncSession, genre: str = None, year: int = None) -> list[TVShow]:
+    query = get_all_or_filter(media_type=TVShow.__name__, genre=genre, year=year)
     return await _execute_all(db, query)
 
 async def get_trending_movies(db: AsyncSession) -> list[Movie]:
