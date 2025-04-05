@@ -2,7 +2,7 @@ from typing import Optional
 from fastapi import Depends, HTTPException
 from sqlalchemy import select, Select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound, DBAPIError
 from starlette import status
 from models.genre import Genre
 from models.movie import Movie
@@ -176,6 +176,8 @@ async def _execute_all(db: AsyncSession, query : Select[tuple[Movie | TVShow | G
     try:
         result = await db.execute(query)
         return list(result.scalars().all())
+    except DBAPIError as dbe:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(dbe))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
@@ -183,5 +185,9 @@ async def _execute_one(db: AsyncSession, query : Select[tuple[Movie | TVShow]]):
     try:
         result = await db.execute(query)
         return result.scalars().first()
+    except NoResultFound as nr:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(nr))
+    except DBAPIError as dbe:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(dbe))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
