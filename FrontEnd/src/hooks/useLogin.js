@@ -6,7 +6,9 @@ export default function useLogin(initialEmail = "", initialPassword = "") {
   const [password, setPassword] = useState(initialPassword);
   const [showPassword, setShowPassword] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [wrongPassword, setWrongPassword] = useState(false);
   const navigate = useNavigate();
+
   const handleLogin = async (email, password) => {
     try {
       const response = await fetch("http://localhost:8000/auth/token", {
@@ -33,7 +35,7 @@ export default function useLogin(initialEmail = "", initialPassword = "") {
       navigate("/");
     } catch (err) {
       console.error("Login error:", err);
-      alert("Login failed. Please check your credentials.");
+      setWrongPassword(true);
     }
   };
 
@@ -56,5 +58,7 @@ export default function useLogin(initialEmail = "", initialPassword = "") {
     modalOpen,
     handleForgotPassword,
     handleModalClose,
+    wrongPassword,
+    setWrongPassword,
   };
 }

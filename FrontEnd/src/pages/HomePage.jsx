@@ -2,8 +2,17 @@ import { Container, Grid, Typography, Divider } from "@mui/material";
 import MovieSlider from "../components/MovieSlider";
 import MovieCardContainer from "../components/MovieCardContainer";
 import SmallMovieContainer from "../components/SmallMovieContainer";
-
+import { useUserRole } from "../hooks/useCheckRole";
+import { useRoleContext } from "../contexts/RoleContext";
+import { useEffect } from "react";
 export default function HomePage() {
+  const role = useUserRole();
+  const { updateRole } = useRoleContext();
+  useEffect(() => {
+    if (role) {
+      updateRole(role);
+    }
+  }, [role, updateRole]);
   return (
     <Container maxWidth="xl" className="py-10">
       <section className="mb-12">

@@ -9,8 +9,9 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from dependecies.db import get_db
 from models.user import User
+from models.role import Role
 from passlib.context import CryptContext
-
+from sqlalchemy.orm import selectinload
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -27,8 +28,29 @@ def get_password_hash(password):
 
 
 async def get_user(db: AsyncSession, username: str):
-    query = await db.execute(select(User).filter(User.email == username))
-    return query.scalar_one_or_none()  
+    query = await db.execute(
+        select(User)
+        .where(User.email == username)
+        .options(selectinload(User.roles))
+    )
+
+    user = query.scalar_one_or_none()
+
+    if user and user.roles:
+        role_obj = user.roles[0]  
+        return UserInDB(
+            id=user.id,
+            username=user.username,
+            # first_name=user.first_name,
+            # last_name=user.last_name,
+            email=user.email,
+            role=role_obj.name,
+            role_id=role_obj.id,
+            disabled=False,  #to be changed to the value of disabled from db
+            hashed_password=user.hashed_password,
+        )
+
+    return None
 
 async def authenticate_user(db: AsyncSession, username: str, password: str):
     
@@ -66,6 +88,6 @@ async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depe
     return user
 
 async def get_current_active_user(current_user: UserInDB = Depends(get_current_user)):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
+    # if current_user.disabled:
+    #     raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

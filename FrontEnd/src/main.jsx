@@ -8,17 +8,20 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MainRoutes from "./router/MainRoutes.jsx";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CustomThemeProvider } from "./components/Header/ThemeContext";
+import { RoleProvider } from "./contexts/RoleContext.jsx"; // Adjust the path accordingly
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <CustomThemeProvider>
       <CssBaseline />
-      <BrowserRouter>
-        <Header />
-        <MainRoutes />
-        <App />
-        <Footer />
-      </BrowserRouter>
+      <RoleProvider>
+        <BrowserRouter>
+          <Header />
+          <MainRoutes />
+          <App />
+          <Footer />
+        </BrowserRouter>
+      </RoleProvider>
     </CustomThemeProvider>
   </StrictMode>
 );
