@@ -22,10 +22,10 @@ export default handleLogin = async (e) => {
 
     document.cookie = `access_token=${token}; path=/; secure`;
 
-    console.log("✅ Login successful:", token);
+    console.log("Login successful:", token);
     navigate("/");
   } catch (err) {
-    console.error("❌ Login error:", err);
+    console.error("Login error:", err);
     alert("Login failed. Please check your credentials.");
   }
 };

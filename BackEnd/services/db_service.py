@@ -1,8 +1,9 @@
 from typing import Optional
-from fastapi import Depends
-from sqlalchemy import select
+from fastapi import Depends, HTTPException
+from sqlalchemy import select, Select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound, DBAPIError
+from starlette import status
 from models.genre import Genre
 from models.movie import Movie
 from models.tv_show import TVShow
@@ -16,7 +17,7 @@ from services.database_queries.media_queries import (
     get_now_playing,
     get_popular,
     get_top_rated,
-    get_trending
+    get_trending, get_media, get_all_or_filter
 )
 
 
@@ -114,38 +115,78 @@ async def delete_user( user_id : int, db: AsyncSession = Depends(get_db)):
         return user
     return None
 
-async def get_popular_movies(limit : int = 10, db: AsyncSession = Depends(get_db)) -> list[Movie]:
-    return await get_popular(media_type="movie", db=db, limit=limit)
+async def get_popular_movies(db: AsyncSession) -> list[Movie]:
+    query = get_popular(media_type=Movie.__name__)
+    return await _execute_all(db, query)
 
-async def get_popular_tv_shows(limit : int = 10, db: AsyncSession = Depends(get_db)) -> list[TVShow]:
-    return await get_popular(media_type="tv", db=db, limit=limit)
+async def get_popular_tv_shows(db: AsyncSession) -> list[TVShow]:
+    query = get_popular(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
 
-async def get_top_rated_movies(limit : int = 10, db: AsyncSession = Depends(get_db)) -> list[Movie]:
-    return await get_top_rated(media_type="movie", db=db, limit=limit)
+async def get_top_rated_movies(db: AsyncSession) -> list[Movie]:
+    query = get_top_rated(media_type=Movie.__name__)
+    return await _execute_all(db, query)
 
-async def get_top_rated_tv_shows(limit : int = 10, db: AsyncSession = Depends(get_db)) -> list[TVShow]:
-    return await get_top_rated(media_type="tv", db=db, limit=limit)
+async def get_top_rated_tv_shows(db: AsyncSession) -> list[TVShow]:
+    query = get_top_rated(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
 
-async def get_now_playing_movies(limit : int = 10, db: AsyncSession = Depends(get_db))-> list[Movie]:
-    return await get_now_playing(media_type="movie", db=db, limit=limit)
+async def get_now_playing_movies(db: AsyncSession)-> list[Movie]:
+    query = get_now_playing(media_type=Movie.__name__)
+    return await _execute_all(db, query)
 
-async def get_now_playing_tv_shows(limit : int = 10, db: AsyncSession = Depends(get_db)) -> list[TVShow]:
-    return await get_now_playing(media_type="tv", db=db, limit=limit)
+async def get_now_playing_tv_shows(db: AsyncSession) -> list[TVShow]:
+    query = get_now_playing(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
 
-async def get_all_movies(db: AsyncSession = Depends(get_db)) -> list[Movie]:
-    return await get_all(media_type="movie", db=db)
+async def get_movies(db: AsyncSession, genre: str = None, year: int = None) -> list[Movie]:
+    query = get_all_or_filter(media_type=Movie.__name__, genre=genre, year=year)
+    return await _execute_all(db, query)
 
-async def get_all_tv_shows(db: AsyncSession = Depends(get_db)) -> list[TVShow]:
-    return await get_all(media_type="tv", db=db)
+async def get_tv_shows(db: AsyncSession, genre: str = None, year: int = None) -> list[TVShow]:
+    query = get_all_or_filter(media_type=TVShow.__name__, genre=genre, year=year)
+    return await _execute_all(db, query)
 
-async def get_trending_movies(db: AsyncSession = Depends(get_db)) -> list[Movie]:
-    return await get_trending(media_type="movie", db=db)
+async def get_trending_movies(db: AsyncSession) -> list[Movie]:
+    query = get_trending(media_type=Movie.__name__)
+    return await _execute_all(db, query)
 
-async def get_trending_tv_shows(db: AsyncSession = Depends(get_db)) -> list[TVShow]:
-    return await get_trending(media_type="tv", db=db)
+async def get_trending_tv_shows(db: AsyncSession) -> list[TVShow]:
+    query = get_trending(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
 
-async def get_movie_genres(db: AsyncSession = Depends(get_db)) -> list[Genre]:
-     return await get_genres(media_type="movie",db=db)
+async def get_movie_genres(db: AsyncSession ) -> list[Genre]:
+     query = get_genres(media_type=Movie.__name__)
+     return await _execute_all(db, query)
 
-async def get_tv_show_genres(db: AsyncSession = Depends(get_db)) -> list[Genre]:
-    return await get_genres(media_type="tv",db=db)
+async def get_tv_show_genres(db: AsyncSession) -> list[Genre]:
+    query = get_genres(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
+
+async def get_movie_details(media_id : int, db: AsyncSession) -> Movie:
+    query = get_media(media_type=Movie.__name__, media_id=media_id)
+    return await _execute_one(db, query)
+
+async def get_tv_show_details(media_id : int, db: AsyncSession) -> TVShow:
+    query = get_media(media_type=TVShow.__name__, media_id=media_id)
+    return await _execute_one(db, query)
+
+async def _execute_all(db: AsyncSession, query : Select[tuple[Movie | TVShow | Genre]]):
+    try:
+        result = await db.execute(query)
+        return list(result.scalars().all())
+    except DBAPIError as dbe:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(dbe))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+async def _execute_one(db: AsyncSession, query : Select[tuple[Movie | TVShow]]):
+    try:
+        result = await db.execute(query)
+        return result.scalars().first()
+    except NoResultFound as nr:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(nr))
+    except DBAPIError as dbe:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(dbe))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
