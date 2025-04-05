@@ -16,7 +16,7 @@ class TVShow(Base):
     original_name = sql.Column(sql.Text)
     overview = sql.Column(sql.Text)
     tagline = sql.Column(sql.Text)
-    first_air_date = sql.Column(sql.Date)
+    release_date = sql.Column(sql.Date)
     popularity = sql.Column(sql.Float)
     vote_average = sql.Column(sql.Float)
     vote_count = sql.Column(sql.Integer)
