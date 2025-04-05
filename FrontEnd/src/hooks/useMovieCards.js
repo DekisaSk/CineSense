@@ -46,8 +46,7 @@ export function useMovieCards(category = "top_rated") {
           const mapped = data.map((item) => {
             const title =
               mediaType === "movie" ? item.title : item.name || "Untitled";
-            const releaseDate =
-              mediaType === "movie" ? item.release_date : item.first_air_date;
+            const releaseDate = item.release_date;
             const year = releaseDate ? releaseDate.slice(0, 4) : "N/A";
 
             let genreNames = "";
