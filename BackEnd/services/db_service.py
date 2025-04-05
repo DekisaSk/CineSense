@@ -1,8 +1,9 @@
 from typing import Optional
-from fastapi import Depends
-from sqlalchemy import select
+from fastapi import Depends, HTTPException
+from sqlalchemy import select, Select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from starlette import status
 from models.genre import Genre
 from models.movie import Movie
 from models.tv_show import TVShow
@@ -115,44 +116,72 @@ async def delete_user( user_id : int, db: AsyncSession = Depends(get_db)):
     return None
 
 async def get_popular_movies(db: AsyncSession) -> list[Movie]:
-    return await get_popular(media_type=Movie.__name__, db=db)
+    query = get_popular(media_type=Movie.__name__)
+    return await _execute_all(db, query)
 
 async def get_popular_tv_shows(db: AsyncSession) -> list[TVShow]:
-    return await get_popular(media_type=TVShow.__name__, db=db)
+    query = get_popular(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
 
 async def get_top_rated_movies(db: AsyncSession) -> list[Movie]:
-    return await get_top_rated(media_type=Movie.__name__, db=db)
+    query = get_top_rated(media_type=Movie.__name__)
+    return await _execute_all(db, query)
 
 async def get_top_rated_tv_shows(db: AsyncSession) -> list[TVShow]:
-    return await get_top_rated(media_type=TVShow.__name__, db=db)
+    query = get_top_rated(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
 
 async def get_now_playing_movies(db: AsyncSession)-> list[Movie]:
-    return await get_now_playing(media_type=Movie.__name__, db=db)
+    query = get_now_playing(media_type=Movie.__name__)
+    return await _execute_all(db, query)
 
 async def get_now_playing_tv_shows(db: AsyncSession) -> list[TVShow]:
-    return await get_now_playing(media_type=TVShow.__name__, db=db)
+    query = get_now_playing(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
 
 async def get_all_movies(db: AsyncSession) -> list[Movie]:
-    return await get_all(media_type=Movie.__name__, db=db)
+
+    query = get_all(media_type=Movie.__name__)
+    return await _execute_all(db, query)
 
 async def get_all_tv_shows(db: AsyncSession) -> list[TVShow]:
-    return await get_all(media_type=TVShow.__name__, db=db)
+    query = get_all(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
 
 async def get_trending_movies(db: AsyncSession) -> list[Movie]:
-    return await get_trending(media_type=Movie.__name__, db=db)
+    query = get_trending(media_type=Movie.__name__)
+    return await _execute_all(db, query)
 
 async def get_trending_tv_shows(db: AsyncSession) -> list[TVShow]:
-    return await get_trending(media_type=TVShow.__name__, db=db)
+    query = get_trending(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
 
 async def get_movie_genres(db: AsyncSession ) -> list[Genre]:
-     return await get_genres(media_type=Movie.__name__,db=db)
+     query = get_genres(media_type=Movie.__name__)
+     return await _execute_all(db, query)
 
 async def get_tv_show_genres(db: AsyncSession) -> list[Genre]:
-    return await get_genres(media_type=TVShow.__name__,db=db)
+    query = get_genres(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
 
 async def get_movie_details(media_id : int, db: AsyncSession) -> Movie:
-    return await get_media(media_type=Movie.__name__, media_id=media_id, db=db)
+    query = get_media(media_type=Movie.__name__, media_id=media_id)
+    return await _execute_one(db, query)
 
 async def get_tv_show_details(media_id : int, db: AsyncSession) -> TVShow:
-    return await get_media(media_type=TVShow.__name__, media_id=media_id, db=db)
+    query = get_media(media_type=TVShow.__name__, media_id=media_id)
+    return await _execute_one(db, query)
 
+async def _execute_all(db: AsyncSession, query : Select[tuple[Movie | TVShow | Genre]]):
+    try:
+        result = await db.execute(query)
+        return list(result.scalars().all())
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+async def _execute_one(db: AsyncSession, query : Select[tuple[Movie | TVShow]]):
+    try:
+        result = await db.execute(query)
+        return result.scalars().first()
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
