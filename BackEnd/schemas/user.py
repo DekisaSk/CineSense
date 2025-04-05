@@ -2,12 +2,13 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 class UserBase(BaseModel):
+    id: int
     username: str
-    first_name: str
-    last_name: str
+    first_name: Optional[str] = None #to be changed to str once the db is updated
+    last_name: Optional[str] = None #to be changed to str once the db is updated
     email: str
     role_id: int
-    disabled: bool
+    disabled: bool | None #to be changed to bool once the db is updated
 
 class UserCreate(UserBase):
     password: str

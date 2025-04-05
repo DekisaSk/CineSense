@@ -10,8 +10,11 @@ class SessionChecker():
         self.db = db
     def check_access_by_role(self, required_role: str):
         user_role = self.current_user.role
+        if user_role == 'admin':
+            return
         if user_role != required_role:
             raise HTTPException(
                 status_code=403,
                 detail="You do not have the necessary permissions"
             )
+
