@@ -9,7 +9,7 @@ class CastMember(Base):
         'credits.credit_id'), primary_key=True)  # shared
     person_id = sql.Column(sql.Integer, sql.ForeignKey(
         'persons.person_id'), nullable=False)
-    character = sql.Column(sql.String(255))
+    character = sql.Column(sql.Text)
     order = sql.Column(sql.Integer)
 
     person = sql.orm.relationship("Person")
