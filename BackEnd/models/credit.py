@@ -1,5 +1,5 @@
 import sqlalchemy as sql
-from dependecies.db  import Base
+from dependecies.db import Base
 
 
 class Credit(Base):
@@ -11,6 +11,3 @@ class Credit(Base):
     content_id = sql.Column(sql.Integer, nullable=False)
     content_type = sql.Column(sql.String(
         10), nullable=False)  # 'movie' or 'tv'
-
-    __table_args__ = (sql.UniqueConstraint(
-        'content_id', 'content_type', name='_content_uc'),)

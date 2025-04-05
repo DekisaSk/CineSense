@@ -20,8 +20,11 @@ class User(Base):
                           index=True, nullable=False)
     email = sql.Column(sql.String(100), unique=True,
                        index=True, nullable=False)
+    first_name = sql.Column(sql.String(50), nullable=True)
+    last_name = sql.Column(sql.String(50), nullable=True)
     hashed_password = sql.Column(sql.String, nullable=False)
     created_at = sql.Column(sql.DateTime, default=datetime.datetime.now)
+    is_disabled = sql.Column(sql.Boolean)
 
     roles = sql.orm.relationship(
         "Role", secondary=user_roles, back_populates="users")
