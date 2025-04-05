@@ -4,6 +4,8 @@ import {
   getTopRatedTvShows,
   getPopularMovies,
   getPopularTvShows,
+  getTrendingMovies,
+  getTrendingTvShows,
   getMovieGenres,
   getTvGenres,
 } from "../api/tmdbApi";
@@ -31,15 +33,27 @@ export function useMovieCards(category = "top_rated") {
 
         let data;
         if (mediaType === "movie") {
-          data =
-            category === "top_rated"
-              ? await getTopRatedMovies()
-              : await getPopularMovies();
+          switch (category) {
+            case "top_rated":
+              data = await getTopRatedMovies();
+              break;
+            case "trending":
+              data = await getTrendingMovies();
+              break;
+            default:
+              data = await getPopularMovies();
+          }
         } else {
-          data =
-            category === "top_rated"
-              ? await getTopRatedTvShows()
-              : await getPopularTvShows();
+          switch (category) {
+            case "top_rated":
+              data = await getTopRatedTvShows();
+              break;
+            case "trending":
+              data = await getTrendingTvShows();
+              break;
+            default:
+              data = await getPopularTvShows();
+          }
         }
 
         if (data && data.length) {

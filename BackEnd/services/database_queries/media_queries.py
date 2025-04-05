@@ -30,7 +30,6 @@ def get_popular(media_type: str, limit: int = 10):
     model = _get_media_model(media_type)
 
     query = select(model) \
-        .where(model.release_date <= datetime.now()) \
         .order_by(model.popularity.desc()) \
         .limit(limit) \
         .options(selectinload(model.genres))
@@ -49,8 +48,7 @@ def get_top_rated(media_type: str, limit: int = 10):
     model = _get_media_model(media_type)
 
     query = select(model) \
-        .where(model.release_date <= datetime.now(),
-               model.vote_count > 1000) \
+        .where(model.vote_count > 1000) \
         .order_by(model.vote_average.desc()) \
         .limit(limit) \
         .options(selectinload(model.genres))
@@ -82,7 +80,7 @@ def get_now_playing(media_type: str, limit: int = 10, days: int = 30):
     return query
 
 
-def get_trending(media_type: str, limit: int = 10, days: int = 7):
+def get_trending(media_type: str, limit: int = 10, days: int = 30):
     """
     Creates query for Movies or TvShows that are on the rise of popularity in the given time interval.
     Time interval is based on the days, set by default to check past week.
