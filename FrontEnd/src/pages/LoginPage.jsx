@@ -16,6 +16,8 @@ const LoginPage = () => {
     modalOpen,
     handleForgotPassword,
     handleModalClose,
+    wrongPassword,
+    setWrongPassword,
   } = useLogin();
 
   const { resetEmail, setResetEmail, notification, handleResetPassword } =
@@ -48,6 +50,16 @@ const LoginPage = () => {
           >
             Sign in to your account
           </Typography>
+          {wrongPassword && (
+            <Typography
+              variant="body2"
+              className="mt-2 text-center"
+              sx={{ color: "red", marginBottom: "15px" }}
+            >
+              {" "}
+              Incorrect username or password!
+            </Typography>
+          )}
 
           <LoginForm
             email={email}

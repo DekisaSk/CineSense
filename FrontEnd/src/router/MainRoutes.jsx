@@ -10,7 +10,7 @@ const ProfilePage = lazy(() => import("../pages/ProfilePage"));
 const LoginPage = lazy(() => import("../pages/LoginPage"));
 const RegisterPage = lazy(() => import("../pages/RegisterPage"));
 const AdminPage = lazy(() => import("../pages/AdminPage"));
-
+const LogoutPage = lazy(() => import("../pages/LogoutPage"));
 export default function MainRoutes() {
   return (
     <Suspense fallback={<LoadingSpinner />}>
@@ -23,6 +23,7 @@ export default function MainRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/logout" element={<LogoutPage />} />
       </Routes>
     </Suspense>
   );
