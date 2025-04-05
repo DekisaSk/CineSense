@@ -2,7 +2,8 @@ from typing import Optional
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DBAPIError, NoResultFound
+from starlette import status
 from models.genre import Genre
 from models.movie import Movie
 from models.tv_show import TVShow
@@ -156,3 +157,22 @@ async def get_movie_details(media_id : int, db: AsyncSession) -> Movie:
 async def get_tv_show_details(media_id : int, db: AsyncSession) -> TVShow:
     return await get_media(media_type=TVShow.__name__, media_id=media_id, db=db)
 
+async def _execute_all(db: AsyncSession, query : Select[tuple[Movie | TVShow | Genre]]):
+    try:
+        result = await db.execute(query)
+        return list(result.scalars().all())
+    except DBAPIError as dbe:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(dbe))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+async def _execute_one(db: AsyncSession, query : Select[tuple[Movie | TVShow]]):
+    try:
+        result = await db.execute(query)
+        return result.scalars().first()
+    except NoResultFound as nr:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(nr))
+    except DBAPIError as dbe:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(dbe))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
