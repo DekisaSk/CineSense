@@ -6,11 +6,11 @@ DATABASE_URL = settings.database_url
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 # noinspection PyTypeChecker
-AsyncSessionLocal = sessionmaker( autocommit=False,
-                                  autoflush=False,
-                                  bind=engine,
-                                  class_=AsyncSession,
-                                  expire_on_commit=False)
+AsyncSessionLocal = sessionmaker(autocommit=False,
+                                 autoflush=False,
+                                 bind=engine,
+                                 class_=AsyncSession,
+                                 expire_on_commit=False)
 
 async def get_db():
     db = AsyncSessionLocal()

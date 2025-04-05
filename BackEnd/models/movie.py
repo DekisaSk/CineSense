@@ -13,10 +13,10 @@ class Movie(Base):
 
     tmdb_id = sql.Column(sql.Integer, primary_key=True, nullable=False)
     imdb_id = sql.Column(sql.String(20))
-    title = sql.Column(sql.String(255))
-    original_title = sql.Column(sql.String(255))
+    title = sql.Column(sql.Text)
+    original_title = sql.Column(sql.Text)
     overview = sql.Column(sql.Text)
-    tagline = sql.Column(sql.String(255))
+    tagline = sql.Column(sql.Text)
     release_date = sql.Column(sql.Date)
     popularity = sql.Column(sql.Float)
     vote_average = sql.Column(sql.Float)

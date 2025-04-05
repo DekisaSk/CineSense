@@ -1,5 +1,5 @@
 import sqlalchemy as sql
-from dependecies.db  import Base
+from dependecies.db import Base
 
 
 class CrewMember(Base):

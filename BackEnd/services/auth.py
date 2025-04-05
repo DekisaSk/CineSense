@@ -8,7 +8,7 @@ from schemas.user import TokenData, UserInDB
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from dependecies.db import get_db
-from models.user import User, user_roles
+from models.user import User
 from models.role import Role
 from passlib.context import CryptContext
 from sqlalchemy.orm import selectinload

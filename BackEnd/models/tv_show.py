@@ -12,11 +12,11 @@ tv_genres = sql.Table(
 class TVShow(Base):
     __tablename__ = 'tv_shows'
     tmdb_id = sql.Column(sql.Integer, primary_key=True, nullable=False)
-    name = sql.Column(sql.String(255))
-    original_name = sql.Column(sql.String(255))
+    name = sql.Column(sql.Text)
+    original_name = sql.Column(sql.Text)
     overview = sql.Column(sql.Text)
-    tagline = sql.Column(sql.String(255))
-    first_air_date = sql.Column(sql.Date)
+    tagline = sql.Column(sql.Text)
+    release_date = sql.Column(sql.Date)
     popularity = sql.Column(sql.Float)
     vote_average = sql.Column(sql.Float)
     vote_count = sql.Column(sql.Integer)
