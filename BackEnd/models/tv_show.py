@@ -25,4 +25,4 @@ class TVShow(Base):
     type = sql.Column(sql.String(100))
 
     genres = sql.orm.relationship(
-        'Genre', secondary=tv_genres, backref='tv_shows')
+        'Genre', secondary=tv_genres, back_populates='tv_shows',)
