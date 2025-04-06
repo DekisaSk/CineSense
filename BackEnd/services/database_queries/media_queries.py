@@ -154,3 +154,25 @@ def get_all_or_filter(media_type: str, genre: str = None, year: int = None):
         query = query.where(extract('year', Movie.release_date) == year)
 
     return query
+
+
+def filter_movies(genre_id: Optional[int] = None, year: Optional[int] = None, title: Optional[str] = None):
+    query = select(Movie)
+    if genre_id:
+        query = query.where(Movie.genres.any(Genre.genre_id == genre_id))
+    if year:
+        query = query.where(extract('year', Movie.release_date) == year)
+    if title:
+        query = query.where(Movie.title.ilike(f"%{title}%"))
+    return query.options(selectinload(Movie.genres)).order_by(Movie.popularity.desc()).limit(100)
+
+
+def filter_tv_shows(genre_id: Optional[int] = None, year: Optional[int] = None, title: Optional[str] = None):
+    query = select(TVShow)
+    if genre_id:
+        query = query.where(TVShow.genres.any(Genre.genre_id == genre_id))
+    if year:
+        query = query.where(extract('year', TVShow.release_date) == year)
+    if title:
+        query = query.where(TVShow.name.ilike(f"%{title}%"))
+    return query.options(selectinload(TVShow.genres)).order_by(TVShow.popularity.desc()).limit(100)
