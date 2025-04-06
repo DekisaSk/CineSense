@@ -7,7 +7,7 @@ from schemas.genre import Genre
 
 class TVShowBase(BaseModel):
     tmdb_id: int = Field(..., description="The TMDB ID of the TV Show")
-    name: Optional[str]
+    title: Optional[str]
     original_name: Optional[str]
     overview: Optional[str]
     tagline: Optional[str]

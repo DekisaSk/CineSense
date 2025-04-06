@@ -12,7 +12,7 @@ tv_genres = sql.Table(
 class TVShow(Base):
     __tablename__ = 'tv_shows'
     tmdb_id = sql.Column(sql.Integer, primary_key=True, nullable=False)
-    name = sql.Column(sql.Text)
+    title = sql.Column(sql.Text)
     original_name = sql.Column(sql.Text)
     overview = sql.Column(sql.Text)
     tagline = sql.Column(sql.Text)

@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import {
   getMovieGenres,
   getTvGenres,
-  filterMovies,
-  filterTvShows,
+  getAllMovies,
+  getAllTvShows,
 } from "../api/tmdbApi";
 
 export default function useSearch({ query, type, genre, year }) {
@@ -31,15 +31,17 @@ export default function useSearch({ query, type, genre, year }) {
       setLoading(true);
       setError(null);
       try {
-        const genreId = parseInt(genre) || 0;
-        const yearVal = parseInt(year) || 0;
+        const params = {};
+        if (year) params.year = parseInt(year);
+        if (genre) params.genre_id = parseInt(genre);
+        if (query) params.title = query;
 
         let data = [];
 
         if (type === "movie") {
-          data = await filterMovies(genreId, yearVal, query);
+          data = await getAllMovies(params);
         } else if (type === "tv") {
-          data = await filterTvShows(genreId, yearVal, query);
+          data = await getAllTvShows(params);
         } else {
           data = [];
         }
