@@ -11,13 +11,14 @@ class TVShowBase(BaseModel):
     original_name: Optional[str]
     overview: Optional[str]
     tagline: Optional[str]
-    first_air_date: Optional[date]
+    release_date: Optional[date]
     popularity: Optional[float]
     vote_average: Optional[float]
     vote_count: Optional[int]
     poster_path: Optional[str]
     backdrop_path: Optional[str]
     type: Optional[str]
+
 
 class TVShowRead(TVShowBase):
     genres: List[Genre]
