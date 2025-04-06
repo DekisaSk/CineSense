@@ -77,3 +77,21 @@ export async function getTvDetails(tvId) {
   const response = await apiClient.get(`/tv-shows/${tvId}`);
   return response.data;
 }
+
+export async function filterMovies(genre_id = 0, release_year = 0, title = "") {
+  const response = await apiClient.get("/movies/search", {
+    params: { genre_id, release_year, title },
+  });
+  return response.data;
+}
+
+export async function filterTvShows(
+  genre_id = 0,
+  release_year = 0,
+  title = ""
+) {
+  const response = await apiClient.get("/tv-shows/search", {
+    params: { genre_id, release_year, title },
+  });
+  return response.data;
+}
