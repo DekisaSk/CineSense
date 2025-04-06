@@ -2,7 +2,7 @@ from typing import Optional
 from fastapi import Depends, HTTPException
 from sqlalchemy import select, Select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound, DBAPIError
 from starlette import status
 from models.genre import Genre
 from models.movie import Movie
@@ -17,7 +17,7 @@ from services.database_queries.media_queries import (
     get_now_playing,
     get_popular,
     get_top_rated,
-    get_trending, get_media
+    get_trending, get_media, get_all_or_filter
 )
 
 
@@ -139,13 +139,12 @@ async def get_now_playing_tv_shows(db: AsyncSession) -> list[TVShow]:
     query = get_now_playing(media_type=TVShow.__name__)
     return await _execute_all(db, query)
 
-async def get_all_movies(db: AsyncSession) -> list[Movie]:
-
-    query = get_all(media_type=Movie.__name__)
+async def get_movies(db: AsyncSession, genre: str = None, year: int = None) -> list[Movie]:
+    query = get_all_or_filter(media_type=Movie.__name__, genre=genre, year=year)
     return await _execute_all(db, query)
 
-async def get_all_tv_shows(db: AsyncSession) -> list[TVShow]:
-    query = get_all(media_type=TVShow.__name__)
+async def get_tv_shows(db: AsyncSession, genre: str = None, year: int = None) -> list[TVShow]:
+    query = get_all_or_filter(media_type=TVShow.__name__, genre=genre, year=year)
     return await _execute_all(db, query)
 
 async def get_trending_movies(db: AsyncSession) -> list[Movie]:
@@ -176,6 +175,8 @@ async def _execute_all(db: AsyncSession, query : Select[tuple[Movie | TVShow | G
     try:
         result = await db.execute(query)
         return list(result.scalars().all())
+    except DBAPIError as dbe:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(dbe))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
@@ -183,5 +184,9 @@ async def _execute_one(db: AsyncSession, query : Select[tuple[Movie | TVShow]]):
     try:
         result = await db.execute(query)
         return result.scalars().first()
+    except NoResultFound as nr:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(nr))
+    except DBAPIError as dbe:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(dbe))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

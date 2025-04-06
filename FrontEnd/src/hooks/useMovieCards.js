@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import {
-  getTopRated,
-  getPopular,
+  getTopRatedMovies,
+  getTopRatedTvShows,
+  getPopularMovies,
+  getPopularTvShows,
+  getTrendingMovies,
+  getTrendingTvShows,
   getMovieGenres,
   getTvGenres,
 } from "../api/tmdbApi";
@@ -22,39 +26,70 @@ export function useMovieCards(category = "top_rated") {
         } else {
           genreList = await getTvGenres();
         }
-
         const genreMap = {};
         genreList.forEach((g) => {
           genreMap[g.id] = g.name;
         });
 
         let data;
-        if (category === "top_rated") {
-          data = await getTopRated(mediaType);
+        if (mediaType === "movie") {
+          switch (category) {
+            case "top_rated":
+              data = await getTopRatedMovies();
+              break;
+            case "trending":
+              data = await getTrendingMovies();
+              break;
+            default:
+              data = await getPopularMovies();
+          }
         } else {
-          data = await getPopular(mediaType);
+          switch (category) {
+            case "top_rated":
+              data = await getTopRatedTvShows();
+              break;
+            case "trending":
+              data = await getTrendingTvShows();
+              break;
+            default:
+              data = await getPopularTvShows();
+          }
         }
 
-        if (data && data.results) {
-          const mapped = data.results.map((item) => {
+        if (data && data.length) {
+          const mapped = data.map((item) => {
             const title =
               mediaType === "movie" ? item.title : item.name || "Untitled";
-            const releaseDate =
-              mediaType === "movie" ? item.release_date : item.first_air_date;
+            const releaseDate = item.release_date;
             const year = releaseDate ? releaseDate.slice(0, 4) : "N/A";
 
-            const genreNames = item.genre_ids
-              .map((id) => genreMap[id])
-              .filter(Boolean)
-              .join(", ");
+            let genreNames = "";
+            if (
+              item.genres &&
+              Array.isArray(item.genres) &&
+              item.genres.length > 0
+            ) {
+              genreNames = item.genres.map((g) => g.name).join(", ");
+            } else if (
+              item.genre_ids &&
+              Array.isArray(item.genre_ids) &&
+              item.genre_ids.length > 0
+            ) {
+              genreNames = item.genre_ids
+                .map((id) => genreMap[id])
+                .filter(Boolean)
+                .join(", ");
+            } else {
+              genreNames = "N/A";
+            }
 
             return {
-              id: item.id,
+              id: item.tmdb_id,
               title,
               posterPath: item.poster_path,
-              rating: item.vote_average?.toFixed(1),
+              rating: item.vote_average ? item.vote_average.toFixed(1) : "N/A",
               year,
-              genre: genreNames || "N/A",
+              genre: genreNames,
               mediaType: mediaType,
             };
           });
