@@ -12,8 +12,6 @@ from schemas.user import UserCreate, UserInDB
 from models.role import Role
 from dependecies.db import get_db
 from services.database_queries.media_queries import (
-    filter_movies,
-    filter_tv_shows,
     get_genres,
     get_now_playing,
     get_popular,
@@ -154,15 +152,15 @@ async def get_now_playing_tv_shows(db: AsyncSession) -> list[TVShow]:
     return await _execute_all(db, query)
 
 
-async def get_movies(db: AsyncSession, genre: str = None, year: int = None) -> list[Movie]:
+async def get_movies(db: AsyncSession, genre_id: int = None, year: int = None, title: str = None) -> list[Movie]:
     query = get_all_or_filter(
-        media_type=Movie.__name__, genre=genre, year=year)
+        media_type=Movie.__name__, genre_id=genre_id, year=year, title=title)
     return await _execute_all(db, query)
 
 
-async def get_tv_shows(db: AsyncSession, genre: str = None, year: int = None) -> list[TVShow]:
+async def get_tv_shows(db: AsyncSession, genre_id: str = None, year: int = None, title: str = None) -> list[TVShow]:
     query = get_all_or_filter(
-        media_type=TVShow.__name__, genre=genre, year=year)
+        media_type=TVShow.__name__, genre_id=genre_id, year=year, title=title)
     return await _execute_all(db, query)
 
 
@@ -194,16 +192,6 @@ async def get_movie_details(media_id: int, db: AsyncSession) -> Movie:
 async def get_tv_show_details(media_id: int, db: AsyncSession) -> TVShow:
     query = get_media(media_type=TVShow.__name__, media_id=media_id)
     return await _execute_one(db, query)
-
-
-async def search_movies(genre_id: int = None, year: int = None, title: str = None, db: AsyncSession = Depends(get_db)) -> list[Movie]:
-    query = filter_movies(genre_id=genre_id, year=year, title=title)
-    return await _execute_all(db, query)
-
-
-async def search_tv_shows(genre_id: int = None, year: int = None, title: str = None, db: AsyncSession = Depends(get_db)) -> list[TVShow]:
-    query = filter_tv_shows(genre_id=genre_id, year=year, title=title)
-    return await _execute_all(db, query)
 
 
 async def _execute_all(db: AsyncSession, query: Select[tuple[Movie | TVShow | Genre]]):
