@@ -1,11 +1,9 @@
-from typing import Optional
-
 from sqlalchemy import select, extract
 from datetime import datetime, timedelta
 from sqlalchemy.orm import selectinload
 from models.genre import Genre
-from models.movie import Movie, movie_genres
-from models.tv_show import TVShow, tv_genres
+from models.movie import Movie
+from models.tv_show import TVShow
 
 _model_mapping = {"movie": Movie, "tvshow": TVShow}
 
@@ -143,35 +141,17 @@ def get_media(media_type: str, media_id: int):
 
     return query
 
-def get_all_or_filter(media_type: str, genre: str = None, year: int = None):
+def get_all_or_filter(media_type: str, genre_id: int = None, year: int = None, title: str = None):
     query = get_all(media_type)
+    model = _get_media_model(media_type)
 
-    if genre:
-        query = query.where(genre == Genre.name)
+    if genre_id:
+        query = query.where(model.genres.any(genre_id == Genre.genre_id))
 
     if year:
-        query = query.where(extract('year', Movie.release_date) == year)
+        query = query.where(extract('year', model.release_date) == year)
+
+    if title:
+        query = query.where(model.title.ilike(f"%{title}%"))
 
     return query
-
-
-def filter_movies(genre_id: Optional[int] = None, year: Optional[int] = None, title: Optional[str] = None):
-    query = select(Movie)
-    if genre_id:
-        query = query.where(Movie.genres.any(Genre.genre_id == genre_id))
-    if year:
-        query = query.where(extract('year', Movie.release_date) == year)
-    if title:
-        query = query.where(Movie.title.ilike(f"%{title}%"))
-    return query.options(selectinload(Movie.genres)).order_by(Movie.popularity.desc()).limit(100)
-
-
-def filter_tv_shows(genre_id: Optional[int] = None, year: Optional[int] = None, title: Optional[str] = None):
-    query = select(TVShow)
-    if genre_id:
-        query = query.where(TVShow.genres.any(Genre.genre_id == genre_id))
-    if year:
-        query = query.where(extract('year', TVShow.release_date) == year)
-    if title:
-        query = query.where(TVShow.name.ilike(f"%{title}%"))
-    return query.options(selectinload(TVShow.genres)).order_by(TVShow.popularity.desc()).limit(100)
