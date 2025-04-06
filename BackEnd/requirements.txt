@@ -10,3 +10,4 @@ pydantic_settings
 psycopg2
 asyncpg
 pyjwt
+argon2_cffi

@@ -9,6 +9,38 @@ from schemas.genre import Genre
 router = APIRouter()
 
 
+@router.get("/movies/search",
+            status_code=status.HTTP_200_OK,
+            response_model=List[MovieRead],
+            summary="Search Movies by genre, release year and/or title")
+async def search_movies(genre_id: int = 0,
+                        release_year: int = 0,
+                        title: str = "",
+                        db: AsyncSession = Depends(get_db)):
+    return await db_service.search_movies(
+        genre_id if genre_id != 0 else None,
+        release_year if release_year != 0 else None,
+        title if title != "" else None,
+        db
+    )
+
+
+@router.get("/tv-shows/search",
+            status_code=status.HTTP_200_OK,
+            response_model=List[TVShowRead],
+            summary="Search TV Shows by genre, release year and/or title")
+async def search_tv_shows(genre_id: int = 0,
+                          release_year: int = 0,
+                          title: str = "",
+                          db: AsyncSession = Depends(get_db)):
+    return await db_service.search_tv_shows(
+        genre_id=genre_id if genre_id != 0 else None,
+        release_year=release_year if release_year != 0 else None,
+        title=title.strip() if title.strip() else None,
+        db=db
+    )
+
+
 @router.get("/movies",
             status_code=status.HTTP_200_OK,
             response_model=List[MovieRead],
