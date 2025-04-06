@@ -7,7 +7,7 @@ const ProfileDetails = ({ userData, onInputChange, onSaveProfile }) => {
         label="First Name"
         variant="outlined"
         required
-        value={userData.firstName}
+        value={userData.name}
         onChange={(event) => onInputChange("firstName", event.target.value)}
       />
 
@@ -15,7 +15,7 @@ const ProfileDetails = ({ userData, onInputChange, onSaveProfile }) => {
         label="Last Name"
         variant="outlined"
         required
-        value={userData.lastName}
+        value={userData.last_name}
         onChange={(event) => onInputChange("lastName", event.target.value)}
       />
 

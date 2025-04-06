@@ -23,7 +23,6 @@ from sqlalchemy.orm import declarative_base
 from dependecies.db import get_db
 from schemas.user import UserInDB
 from services.auth import get_current_active_user
-#importovati model user
 
 
 class SessionChecker:

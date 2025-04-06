@@ -1,24 +1,25 @@
 import { useState, useEffect } from "react";
-
-// Dummy data until backend is implemented
-const initialUserData = {
-  firstName: "Pavle",
-  lastName: "Dzuverovic",
-  email: "pdzuverovic@gmail.com",
-  avatar: "../assets/dummy.jpg",
-};
+import { getUserInfo } from "../api/getUserInfo";
 
 export default function useProfile() {
   const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
+    last_name: "",
     email: "",
     avatar: "",
   });
 
   useEffect(() => {
-    // dummy initialization
-    setUserData(initialUserData);
+    const fetchUserInfo = async () => {
+      try {
+        const response = await getUserInfo();
+        setUserData(response);
+      } catch (error) {
+        console.error("Failed to fetch user info:", error);
+      }
+    };
+
+    fetchUserInfo();
   }, []);
 
   const handleInputChange = (key, value) => {
