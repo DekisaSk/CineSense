@@ -32,9 +32,12 @@ class SessionChecker:
         self.current_user = current_user
         self.db = db
 
-    def check_permissions(self, required_permissions: List[str]):
-        if not any(perm in self.current_user.permissions for perm in required_permissions):
+    def check_permissions(self, required_permission: str):
+        if self.current_user.role == "admin":
+            return True
+        if (self.current_user != required_permission):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="You do not have the necessary permissions"
             )
+        return True

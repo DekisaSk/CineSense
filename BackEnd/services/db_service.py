@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from fastapi import Depends, HTTPException
 from sqlalchemy import select, Select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,7 +9,7 @@ from models.genre import Genre
 from models.movie import Movie
 from models.tv_show import TVShow
 from models.user import User
-from schemas.user import UserCreate, UserInDB, UserToUpdate
+from schemas.user import UserCreate, UserInDB, UserToUpdate, AllUsers
 from models.role import Role
 from dependecies.db import get_db
 from services.database_queries.media_queries import (
@@ -22,6 +22,12 @@ from services.database_queries.media_queries import (
 )
 from services.auth import get_password_hash
 
+
+
+async def get_all_users(db: AsyncSession = Depends(get_db)) -> List[AllUsers]:
+    result = await db.execute(select(User))
+    users = result.scalars().all()
+    return list(map(AllUsers.model_validate, users))
 
 async def get_role_by_id(role_id: int, db: AsyncSession = Depends(get_db)) -> Role:
     """

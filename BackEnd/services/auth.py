@@ -46,7 +46,7 @@ async def get_user(db: AsyncSession, username: str):
             email=user.email,
             role=role_obj.name,
             role_id=role_obj.id,
-            disabled=False,  #to be changed to the value of disabled from db
+            is_disabled=False,  #to be changed to the value of disabled from db
             hashed_password=user.hashed_password,
         )
 
@@ -88,6 +88,6 @@ async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depe
     return user
 
 async def get_current_active_user(current_user: UserInDB = Depends(get_current_user)):
-    if current_user.disabled:
+    if current_user.is_disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

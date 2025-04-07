@@ -4,6 +4,8 @@ from apis.tmdb_api import router as tmdb_router
 from fastapi.middleware.cors import CORSMiddleware
 from apis.edit_profile import router as edit_profile_router
 from apis.create_user import router as create_user_router
+from apis.get_all_users import router as get_all_users_router
+
 
 app = FastAPI()
 
@@ -23,6 +25,7 @@ app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(tmdb_router, tags=["TMDB"])
 app.include_router(edit_profile_router, tags=["user_update"])
 app.include_router(create_user_router, tags=["create_user"])
+app.include_router(get_all_users_router, tags=["create_user"])
 
 if __name__ == "__main__":
     import uvicorn
