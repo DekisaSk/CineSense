@@ -8,7 +8,7 @@ from models.genre import Genre
 from models.movie import Movie
 from models.tv_show import TVShow
 from models.user import User
-from schemas.user import UserCreate, UserInDB
+from schemas.user import UserCreate, UserInDB, UserToUpdate
 from models.role import Role
 from dependecies.db import get_db
 from services.database_queries.media_queries import (
@@ -83,23 +83,25 @@ async def get_user_by_email( email: str, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(User).filter(User.email == email))
     return result.scalars().first()
 
-def update_user(user: UserInDB, db: AsyncSession = Depends(get_db)):
+async def update_user(user: UserInDB, user_info: UserToUpdate, db: AsyncSession = Depends(get_db)):
     """
     Change the user's information by updating data in DB
     :param user: User with updated information
     :param db: Async DB Session
     :return: Updated User or None if the user does not exist
     """
-    # db_user = db.execute(select(User).where(User.id == user).first()
-    # if db_user:
-    #     db_user.username = user.username
-    #     db_user.email = user.email
-    #     db_user.password = user.password  # Hash the password before storing
-    #     db.commit()
-    #     db.refresh(db_user)
-    #     return db_user
-    # return None
-    pass
+    # Ensure to await db.execute() properly and then use scalars().first() to get the result
+    result = await db.execute(select(User).where(User.id == user.id))
+    db_user = result.scalars().first()  # Use scalars().first() to get the first result
+
+    if db_user:
+        db_user.first_name = user_info.first_name
+        db_user.last_name = user_info.last_name
+        db_user.email = user_info.email
+        await db.commit()  # Use await for asynchronous commit
+        await db.refresh(db_user)  # Use await for asynchronous refresh
+        return db_user
+    return None
 
 async def delete_user( user_id : int, db: AsyncSession = Depends(get_db)):
     """

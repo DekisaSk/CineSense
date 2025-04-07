@@ -1,6 +1,23 @@
 import { TextField, Button } from "@mui/material";
+import { useEffect } from "react";
 
-const ProfileDetails = ({ userData, onInputChange, onSaveProfile }) => {
+const ProfileDetails = ({
+  userData,
+  onInputChange,
+  onSaveProfile,
+  email,
+  firstName,
+  lastName,
+  setEmail,
+  setFirstName,
+  setLastName,
+}) => {
+  useEffect(() => {
+    setFirstName(userData.name);
+    setLastName(userData.last_name);
+    setEmail(userData.email);
+  }, [userData, setFirstName, setLastName, setEmail]);
+
   return (
     <form className="flex flex-col gap-4 mt-4 w-full">
       <TextField
@@ -8,7 +25,10 @@ const ProfileDetails = ({ userData, onInputChange, onSaveProfile }) => {
         variant="outlined"
         required
         value={userData.name}
-        onChange={(event) => onInputChange("firstName", event.target.value)}
+        onChange={(event) => {
+          onInputChange("firstName", event.target.value);
+          setFirstName(event.target.value);
+        }}
       />
 
       <TextField
@@ -16,7 +36,10 @@ const ProfileDetails = ({ userData, onInputChange, onSaveProfile }) => {
         variant="outlined"
         required
         value={userData.last_name}
-        onChange={(event) => onInputChange("lastName", event.target.value)}
+        onChange={(event) => {
+          onInputChange("lastName", event.target.value);
+          setLastName(event.target.value);
+        }}
       />
 
       <TextField
@@ -25,10 +48,17 @@ const ProfileDetails = ({ userData, onInputChange, onSaveProfile }) => {
         type="email"
         required
         value={userData.email}
-        onChange={(event) => onInputChange("email", event.target.value)}
+        onChange={(event) => {
+          onInputChange("email", event.target.value);
+          setEmail(event.target.value);
+        }}
       />
 
-      <Button variant="contained" color="primary" onClick={onSaveProfile}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => onSaveProfile(firstName, lastName, email)}
+      >
         Save Changes
       </Button>
     </form>

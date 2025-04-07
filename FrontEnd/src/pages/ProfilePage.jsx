@@ -36,6 +36,12 @@ const ProfilePage = () => {
     handleInputChange,
     handleAvatarChange,
     handleUpdateProfile,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    email,
+    setEmail,
   } = useProfile();
 
   // Render a loading spinner until auth check is done
@@ -98,6 +104,12 @@ const ProfilePage = () => {
                 userData={userData}
                 onInputChange={handleInputChange}
                 onSaveProfile={handleUpdateProfile}
+                firstName={firstName}
+                setFirstName={setFirstName}
+                lastName={lastName}
+                setLastName={setLastName}
+                email={email}
+                setEmail={setEmail}
               />
             </Paper>
           </Grid>
