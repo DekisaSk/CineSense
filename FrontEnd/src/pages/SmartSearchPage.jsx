@@ -1,10 +1,11 @@
 import { Box, Typography, CircularProgress } from "@mui/material";
-import MovieSlider from "../components/MovieSlider";
+
+import SmartSlider from "../components/SmartSlider";
 import MovieSearchForm from "../components/SmartSearch/MovieSearchForm";
-import { useSearch } from "../hooks/useSmartSearch";
+import { useSmartSearch } from "../hooks/useSmartSearch";
 
 export default function SmartSearch() {
-  const { searched, loading, error, handleSearch } = useSearch();
+  const { searched, loading, error, handleSearch, results } = useSmartSearch();
 
   return (
     <Box
@@ -19,10 +20,11 @@ export default function SmartSearch() {
       }}
     >
       {!searched && !loading && (
-        <Box sx={{ width: "100%", maxWidth: 400, textAlign: "center" }}>
+        <Box sx={{ width: "100%", maxWidth: 600, textAlign: "center" }}>
           <Typography variant="h4" sx={{ mb: 3, mt: 3, fontWeight: "bold" }}>
             Smart Search
           </Typography>
+
           <MovieSearchForm onSearch={handleSearch} />
         </Box>
       )}
@@ -43,7 +45,7 @@ export default function SmartSearch() {
       {searched && !loading && (
         <>
           <Box sx={{ flex: 1, mb: 6 }}>
-            <MovieSlider />
+            <SmartSlider results={results} />
           </Box>
 
           <Box

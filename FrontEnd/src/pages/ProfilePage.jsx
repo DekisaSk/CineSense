@@ -1,16 +1,64 @@
-import { Box, Container, Grid, Paper, Typography } from "@mui/material";
+"use client";
+
+import {
+  Box,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import ProfileAvatar from "../components/profilePage/ProfileAvatar";
 import ProfileDetails from "../components/profilePage/ProfileDetails";
 import FavoritesContainer from "../components/FavoritesContainer";
 import useProfile from "../hooks/useProfile";
+import useCheckAuth from "../hooks/useCheckAuth";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
+  const auth = useCheckAuth();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!auth.loading) {
+      if (auth.access !== true) {
+        console.error("Auth check failed.");
+        navigate("/login");
+      }
+      setIsLoaded(true); // Set isLoaded to true once auth check is complete
+    }
+  }, [auth, navigate]);
+
   const {
     userData,
     handleInputChange,
     handleAvatarChange,
     handleUpdateProfile,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    email,
+    setEmail,
   } = useProfile();
+
+  // Render a loading spinner until auth check is done
+  if (!isLoaded || auth.loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -56,6 +104,12 @@ const ProfilePage = () => {
                 userData={userData}
                 onInputChange={handleInputChange}
                 onSaveProfile={handleUpdateProfile}
+                firstName={firstName}
+                setFirstName={setFirstName}
+                lastName={lastName}
+                setLastName={setLastName}
+                email={email}
+                setEmail={setEmail}
               />
             </Paper>
           </Grid>
@@ -64,7 +118,6 @@ const ProfilePage = () => {
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>
               Favourites
             </Typography>
-
             <FavoritesContainer category="popular" />
           </Grid>
         </Grid>

@@ -1,4 +1,4 @@
-from sqlalchemy import select, extract
+from sqlalchemy import or_, select, extract
 from datetime import datetime, timedelta
 from sqlalchemy.orm import selectinload
 from models.genre import Genre
@@ -96,6 +96,23 @@ def get_trending(media_type: str, limit: int = 10, days: int = 30):
         .limit(limit) \
         .options(selectinload(model.genres))
 
+    return query
+
+
+def get_items_by_tmdb_ids(media_type: str, titles: list[str]):
+    """
+    Creates query for Movies or TvShows that OpenAI suggests.
+    :param media_type: represents the media type we want to get - Movies or TV Shows
+    :param list[int]: List of TMDB IDs that OpenAI returns.
+    :return: Select query
+    """
+    model = _get_media_model(media_type)
+    query = (
+        select(model)
+        .where(or_(model.title.in_(titles), model.original_title.in_(titles)))
+        .order_by(model.popularity.desc())
+        .options(selectinload(model.genres))
+    )
     return query
 
 

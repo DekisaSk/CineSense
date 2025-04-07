@@ -13,7 +13,7 @@ class TVShow(Base):
     __tablename__ = 'tv_shows'
     tmdb_id = sql.Column(sql.Integer, primary_key=True, nullable=False)
     title = sql.Column(sql.Text)
-    original_name = sql.Column(sql.Text)
+    original_title = sql.Column(sql.Text)
     overview = sql.Column(sql.Text)
     tagline = sql.Column(sql.Text)
     release_date = sql.Column(sql.Date)
