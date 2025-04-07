@@ -36,7 +36,7 @@ const ProfilePage = () => {
         console.error("Auth check failed.");
         navigate("/login");
       }
-      setIsLoaded(true); // Set isLoaded to true once auth check is complete
+      setIsLoaded(true);
     }
   }, [auth, navigate]);
 
@@ -53,7 +53,6 @@ const ProfilePage = () => {
     setEmail,
   } = useProfile();
 
-  // Render a loading spinner until auth check is done
   if (!isLoaded || auth.loading) {
     return (
       <Box

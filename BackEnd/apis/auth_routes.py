@@ -42,3 +42,8 @@ async def is_autorised(session: SessionChecker = Depends()):
     if session.check_access_by_role("user"):
         return {"access": True}
     
+@router.get("/admin-access")
+async def is_autorised(session: SessionChecker = Depends()):
+    if session.check_access_by_role("admin"):
+        return {"access": True}
+    

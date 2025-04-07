@@ -113,7 +113,12 @@ const RegisterPage = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
 
-            <Button type="submit" variant="contained" color="primary">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              onClick={handleRegister}
+            >
               Register
             </Button>
 

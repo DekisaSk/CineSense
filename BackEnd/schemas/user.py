@@ -1,16 +1,19 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 class UserBase(BaseModel):
     id: int
-    username: str
+    # username: str
     first_name: Optional[str] = None #to be changed to str once the db is updated
     last_name: Optional[str] = None #to be changed to str once the db is updated
     email: str
     role_id: int
     disabled: bool | None #to be changed to bool once the db is updated
 
-class UserCreate(UserBase):
+class UserCreate(BaseModel):
+    first_name: Optional[str] = None #to be changed to str once the db is updated
+    last_name: Optional[str] = None #to be changed to str once the db is updated
+    email: str
     password: str
 
 class UserInDB(UserBase):
@@ -28,3 +31,6 @@ class UserToUpdate(BaseModel):
     first_name: str
     last_name: str
     email: str
+
+
+

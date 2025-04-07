@@ -25,11 +25,11 @@ export default function useRegister() {
       }
 
       try {
-        const response = await axios.post("...", {
-          firstName,
-          lastName,
-          email,
-          password,
+        const response = await axios.post("http://localhost:8000/register", {
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          password: password,
         });
 
         alert(response.data.message || "Registration successful!");

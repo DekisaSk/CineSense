@@ -6,6 +6,9 @@ import StatsCard from "../components/admin/StatsCard";
 import { useUserRole } from "../hooks/useCheckRole";
 import { useRoleContext } from "../contexts/RoleContext";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import useCheckAdmin from "../hooks/useCheckAdmin";
+import { useState } from "react";
 
 const AdminPage = () => {
   const role = useUserRole();
@@ -15,6 +18,31 @@ const AdminPage = () => {
       updateRole(role);
     }
   }, [role, updateRole]);
+
+  const navigate = useNavigate();
+  const auth = useCheckAdmin();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!auth.loading) {
+      if (auth.access !== true) {
+        console.error("Auth check failed.");
+        navigate("/login");
+      }
+      setIsLoaded(true);
+    }
+  }, [auth, navigate]);
+
+  useEffect(() => {
+    if (!auth.loading) {
+      if (auth.access !== true) {
+        console.error("Auth check failed.");
+        navigate("/login");
+      }
+      setIsLoaded(true);
+    }
+  }, [auth, navigate]);
+  // if (!isLoaded || auth.loading) {
   return (
     <Box className="p-4 min-h-screen">
       <Typography variant="h4" className="mb-6">
@@ -49,5 +77,6 @@ const AdminPage = () => {
     </Box>
   );
 };
+// };
 
 export default AdminPage;

@@ -20,6 +20,7 @@ from services.database_queries.media_queries import (
     get_top_rated,
     get_trending, get_media, get_all_or_filter
 )
+from services.auth import get_password_hash
 
 
 async def get_role_by_id(role_id: int, db: AsyncSession = Depends(get_db)) -> Role:
@@ -41,27 +42,31 @@ async def create_user(user: UserCreate,
     :param db: DB Session
     :return: Newly created User
     """
+    result = await db.execute(select(Role).where(Role.name == "user"))
+    role = result.scalars().first()
+
+    if not role:
+        raise ValueError("Default role 'user' does not exist.")
+
     new_user = User(
-        username=user.username,
+        first_name=user.first_name,
+        last_name=user.last_name,
         email=user.email,
-        hashed_password=user.password,
+        username="proba",#to be removed!!!!
+        hashed_password=get_password_hash(user.password),
+        is_disabled=False
     )
-    role = await get_role_by_id(user.role_id, db)
 
-    if role:
-        new_user.roles.append(role)
-        db.add(new_user)
-        try:
-            await db.commit()
-            await db.refresh(new_user)
-        except IntegrityError as ex:
-            await db.rollback()
-            raise ValueError(
-                "User with this username or email already exists.")
+    new_user.roles.append(role) 
+
+    db.add(new_user)
+    try:
+        await db.commit()
+        await db.refresh(new_user)
         return new_user
-    else:
-        raise ValueError("Role ID does not exist.")
-
+    except IntegrityError:
+        await db.rollback()
+        raise ValueError("User with this username or email already exists.")
 
 async def get_user_by_id(user_id: int, db: AsyncSession = Depends(get_db)) -> Optional[User]:
     """
