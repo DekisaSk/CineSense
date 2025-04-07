@@ -8,6 +8,8 @@ import {
   getTrendingTvShows,
   getMovieGenres,
   getTvGenres,
+  getUserFavoriteMovie,
+  getUserFavoriteTvShow,
 } from "../api/tmdbApi";
 
 export function useMovieCards(category = "top_rated") {
@@ -40,6 +42,9 @@ export function useMovieCards(category = "top_rated") {
             case "trending":
               data = await getTrendingMovies();
               break;
+            case "favorites":
+              data = await getUserFavoriteMovie();
+              break;
             default:
               data = await getPopularMovies();
           }
@@ -50,6 +55,9 @@ export function useMovieCards(category = "top_rated") {
               break;
             case "trending":
               data = await getTrendingTvShows();
+              break;
+            case "favorites":
+              data = await getUserFavoriteTvShow();
               break;
             default:
               data = await getPopularTvShows();
