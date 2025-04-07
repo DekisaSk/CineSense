@@ -3,8 +3,18 @@ import AuthToggle from "../components/admin/AuthToggle";
 import UserManagementCard from "../components/admin/UserManagementCard";
 import AddAdminCard from "../components/admin/AddAdminCard";
 import StatsCard from "../components/admin/StatsCard";
+import { useUserRole } from "../hooks/useCheckRole";
+import { useRoleContext } from "../contexts/RoleContext";
+import { useEffect } from "react";
 
 const AdminPage = () => {
+  const role = useUserRole();
+  const { updateRole } = useRoleContext();
+  useEffect(() => {
+    if (role) {
+      updateRole(role);
+    }
+  }, [role, updateRole]);
   return (
     <Box className="p-4 min-h-screen">
       <Typography variant="h4" className="mb-6">

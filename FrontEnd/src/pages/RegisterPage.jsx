@@ -8,8 +8,18 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import useRegister from "../hooks/useRegister";
+import { useUserRole } from "../hooks/useCheckRole";
+import { useRoleContext } from "../contexts/RoleContext";
+import { useEffect } from "react";
 
 const RegisterPage = () => {
+  const role = useUserRole();
+  const { updateRole } = useRoleContext();
+  useEffect(() => {
+    if (role) {
+      updateRole(role);
+    }
+  }, [role, updateRole]);
   const {
     firstName,
     setFirstName,

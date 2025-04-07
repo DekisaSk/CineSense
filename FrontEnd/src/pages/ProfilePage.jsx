@@ -15,8 +15,17 @@ import FavoritesContainer from "../components/FavoritesContainer";
 import useProfile from "../hooks/useProfile";
 import useCheckAuth from "../hooks/useCheckAuth";
 import { useNavigate } from "react-router-dom";
+import { useUserRole } from "../hooks/useCheckRole";
+import { useRoleContext } from "../contexts/RoleContext";
 
 const ProfilePage = () => {
+  const role = useUserRole();
+  const { updateRole } = useRoleContext();
+  useEffect(() => {
+    if (role) {
+      updateRole(role);
+    }
+  }, [role, updateRole]);
   const navigate = useNavigate();
   const auth = useCheckAuth();
   const [isLoaded, setIsLoaded] = useState(false);
