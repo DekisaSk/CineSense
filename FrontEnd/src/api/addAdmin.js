@@ -9,13 +9,13 @@ export const addAdmin = async (email) => {
   const token = getTokenFromCookie();
   const res = await axios.put(
     `http://localhost:8000/add-admin/${email}`,
-
+    {},
     {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
     }
   );
+
   return res.data;
 };
