@@ -1,17 +1,21 @@
 import { useState } from "react";
 
-export default function useMovieSearchForm(initialPrompt = "") {
-  const [userPrompt, setUserPrompt] = useState(initialPrompt);
+export default function useMovieSearchForm() {
+  const [userPrompt, setUserPrompt] = useState("");
+  const [mediaType, setMediaType] = useState("movie");
 
-  const handleSubmit = (e, onSearch) => {
-    if (!e.currentTarget.checkValidity()) {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
+  const handleSubmit = (e, onSearch, selectedType) => {
     e.preventDefault();
-    onSearch(userPrompt);
+    if (userPrompt.trim()) {
+      onSearch(userPrompt, selectedType || mediaType);
+    }
   };
 
-  return { userPrompt, setUserPrompt, handleSubmit };
+  return {
+    userPrompt,
+    setUserPrompt,
+    mediaType,
+    setMediaType,
+    handleSubmit,
+  };
 }

@@ -75,3 +75,17 @@ export async function getTvDetails(tvId) {
   const response = await apiClient.get(`/tv-shows/${tvId}`);
   return response.data;
 }
+
+export async function smartSearchMovies(query) {
+  const response = await apiClient.get(
+    `/movies/smart-search/${encodeURIComponent(query)}`
+  );
+  return response.data;
+}
+
+export async function smartSearchTvShows(query) {
+  const response = await apiClient.get(
+    `/tv-shows/smart-search/${encodeURIComponent(query)}`
+  );
+  return response.data;
+}
