@@ -1,6 +1,7 @@
 from typing import List, Optional
 from fastapi import Depends, HTTPException
-from sqlalchemy import select, Select
+from sqlalchemy import select, Select, Delete
+from sqlalchemy.dialects.postgresql import Insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError, NoResultFound, DBAPIError
 from starlette import status
@@ -18,7 +19,8 @@ from services.database_queries.media_queries import (
     get_now_playing,
     get_popular,
     get_top_rated,
-    get_trending, get_media, get_all_or_filter
+    get_trending, get_media, get_all_or_filter, get_all_favorite_media, insert_favorite_media, delete_favorite_media,
+    get_favorite_by_ids
 )
 from services.auth import get_password_hash
 
@@ -222,6 +224,58 @@ async def get_tv_show_details(media_id: int, db: AsyncSession) -> TVShow:
     return await _execute_one(db, query)
 
 
+async def get_user_favorite_movies(user_id: int, db: AsyncSession) -> list[Movie]:
+    query = get_all_favorite_media(media_type=Movie.__name__, user_id=user_id)
+    return await _execute_all(db, query)
+
+
+async def get_user_favorite_tv_shows(user_id: int, db: AsyncSession) -> list[TVShow]:
+    query = get_all_favorite_media(media_type=TVShow.__name__, user_id=user_id)
+    return await _execute_all(db, query)
+
+
+async def add_favorite_movie(user_id: int, movie_id: int, db:AsyncSession):
+    print("test")
+    query = insert_favorite_media(user_id=user_id, media_id=movie_id, media_type=Movie.__name__)
+    return await _execute_with_commit(db, query)
+
+
+async def add_favorite_tv_show(user_id: int, tv_id: int, db:AsyncSession):
+    query = insert_favorite_media(user_id=user_id, media_id=tv_id, media_type=TVShow.__name__)
+    return await _execute_with_commit(db, query)
+
+
+async def remove_favorite_movie(user_id: int, movie_id: int, db:AsyncSession):
+    query = delete_favorite_media(user_id=user_id, media_id=movie_id, media_type=Movie.__name__)
+    return await _execute_with_commit(db, query)
+
+
+async def remove_favorite_tv_show(user_id: int, tv_id: int, db:AsyncSession):
+    query = delete_favorite_media(user_id=user_id, media_id=tv_id, media_type=TVShow.__name__)
+    return await _execute_with_commit(db, query)
+
+
+async def is_movie_favorite(user_id: int, movie_id: int, db:AsyncSession):
+    query = get_favorite_by_ids(user_id=user_id, media_id=movie_id, media_type=Movie.__name__)
+    try:
+        result = await db.execute(query)
+        return result.scalar()
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+async def is_tv_show_favorite(user_id: int, tv_id: int, db:AsyncSession):
+    query = get_favorite_by_ids(user_id=user_id, media_id=tv_id, media_type=TVShow.__name__)
+
+    try:
+        result = await db.execute(query)
+        return result.scalar()
+    except NoResultFound as nr:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(nr))
+
+
 async def _execute_all(db: AsyncSession, query: Select[tuple[Movie | TVShow | Genre]]):
     try:
         result = await db.execute(query)
@@ -247,3 +301,17 @@ async def _execute_one(db: AsyncSession, query: Select[tuple[Movie | TVShow]]):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+async def _execute_with_commit(db: AsyncSession, query: Insert | Delete):
+    try:
+        await db.execute(query)
+        await db.commit()
+    except DBAPIError as dbe:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(dbe))
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    return {"message": "Execution was successful."}

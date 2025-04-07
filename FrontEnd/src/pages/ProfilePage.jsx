@@ -126,7 +126,7 @@ const ProfilePage = () => {
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>
               Favourites
             </Typography>
-            <FavoritesContainer category="popular" />
+            <FavoritesContainer category="favorites" />
           </Grid>
         </Grid>
       </Container>
