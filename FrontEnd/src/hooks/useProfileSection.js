@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRoleContext } from "../contexts/RoleContext"; // Import the context
+import { useRoleContext } from "../contexts/RoleContext";
 export default function useProfileSection() {
   const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = useState(null);

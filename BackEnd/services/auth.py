@@ -41,8 +41,8 @@ async def get_user(db: AsyncSession, username: str):
         return UserInDB(
             id=user.id,
             username=user.username,
-            # first_name=user.first_name,
-            # last_name=user.last_name,
+            first_name=user.first_name,
+            last_name=user.last_name,
             email=user.email,
             role=role_obj.name,
             role_id=role_obj.id,
@@ -88,6 +88,6 @@ async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depe
     return user
 
 async def get_current_active_user(current_user: UserInDB = Depends(get_current_user)):
-    # if current_user.disabled:
-    #     raise HTTPException(status_code=400, detail="Inactive user")
+    if current_user.disabled:
+        raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
