@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Optional
 
 class UserBase(BaseModel):
     id: int
@@ -23,3 +23,8 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+class UserToUpdate(BaseModel):
+    first_name: str
+    last_name: str
+    email: str

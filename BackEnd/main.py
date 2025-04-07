@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from apis.auth_routes import router as auth_router
 from apis.tmdb_api import router as tmdb_router
 from fastapi.middleware.cors import CORSMiddleware
+from apis.edit_profile import router as edit_profile_router
 
 app = FastAPI()
 
@@ -19,6 +20,7 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(tmdb_router, tags=["TMDB"])
+app.include_router(edit_profile_router, tags=["UserUpdate"])
 
 if __name__ == "__main__":
     import uvicorn
