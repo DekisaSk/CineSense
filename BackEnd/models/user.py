@@ -16,8 +16,7 @@ class User(Base):
     __tablename__ = 'users'
 
     id = sql.Column(sql.Integer, primary_key=True, index=True)
-    username = sql.Column(sql.String(100), unique=True,
-                          index=True, nullable=False)
+    username = sql.Column(sql.String(100))
     email = sql.Column(sql.String(100), unique=True,
                        index=True, nullable=False)
     first_name = sql.Column(sql.String(50), nullable=True)

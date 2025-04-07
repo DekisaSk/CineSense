@@ -18,11 +18,21 @@ import useSearch from "../hooks/useSearch";
 import ItemCard from "../components/MoviesPageComponents/ItemCard";
 import SearchBar from "../components/MoviesPageComponents/SearchBar";
 import FilterButton from "../components/MoviesPageComponents/FilterButton";
+import { useUserRole } from "../hooks/useCheckRole";
+import { useRoleContext } from "../contexts/RoleContext";
+import { useEffect } from "react";
 
 const UI_ITEMS_PER_PAGE = 4;
 const UI_PAGES_PER_API_PAGE = 5;
 
 export default function MoviesPage() {
+  const role = useUserRole();
+  const { updateRole } = useRoleContext();
+  useEffect(() => {
+    if (role) {
+      updateRole(role);
+    }
+  }, [role, updateRole]);
   const [searchQuery, setSearchQuery] = useState("");
   const [type, setType] = useState("movie");
   const [genre, setGenre] = useState("");

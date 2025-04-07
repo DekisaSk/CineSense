@@ -3,9 +3,19 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import SmartSlider from "../components/SmartSlider";
 import MovieSearchForm from "../components/SmartSearch/MovieSearchForm";
 import { useSmartSearch } from "../hooks/useSmartSearch";
+import { useUserRole } from "../hooks/useCheckRole";
+import { useRoleContext } from "../contexts/RoleContext";
+import { useEffect } from "react";
 
 export default function SmartSearch() {
   const { searched, loading, error, handleSearch, results } = useSmartSearch();
+  const role = useUserRole();
+  const { updateRole } = useRoleContext();
+  useEffect(() => {
+    if (role) {
+      updateRole(role);
+    }
+  }, [role, updateRole]);
 
   return (
     <Box

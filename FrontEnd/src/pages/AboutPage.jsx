@@ -1,6 +1,16 @@
 import { Container, Typography, Box } from "@mui/material";
+import { useUserRole } from "../hooks/useCheckRole";
+import { useRoleContext } from "../contexts/RoleContext";
+import { useEffect } from "react";
 
 export default function AboutPage() {
+  const role = useUserRole();
+  const { updateRole } = useRoleContext();
+  useEffect(() => {
+    if (role) {
+      updateRole(role);
+    }
+  }, [role, updateRole]);
   return (
     <Container maxWidth="md" sx={{ textAlign: "center", py: 4 }}>
       <Typography variant="h3" gutterBottom>
