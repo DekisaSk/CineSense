@@ -15,8 +15,17 @@ import FavoritesContainer from "../components/FavoritesContainer";
 import useProfile from "../hooks/useProfile";
 import useCheckAuth from "../hooks/useCheckAuth";
 import { useNavigate } from "react-router-dom";
+import { useUserRole } from "../hooks/useCheckRole";
+import { useRoleContext } from "../contexts/RoleContext";
 
 const ProfilePage = () => {
+  const role = useUserRole();
+  const { updateRole } = useRoleContext();
+  useEffect(() => {
+    if (role) {
+      updateRole(role);
+    }
+  }, [role, updateRole]);
   const navigate = useNavigate();
   const auth = useCheckAuth();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -27,7 +36,7 @@ const ProfilePage = () => {
         console.error("Auth check failed.");
         navigate("/login");
       }
-      setIsLoaded(true); // Set isLoaded to true once auth check is complete
+      setIsLoaded(true);
     }
   }, [auth, navigate]);
 
@@ -44,7 +53,6 @@ const ProfilePage = () => {
     setEmail,
   } = useProfile();
 
-  // Render a loading spinner until auth check is done
   if (!isLoaded || auth.loading) {
     return (
       <Box
@@ -118,7 +126,7 @@ const ProfilePage = () => {
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>
               Favourites
             </Typography>
-            <FavoritesContainer category="popular" />
+            <FavoritesContainer category="favorites" />
           </Grid>
         </Grid>
       </Container>

@@ -1,12 +1,17 @@
-from sqlalchemy import or_, select, extract
+from sqlalchemy import or_, select, extract, delete, exists, and_
+from sqlalchemy.dialects.postgresql import insert
 from datetime import datetime, timedelta
 from sqlalchemy.orm import selectinload
+
+from models.favorite import Favorite
 from models.genre import Genre
 from models.movie import Movie
 from models.tv_show import TVShow
 
 _model_mapping = {"movie": Movie, "tvshow": TVShow}
 
+def _get_content_type(media_type: str):
+    return "movie" if media_type == Movie.__name__ else "tv"
 
 def _get_media_model(media_type: str):
     model = _model_mapping.get(media_type.lower())
@@ -158,7 +163,6 @@ def get_media(media_type: str, media_id: int):
 
     return query
 
-
 def get_all_or_filter(media_type: str, genre_id: int = None, year: int = None, title: str = None):
     query = get_all(media_type)
     model = _get_media_model(media_type)
@@ -173,4 +177,45 @@ def get_all_or_filter(media_type: str, genre_id: int = None, year: int = None, t
         query = query.where(model.title.ilike(f"%{title}%"))
 
     query = query.order_by(model.popularity.desc())
+    return query
+
+def get_all_favorite_media(media_type: str, user_id: int):
+    model = _get_media_model(media_type)
+    content_type = _get_content_type(media_type)
+
+    query = select(model) \
+        .join(Favorite, Favorite.content_id == model.tmdb_id) \
+        .where(and_(Favorite.user_id == user_id, Favorite.content_type == content_type)) \
+        .options(selectinload(model.genres))
+
+    return query
+
+def insert_favorite_media(media_type: str, media_id: int, user_id: int):
+    print("test")
+    content_type = _get_content_type(media_type)
+
+    query = insert(Favorite).values(
+        user_id=user_id,
+        content_id=media_id,
+        content_type=content_type
+    ).on_conflict_do_nothing(index_elements=['user_id', 'content_id', 'content_type'])
+
+    return query
+
+def delete_favorite_media(media_type: str, media_id: int, user_id: int):
+    content_type = _get_content_type(media_type)
+
+    query = delete(Favorite).where(media_id == Favorite.content_id,
+                                   user_id == Favorite.user_id,
+                                   content_type == Favorite.content_type)
+
+    return query
+
+def get_favorite_by_ids(media_type: str, media_id: int, user_id: int):
+    content_type = _get_content_type(media_type)
+
+    query = select(exists().where(and_(media_id == Favorite.content_id,
+                                   user_id == Favorite.user_id,
+                                   content_type == Favorite.content_type)))
+
     return query

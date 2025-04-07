@@ -33,12 +33,17 @@ async def user_info(session: SessionChecker = Depends()):
         "role": session.current_user.role,
         "name": session.current_user.first_name,
         "last_name": session.current_user.last_name,
-        "is_disabled": session.current_user.disabled
+        "is_disabled": session.current_user.is_disabled
          }
 
 
 @router.get("/check-authorisation")
 async def is_autorised(session: SessionChecker = Depends()):
     if session.check_access_by_role("user"):
+        return {"access": True}
+    
+@router.get("/admin-access")
+async def is_autorised(session: SessionChecker = Depends()):
+    if session.check_access_by_role("admin"):
         return {"access": True}
     

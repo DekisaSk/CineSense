@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import List, Optional
 from fastapi import Depends, HTTPException
-from sqlalchemy import select, Select
+from sqlalchemy import select, Select, Delete
+from sqlalchemy.dialects.postgresql import Insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError, NoResultFound, DBAPIError
 from starlette import status
@@ -9,7 +10,7 @@ from models.genre import Genre
 from models.movie import Movie
 from models.tv_show import TVShow
 from models.user import User
-from schemas.user import UserCreate, UserInDB, UserToUpdate
+from schemas.user import UserCreate, UserInDB, UserToUpdate, AllUsers
 from models.role import Role
 from dependecies.db import get_db
 from services.database_queries.media_queries import (
@@ -18,9 +19,17 @@ from services.database_queries.media_queries import (
     get_now_playing,
     get_popular,
     get_top_rated,
-    get_trending, get_media, get_all_or_filter
+    get_trending, get_media, get_all_or_filter, get_all_favorite_media, insert_favorite_media, delete_favorite_media,
+    get_favorite_by_ids
 )
+from services.auth import get_password_hash
 
+
+
+async def get_all_users(db: AsyncSession = Depends(get_db)) -> List[AllUsers]:
+    result = await db.execute(select(User))
+    users = result.scalars().all()
+    return list(map(AllUsers.model_validate, users))
 
 async def get_role_by_id(role_id: int, db: AsyncSession = Depends(get_db)) -> Role:
     """
@@ -41,27 +50,31 @@ async def create_user(user: UserCreate,
     :param db: DB Session
     :return: Newly created User
     """
+    result = await db.execute(select(Role).where(Role.name == "user"))
+    role = result.scalars().first()
+
+    if not role:
+        raise ValueError("Default role 'user' does not exist.")
+
     new_user = User(
-        username=user.username,
+        first_name=user.first_name,
+        last_name=user.last_name,
         email=user.email,
-        hashed_password=user.password,
+        username="proba",#to be removed!!!!
+        hashed_password=get_password_hash(user.password),
+        is_disabled=False
     )
-    role = await get_role_by_id(user.role_id, db)
 
-    if role:
-        new_user.roles.append(role)
-        db.add(new_user)
-        try:
-            await db.commit()
-            await db.refresh(new_user)
-        except IntegrityError as ex:
-            await db.rollback()
-            raise ValueError(
-                "User with this username or email already exists.")
+    new_user.roles.append(role) 
+
+    db.add(new_user)
+    try:
+        await db.commit()
+        await db.refresh(new_user)
         return new_user
-    else:
-        raise ValueError("Role ID does not exist.")
-
+    except IntegrityError:
+        await db.rollback()
+        raise ValueError("User with this username or email already exists.")
 
 async def get_user_by_id(user_id: int, db: AsyncSession = Depends(get_db)) -> Optional[User]:
     """
@@ -211,6 +224,58 @@ async def get_tv_show_details(media_id: int, db: AsyncSession) -> TVShow:
     return await _execute_one(db, query)
 
 
+async def get_user_favorite_movies(user_id: int, db: AsyncSession) -> list[Movie]:
+    query = get_all_favorite_media(media_type=Movie.__name__, user_id=user_id)
+    return await _execute_all(db, query)
+
+
+async def get_user_favorite_tv_shows(user_id: int, db: AsyncSession) -> list[TVShow]:
+    query = get_all_favorite_media(media_type=TVShow.__name__, user_id=user_id)
+    return await _execute_all(db, query)
+
+
+async def add_favorite_movie(user_id: int, movie_id: int, db:AsyncSession):
+    print("test")
+    query = insert_favorite_media(user_id=user_id, media_id=movie_id, media_type=Movie.__name__)
+    return await _execute_with_commit(db, query)
+
+
+async def add_favorite_tv_show(user_id: int, tv_id: int, db:AsyncSession):
+    query = insert_favorite_media(user_id=user_id, media_id=tv_id, media_type=TVShow.__name__)
+    return await _execute_with_commit(db, query)
+
+
+async def remove_favorite_movie(user_id: int, movie_id: int, db:AsyncSession):
+    query = delete_favorite_media(user_id=user_id, media_id=movie_id, media_type=Movie.__name__)
+    return await _execute_with_commit(db, query)
+
+
+async def remove_favorite_tv_show(user_id: int, tv_id: int, db:AsyncSession):
+    query = delete_favorite_media(user_id=user_id, media_id=tv_id, media_type=TVShow.__name__)
+    return await _execute_with_commit(db, query)
+
+
+async def is_movie_favorite(user_id: int, movie_id: int, db:AsyncSession):
+    query = get_favorite_by_ids(user_id=user_id, media_id=movie_id, media_type=Movie.__name__)
+    try:
+        result = await db.execute(query)
+        return result.scalar()
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+async def is_tv_show_favorite(user_id: int, tv_id: int, db:AsyncSession):
+    query = get_favorite_by_ids(user_id=user_id, media_id=tv_id, media_type=TVShow.__name__)
+
+    try:
+        result = await db.execute(query)
+        return result.scalar()
+    except NoResultFound as nr:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(nr))
+
+
 async def _execute_all(db: AsyncSession, query: Select[tuple[Movie | TVShow | Genre]]):
     try:
         result = await db.execute(query)
@@ -236,3 +301,17 @@ async def _execute_one(db: AsyncSession, query: Select[tuple[Movie | TVShow]]):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+async def _execute_with_commit(db: AsyncSession, query: Insert | Delete):
+    try:
+        await db.execute(query)
+        await db.commit()
+    except DBAPIError as dbe:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(dbe))
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    return {"message": "Execution was successful."}
