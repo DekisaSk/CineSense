@@ -33,6 +33,7 @@ class UserToUpdate(BaseModel):
     email: str
 
 class AllUsers(BaseModel):
+    id: int
     first_name: str
     last_name: str
     email: str
