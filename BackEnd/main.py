@@ -8,7 +8,8 @@ from apis.get_all_users import router as get_all_users_router
 from apis.delete_user import router as delete_user_router
 from apis.disable_user import router as disable_user_router
 from apis.add_admin import router as add_admin_router
-
+from apis.forgot_password import router as forgot_password_router
+from apis.forgot_password import router as reset_password_router
 
 app = FastAPI()
 
@@ -32,6 +33,8 @@ app.include_router(get_all_users_router, tags=["create_user"])
 app.include_router(delete_user_router, tags=["delete_user"])
 app.include_router(disable_user_router, tags=["disable_user"])
 app.include_router(add_admin_router, tags=["add_admin"])
+app.include_router(forgot_password_router, tags=["forgot_password"])
+app.include_router(reset_password_router, tags=["reset_password"])
 
 
 if __name__ == "__main__":

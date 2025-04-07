@@ -12,3 +12,6 @@ asyncpg
 pyjwt
 argon2_cffi
 openai
+aiosmtplib 
+python-dotenv 
+email-validator
