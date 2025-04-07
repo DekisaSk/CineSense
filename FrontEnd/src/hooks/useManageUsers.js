@@ -3,6 +3,11 @@ import { disableUser } from "../api/disableUser";
 
 export default function useManageUsers(setUsers) {
   const handleDelete = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this user?"
+    );
+    if (!confirmed) return;
+
     try {
       await deleteUser(id);
       setUsers((prev) => prev.filter((user) => user.id !== id));
