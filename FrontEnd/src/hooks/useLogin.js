@@ -11,7 +11,7 @@ export default function useLogin(initialEmail = "", initialPassword = "") {
 
   const handleLogin = async (email, password) => {
     try {
-      const response = await fetch("http://localhost:8000/auth/token", {
+      const response = await fetch("https://api.cinesense.dzuverovic.me/auth/token", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

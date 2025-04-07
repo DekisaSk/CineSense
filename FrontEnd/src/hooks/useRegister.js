@@ -25,7 +25,7 @@ export default function useRegister() {
       }
 
       try {
-        const response = await axios.post("http://localhost:8000/register", {
+        const response = await axios.post("https://api.cinesense.dzuverovic.me/register", {
           first_name: firstName,
           last_name: lastName,
           email: email,

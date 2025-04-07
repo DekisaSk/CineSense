@@ -62,7 +62,7 @@ export default function useProfile() {
           email: email,
         };
 
-        const response = await fetch("http://localhost:8000/update-user-info", {
+        const response = await fetch("https://api.cinesense.dzuverovic.me/update-user-info", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

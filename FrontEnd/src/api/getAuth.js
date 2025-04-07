@@ -7,7 +7,7 @@ export const getAuth = async () => {
     console.log("1");
     if (token) {
       const response = await fetch(
-        "http://localhost:8000/auth/check-authorisation",
+        "https://api.cinesense.dzuverovic.me/auth/check-authorisation",
         {
           method: "GET",
           headers: {

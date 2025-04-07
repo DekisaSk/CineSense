@@ -6,7 +6,7 @@ export const getUserInfo = async () => {
       ?.split("=")[1];
 
     if (token) {
-      const response = await fetch("http://localhost:8000/auth/user-info", {
+      const response = await fetch("https://api.cinesense.dzuverovic.me/auth/user-info", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
