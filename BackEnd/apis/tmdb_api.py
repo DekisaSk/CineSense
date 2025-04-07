@@ -6,6 +6,7 @@ import services.db_service as db_service
 from schemas.tv_show import TVShowRead
 from schemas.movie import MovieRead
 from schemas.genre import Genre
+from services.session_checker import SessionChecker
 
 router = APIRouter()
 
@@ -129,6 +130,86 @@ async def get_movie_genres(db: AsyncSession = Depends(get_db)):
             summary="Get all the Genres of Tv Shows")
 async def get_tv_show_genres(db: AsyncSession = Depends(get_db)):
     return await db_service.get_tv_show_genres(db)
+
+
+@router.get("/movies/favorite",
+            status_code=status.HTTP_200_OK,
+            response_model=List[MovieRead],
+            summary="Get User's favorite movies")
+async def get_user_favorite_movies(db: AsyncSession = Depends(get_db),
+    session_checker: SessionChecker = Depends()):
+    user_id = session_checker.current_user.id
+    return await db_service.get_user_favorite_movies(user_id=user_id, db=db)
+
+
+@router.get("/tv-shows/favorite",
+            status_code=status.HTTP_200_OK,
+            response_model=List[TVShowRead],
+            summary="Get User's favorite tv shows")
+async def get_user_favorite_tv_shows(db: AsyncSession = Depends(get_db),
+    session_checker: SessionChecker = Depends()):
+    user_id = session_checker.current_user.id
+    return await db_service.get_user_favorite_tv_shows(user_id=user_id, db=db)
+
+
+@router.post("/movies/favorite/{movie_id}",
+            status_code=status.HTTP_201_CREATED,
+            summary="Adds Movie to user's favorites")
+async def add_favorite_movie(movie_id: int,
+                                db: AsyncSession = Depends(get_db),
+                                session_checker: SessionChecker = Depends()):
+    user_id = session_checker.current_user.id
+    return await db_service.add_favorite_movie(user_id=user_id, movie_id=movie_id, db=db)
+
+
+@router.post("/tv-shows/favorite/{tv_id}",
+            status_code=status.HTTP_201_CREATED,
+            summary="Adds TV Show to user's favorites")
+async def add_favorite_tv_show(tv_id: int,
+                                db: AsyncSession = Depends(get_db),
+                                session_checker: SessionChecker = Depends()):
+    user_id = session_checker.current_user.id
+    return await db_service.add_favorite_tv_show(user_id=user_id, tv_id=tv_id, db=db)
+
+
+@router.delete("/movies/favorite/{movie_id}",
+            status_code=status.HTTP_200_OK,
+            summary="Removes Movie from user's favorites")
+async def remove_favorite_movie(movie_id: int,
+                                db: AsyncSession = Depends(get_db),
+                                session_checker: SessionChecker = Depends()):
+    user_id = session_checker.current_user.id
+    return await db_service.remove_favorite_movie(user_id=user_id, movie_id=movie_id, db=db)
+
+
+@router.delete("/tv-shows/favorite/{tv_id}",
+            status_code=status.HTTP_200_OK,
+            summary="Removes TV Show from user's favorites")
+async def remove_favorite_tv_show(tv_id: int,
+                                db: AsyncSession = Depends(get_db),
+                                session_checker: SessionChecker = Depends()):
+    user_id = session_checker.current_user.id
+    return await db_service.remove_favorite_tv_show(user_id=user_id, tv_id=tv_id, db=db)
+
+
+@router.get("/movies/favorite/{movie_id}",
+            status_code=status.HTTP_200_OK,
+            summary="Checks if Movie is user's favorite")
+async def is_movie_favorite(movie_id: int,
+                                db: AsyncSession = Depends(get_db),
+                                session_checker: SessionChecker = Depends()):
+    user_id = session_checker.current_user.id
+    return await db_service.is_movie_favorite(user_id=user_id, movie_id=movie_id, db=db)
+
+
+@router.get("/tv-shows/favorite/{tv_id}",
+            status_code=status.HTTP_200_OK,
+            summary="Checks if TV Show is user's favorite")
+async def is_tv_show_favorite(tv_id: int,
+                                db: AsyncSession = Depends(get_db),
+                                session_checker: SessionChecker = Depends()):
+    user_id = session_checker.current_user.id
+    return await db_service.is_tv_show_favorite(user_id=user_id, tv_id=tv_id, db=db)
 
 
 @router.get("/movies/{movie_id}",

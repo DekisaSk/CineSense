@@ -13,12 +13,24 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import StarBorder from "@mui/icons-material/StarBorder";
 import Star from "@mui/icons-material/Star";
-import { getMovieDetails, getTvDetails } from "../api/tmdbApi";
+import {
+  addMovieToFavorite,
+  addTvShowToFavorite,
+  getMovieDetails,
+  getTvDetails,
+  isMovieFavorite,
+  isTvShowFavorite,
+  removeMovieFromFavorite,
+  removeTvShowFromFavorite,
+} from "../api/tmdbApi";
+
+import { useRoleContext } from "../contexts/RoleContext";
 
 export default function MovieDetailsModal({ open, onClose, movie }) {
   const [loading, setLoading] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false);
   const [movieDetails, setMovieDetails] = useState(null);
+  const { role } = useRoleContext();
 
   useEffect(() => {
     if (!open || !movie) {
@@ -36,18 +48,55 @@ export default function MovieDetailsModal({ open, onClose, movie }) {
         } else {
           data = await getMovieDetails(movie.id);
         }
+
         setMovieDetails(data);
+        console.log(role);
+        if (role !== "user") {
+          return;
+        }
+
+        let favoriteExists =
+          movie.mediaType === "tv"
+            ? await isTvShowFavorite(movie.id)
+            : await isMovieFavorite(movie.id);
+
+        console.log(favoriteExists);
+        setIsFavourite(favoriteExists);
       } catch (error) {
+        setIsFavourite(false);
         console.error("Error fetching details:", error);
       } finally {
         setLoading(false);
       }
     }
     fetchDetails();
-  }, [open, movie]);
+  }, [open, movie, role]);
 
   const handleFavourite = () => {
-    setIsFavourite((prev) => !prev);
+    async function manageFavorite() {
+      if (role !== "user") {
+        return;
+      }
+      const isTvShow = movie.mediaType === "tv";
+      try {
+        if (!isFavourite) {
+          isTvShow
+            ? await addTvShowToFavorite(movie.id)
+            : await addMovieToFavorite(movie.id);
+        } else {
+          isTvShow
+            ? await removeTvShowFromFavorite(movie.id)
+            : await removeMovieFromFavorite(movie.id);
+        }
+        console.log(isFavourite);
+
+        setIsFavourite((prev) => !prev);
+      } catch (error) {
+        console.error("Error fetching details:", error);
+      }
+    }
+
+    manageFavorite();
   };
 
   if (!open) return null;
@@ -72,7 +121,10 @@ export default function MovieDetailsModal({ open, onClose, movie }) {
           px: 2,
         }}
       >
-        <IconButton onClick={handleFavourite}>
+        <IconButton
+          onClick={handleFavourite}
+          style={{ display: role !== "user" ? "none" : "inline-block" }}
+        >
           {isFavourite ? <Star /> : <StarBorder />}
         </IconButton>
         <DialogTitle sx={{ flex: 1, textAlign: "center", ml: -4 }}>
