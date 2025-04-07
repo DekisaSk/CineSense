@@ -1,26 +1,25 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Select, MenuItem } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import useMovieSearchForm from "../../hooks/useMovieSearchForm";
 
 const MovieSearchForm = ({ onSearch }) => {
-  const { userPrompt, setUserPrompt, handleSubmit } = useMovieSearchForm();
+  const { userPrompt, setUserPrompt, handleSubmit, mediaType, setMediaType } =
+    useMovieSearchForm();
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    handleSubmit(e, onSearch, mediaType);
+  };
 
   return (
-    <Box
-      component="form"
-      onSubmit={(e) => handleSubmit(e, onSearch)}
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 2,
-        width: "100%",
-      }}
-      noValidate={false}
-    >
+    <Box component="form" onSubmit={onSubmit} sx={{ display: "flex", gap: 2 }}>
+      <Select value={mediaType} onChange={(e) => setMediaType(e.target.value)}>
+        <MenuItem value="movie">Movie</MenuItem>
+        <MenuItem value="tv">TV Show</MenuItem>
+      </Select>
+
       <TextField
-        label="Describe the movie"
-        variant="outlined"
-        required
+        label="Describe the content"
         fullWidth
         value={userPrompt}
         onChange={(e) => setUserPrompt(e.target.value)}
@@ -29,15 +28,7 @@ const MovieSearchForm = ({ onSearch }) => {
       <Button
         type="submit"
         variant="contained"
-        color="primary"
-        sx={{
-          width: 56,
-          height: 56,
-          minWidth: 56,
-          minHeight: 56,
-          borderRadius: "50%",
-          padding: 0,
-        }}
+        sx={{ minWidth: 56, minHeight: 56 }}
       >
         <ArrowForwardIosIcon />
       </Button>

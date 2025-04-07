@@ -97,6 +97,24 @@ async def get_trending_tv_shows(db: AsyncSession = Depends(get_db)):
     return await db_service.get_trending_tv_shows(db)
 
 
+@router.get("/movies/smart-search/{query}",
+            summary="Movies Smart search based on natural language",
+            response_model=List[MovieRead],
+            status_code=200)
+async def smart_search(query: str,
+                       db: AsyncSession = Depends(get_db)):
+    return await db_service.get_smart_movies_recommendations(query, db)
+
+
+@router.get("/tv-shows/smart-search/{query}",
+            summary="TV Smart search based on natural language",
+            response_model=List[TVShowRead],
+            status_code=200)
+async def smart_search(query: str,
+                       db: AsyncSession = Depends(get_db)):
+    return await db_service.get_smart_tv_shows_recommendations(query, db)
+
+
 @router.get("/movies/genres",
             status_code=status.HTTP_200_OK,
             response_model=List[Genre],
