@@ -12,8 +12,8 @@ tv_genres = sql.Table(
 class TVShow(Base):
     __tablename__ = 'tv_shows'
     tmdb_id = sql.Column(sql.Integer, primary_key=True, nullable=False)
-    name = sql.Column(sql.Text)
-    original_name = sql.Column(sql.Text)
+    title = sql.Column(sql.Text)
+    original_title = sql.Column(sql.Text)
     overview = sql.Column(sql.Text)
     tagline = sql.Column(sql.Text)
     release_date = sql.Column(sql.Date)
@@ -25,4 +25,4 @@ class TVShow(Base):
     type = sql.Column(sql.String(100))
 
     genres = sql.orm.relationship(
-        'Genre', secondary=tv_genres, backref='tv_shows')
+        'Genre', secondary=tv_genres, back_populates='tv_shows',)

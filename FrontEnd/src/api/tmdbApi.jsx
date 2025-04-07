@@ -4,16 +4,14 @@ const apiClient = axios.create({
   baseURL: "http://localhost:8000",
 });
 
-export async function getAllMovies(genre, year) {
-  const response = await apiClient.get("/movies", {
-    params: { genre, year },
-  });
+export async function getAllMovies(params) {
+  const response = await apiClient.get("/movies", { params });
   return response.data;
 }
 
-export async function getAllTvShows(genre, year) {
+export async function getAllTvShows(params) {
   const response = await apiClient.get("/tv-shows", {
-    params: { genre, year },
+    params: params,
   });
   return response.data;
 }
@@ -75,5 +73,19 @@ export async function getMovieDetails(movieId) {
 
 export async function getTvDetails(tvId) {
   const response = await apiClient.get(`/tv-shows/${tvId}`);
+  return response.data;
+}
+
+export async function smartSearchMovies(query) {
+  const response = await apiClient.get(
+    `/movies/smart-search/${encodeURIComponent(query)}`
+  );
+  return response.data;
+}
+
+export async function smartSearchTvShows(query) {
+  const response = await apiClient.get(
+    `/tv-shows/smart-search/${encodeURIComponent(query)}`
+  );
   return response.data;
 }

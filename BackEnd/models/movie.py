@@ -26,4 +26,4 @@ class Movie(Base):
     adult = sql.Column(sql.Boolean)
 
     genres = sql.orm.relationship(
-        'Genre', secondary=movie_genres, backref='movies')
+        'Genre', secondary=movie_genres, back_populates='movies')

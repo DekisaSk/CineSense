@@ -6,29 +6,31 @@ import services.db_service as db_service
 from schemas.tv_show import TVShowRead
 from schemas.movie import MovieRead
 from schemas.genre import Genre
-router = APIRouter()
 
+router = APIRouter()
 
 @router.get("/movies",
             status_code=status.HTTP_200_OK,
             response_model=List[MovieRead],
-            summary="Get all movies or filter them by year and/or genre")
-async def get_all_movies(genre: Optional[str] = Query(None, description="Filter by genre name"),
+            summary="Get all movies or filter them by genre, release year and/or title")
+async def get_all_movies(genre_id: Optional[int] = Query(None, description="Filter by genre"),
                          year: Optional[int] = Query(
                              None, description="Filter by release year"),
+                         title: Optional[str] = Query(None, description="Filter by movie title"),
                          db: AsyncSession = Depends(get_db)):
-    return await db_service.get_movies(genre=genre, year=year, db=db)
+    return await db_service.get_movies(genre_id=genre_id, year=year, title=title, db=db)
 
 
 @router.get("/tv-shows",
             status_code=status.HTTP_200_OK,
             response_model=List[TVShowRead],
-            summary="Get all TV Shows or filter them by year and/or genre")
-async def get_all_tv_shows(genre: Optional[str] = Query(None, description="Filter by genre name"),
+            summary="Get all TV Shows or filter them by genre, release year and/or title")
+async def get_all_tv_shows(genre_id: Optional[int] = Query(None, description="Filter by genre"),
                            year: Optional[int] = Query(
                                None, description="Filter by release year"),
+                           title: Optional[str] = Query(None, description="Filter by movie title"),
                            db: AsyncSession = Depends(get_db)):
-    return await db_service.get_tv_shows(genre=genre, year=year, db=db)
+    return await db_service.get_tv_shows(genre_id=genre_id, year=year, title=title, db=db)
 
 
 @router.get("/movies/popular",
@@ -93,6 +95,24 @@ async def get_trending_movies(db: AsyncSession = Depends(get_db)):
             summary="Get Tv Shows that are lately on the rise of popularity")
 async def get_trending_tv_shows(db: AsyncSession = Depends(get_db)):
     return await db_service.get_trending_tv_shows(db)
+
+
+@router.get("/movies/smart-search/{query}",
+            summary="Movies Smart search based on natural language",
+            response_model=List[MovieRead],
+            status_code=200)
+async def smart_search(query: str,
+                       db: AsyncSession = Depends(get_db)):
+    return await db_service.get_smart_movies_recommendations(query, db)
+
+
+@router.get("/tv-shows/smart-search/{query}",
+            summary="TV Smart search based on natural language",
+            response_model=List[TVShowRead],
+            status_code=200)
+async def smart_search(query: str,
+                       db: AsyncSession = Depends(get_db)):
+    return await db_service.get_smart_tv_shows_recommendations(query, db)
 
 
 @router.get("/movies/genres",

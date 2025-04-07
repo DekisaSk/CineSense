@@ -1,11 +1,9 @@
-from typing import Optional
-
-from sqlalchemy import select, extract
+from sqlalchemy import or_, select, extract
 from datetime import datetime, timedelta
 from sqlalchemy.orm import selectinload
 from models.genre import Genre
-from models.movie import Movie, movie_genres
-from models.tv_show import TVShow, tv_genres
+from models.movie import Movie
+from models.tv_show import TVShow
 
 _model_mapping = {"movie": Movie, "tvshow": TVShow}
 
@@ -101,6 +99,23 @@ def get_trending(media_type: str, limit: int = 10, days: int = 30):
     return query
 
 
+def get_items_by_tmdb_ids(media_type: str, titles: list[str]):
+    """
+    Creates query for Movies or TvShows that OpenAI suggests.
+    :param media_type: represents the media type we want to get - Movies or TV Shows
+    :param list[int]: List of TMDB IDs that OpenAI returns.
+    :return: Select query
+    """
+    model = _get_media_model(media_type)
+    query = (
+        select(model)
+        .where(or_(model.title.in_(titles), model.original_title.in_(titles)))
+        .order_by(model.popularity.desc())
+        .options(selectinload(model.genres))
+    )
+    return query
+
+
 def get_all(media_type: str):
     """
     Creates query for all Movies or TV Shows from the databse
@@ -144,13 +159,17 @@ def get_media(media_type: str, media_id: int):
     return query
 
 
-def get_all_or_filter(media_type: str, genre: str = None, year: int = None):
+def get_all_or_filter(media_type: str, genre_id: int = None, year: int = None, title: str = None):
     query = get_all(media_type)
+    model = _get_media_model(media_type)
 
-    if genre:
-        query = query.where(genre == Genre.name)
+    if genre_id:
+        query = query.where(model.genres.any(genre_id == Genre.genre_id))
 
     if year:
-        query = query.where(extract('year', Movie.release_date) == year)
+        query = query.where(extract('year', model.release_date) == year)
+
+    if title:
+        query = query.where(model.title.ilike(f"%{title}%"))
 
     return query

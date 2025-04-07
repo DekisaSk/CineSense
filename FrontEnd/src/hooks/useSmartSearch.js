@@ -1,18 +1,25 @@
 import { useState, useCallback } from "react";
+import { smartSearchMovies, smartSearchTvShows } from "../api/tmdbApi";
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-export function useSearch(initialSearched = false) {
+export function useSmartSearch(initialSearched = false) {
   const [searched, setSearched] = useState(initialSearched);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [results, setResults] = useState([]);
+  const [mediaType, setMediaType] = useState("movie");
 
-  const handleSearch = useCallback(async () => {
+  const handleSearch = useCallback(async (query, selectedType = "movie") => {
     setLoading(true);
     setError(null);
+    setMediaType(selectedType);
+
     try {
-      //fejk waiting time
-      await wait(2000);
+      const data =
+        selectedType === "movie"
+          ? await smartSearchMovies(query)
+          : await smartSearchTvShows(query);
+
+      setResults(data);
       setSearched(true);
     } catch (e) {
       setError(e);
@@ -21,5 +28,5 @@ export function useSearch(initialSearched = false) {
     }
   }, []);
 
-  return { searched, loading, error, handleSearch };
+  return { searched, loading, error, handleSearch, results, mediaType };
 }

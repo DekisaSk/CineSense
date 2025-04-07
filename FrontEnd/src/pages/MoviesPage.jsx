@@ -24,7 +24,7 @@ const UI_PAGES_PER_API_PAGE = 5;
 
 export default function MoviesPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [type, setType] = useState("all");
+  const [type, setType] = useState("movie");
   const [genre, setGenre] = useState("");
   const [year, setYear] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -43,6 +43,7 @@ export default function MoviesPage() {
     totalPages: apiTotalPages,
     loading,
     error,
+    genreList,
   } = useSearch({
     query: searchQuery,
     type,
@@ -103,14 +104,23 @@ export default function MoviesPage() {
               </MuiFormControl>
             </Grid>
             <Grid item xs={12} sm="auto">
-              <TextField
-                variant="outlined"
-                label="Genre"
-                value={genre}
-                onChange={(e) => setGenre(e.target.value)}
-                fullWidth
-              />
+              <MuiFormControl variant="outlined" fullWidth>
+                <InputLabel>Genre</InputLabel>
+                <Select
+                  value={genre}
+                  onChange={(e) => setGenre(e.target.value)}
+                  label="Genre"
+                >
+                  <MenuItem value="">All</MenuItem>
+                  {genreList.map((g) => (
+                    <MenuItem key={g.genre_id} value={g.genre_id}>
+                      {g.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </MuiFormControl>
             </Grid>
+
             <Grid item xs={12} sm="auto">
               <TextField
                 variant="outlined"
