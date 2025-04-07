@@ -1,37 +1,50 @@
 import { Card, CardContent, Typography, Box, IconButton } from "@mui/material";
 import { Delete, Block } from "@mui/icons-material";
-
-// dummy
-const users = [
-  { id: 1, email: "pavle@outlook.com", blocked: false },
-  { id: 2, email: "dejan@gmail.com", blocked: true },
-  { id: 3, email: "nikola@gmail.com", blocked: true },
-  { id: 4, email: "andrija@gmail.com", blocked: true },
-];
+import { getAllUsers } from "../../api/getAllUsers";
+import { useEffect } from "react";
+import { use } from "react";
+import { useState } from "react";
 
 const UserManagementCard = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await getAllUsers();
+        setUsers(data);
+        console.log(data);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   return (
     <Card className="mb-4">
       <CardContent>
         <Typography variant="h6" className="mb-4">
           User Management
         </Typography>
-        {users.map((user) => (
-          <Box
-            key={user.id}
-            className="flex justify-between items-center py-2 border-b"
-          >
-            <Typography>{user.email}</Typography>
-            <Box>
-              <IconButton color="error">
-                <Delete />
-              </IconButton>
-              <IconButton color={user.blocked ? "error" : "default"}>
-                <Block />
-              </IconButton>
+        {Array.isArray(users) &&
+          users.map((user) => (
+            <Box
+              key={user.id}
+              className="flex justify-between items-center py-2 border-b"
+            >
+              <Typography>{user.email}</Typography>
+              <Box>
+                <IconButton color="error">
+                  <Delete />
+                </IconButton>
+                <IconButton color={user.blocked ? "error" : "default"}>
+                  <Block />
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
-        ))}
+          ))}
       </CardContent>
     </Card>
   );
