@@ -172,4 +172,5 @@ def get_all_or_filter(media_type: str, genre_id: int = None, year: int = None, t
     if title:
         query = query.where(model.title.ilike(f"%{title}%"))
 
+    query = query.order_by(model.popularity.desc())
     return query

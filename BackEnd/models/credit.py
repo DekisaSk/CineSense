@@ -11,3 +11,8 @@ class Credit(Base):
     content_id = sql.Column(sql.Integer, nullable=False)
     content_type = sql.Column(sql.String(
         10), nullable=False)  # 'movie' or 'tv'
+
+    # tv_shows = sql.orm.relationship(
+    #     'TVShow', secondary="tv_credits", back_populates='credits')
+    # movies = sql.orm.relationship(
+    #     'Movie', secondary="movie_credits", back_populates='credits')
