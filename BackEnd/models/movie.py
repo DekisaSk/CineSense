@@ -7,6 +7,15 @@ movie_genres = sql.Table(
     sql.Column('genre_id', sql.ForeignKey('genres.genre_id'), primary_key=True)
 )
 
+# Possible future update to display cast and crew of a movie
+# movie_credits = sql.Table(
+#     'movie_credits', Base.metadata,
+#     sql.Column('tmdb_id', sql.ForeignKey(
+#         'movies.tmdb_id'), primary_key=True),
+#     sql.Column('credit_id', sql.ForeignKey(
+#         'credits.credit_id'), primary_key=True)
+# )
+
 
 class Movie(Base):
     __tablename__ = 'movies'
@@ -27,3 +36,5 @@ class Movie(Base):
 
     genres = sql.orm.relationship(
         'Genre', secondary=movie_genres, back_populates='movies')
+    # credits = sql.orm.relationship(
+    #     'Credit', secondary=movie_credits, back_populates='movies')
