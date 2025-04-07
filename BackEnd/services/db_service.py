@@ -4,6 +4,7 @@ from sqlalchemy import select, Select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError, NoResultFound, DBAPIError
 from starlette import status
+from services.openai_service import get_tmdb_ids_from_description
 from models.genre import Genre
 from models.movie import Movie
 from models.tv_show import TVShow
@@ -13,6 +14,7 @@ from models.role import Role
 from dependecies.db import get_db
 from services.database_queries.media_queries import (
     get_genres,
+    get_items_by_tmdb_ids,
     get_now_playing,
     get_popular,
     get_top_rated,
@@ -171,6 +173,20 @@ async def get_trending_movies(db: AsyncSession) -> list[Movie]:
 
 async def get_trending_tv_shows(db: AsyncSession) -> list[TVShow]:
     query = get_trending(media_type=TVShow.__name__)
+    return await _execute_all(db, query)
+
+
+async def get_smart_movies_recommendations(description: str, db: AsyncSession):
+    titles = await get_tmdb_ids_from_description(media_type=Movie.__name__, description=description)
+
+    query = get_items_by_tmdb_ids(media_type=Movie.__name__, titles=titles)
+    return await _execute_all(db, query)
+
+
+async def get_smart_tv_shows_recommendations(description: str, db: AsyncSession):
+    titles = await get_tmdb_ids_from_description(media_type=TVShow.__name__, description=description)
+
+    query = get_items_by_tmdb_ids(media_type=TVShow.__name__, titles=titles)
     return await _execute_all(db, query)
 
 
