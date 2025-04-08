@@ -8,7 +8,11 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MainRoutes from "./router/MainRoutes.jsx";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CustomThemeProvider } from "./components/Header/ThemeContext";
-import { RoleProvider } from "./contexts/RoleContext.jsx"; // Adjust the path accordingly
+import { RoleProvider } from "./contexts/RoleContext.jsx";
+import ReactGA from "react-ga4";
+import AnalyticsTracker from "./utils/AnalyticsTracker.jsx";
+
+ReactGA.initialize("G-DFWNC57GYW");
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -17,6 +21,7 @@ createRoot(document.getElementById("root")).render(
       <RoleProvider>
         <BrowserRouter>
           <Header />
+          <AnalyticsTracker />
           <MainRoutes />
           <App />
           <Footer />

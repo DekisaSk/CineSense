@@ -24,6 +24,6 @@ class User(Base):
     hashed_password = sql.Column(sql.String, nullable=False)
     created_at = sql.Column(sql.DateTime, default=datetime.datetime.now)
     is_disabled = sql.Column(sql.Boolean)
-
+    avatar_path = sql.Column(sql.String(length=255), nullable=True)
     roles = sql.orm.relationship(
         "Role", secondary=user_roles, back_populates="users")
