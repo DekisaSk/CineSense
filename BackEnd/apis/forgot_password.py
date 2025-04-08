@@ -1,3 +1,4 @@
+from core.config import settings
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -10,13 +11,17 @@ from services.auth import get_user
 from utils.email_utils import send_reset_email
 import jwt
 
+
 router = APIRouter()
 
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
 # 📌 Endpoint 1: Forgot password
+
+
 @router.post("/forgot-password")
 async def forgot_password(email: str, db: AsyncSession = Depends(get_db)):
     user = await get_user(db, email)
@@ -35,10 +40,10 @@ async def forgot_password(email: str, db: AsyncSession = Depends(get_db)):
     return {"message": "Reset link sent to your email"}
 
 
-
 class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str
+
 
 @router.post("/reset-password")
 async def reset_password(
@@ -61,11 +66,12 @@ async def reset_password(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    from services.auth import get_password_hash  
+    from services.auth import get_password_hash
     user.hashed_password = get_password_hash(data.new_password)
 
     await db.commit()
     return {"message": "Password successfully reset"}
+
 
 @router.get("/reset-password")
 async def open_reset_page(token: str):
