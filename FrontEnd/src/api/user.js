@@ -22,17 +22,20 @@ export async function getUserInfo() {
   return response.data;
 }
 
-export async function updateUserInfo({ first_name, last_name, email }) {
+export async function updateUserInfo(userData) {
   const token = getToken();
-  const response = await apiClient.put(
-    "/update-user-info",
-    { first_name, last_name, email },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await apiClient.put("/update-user-info", userData, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
+}
+
+export async function sendPasswordReset(email) {
+  const { response } = await apiClient.post(
+    `/forgot-password?email=${encodeURIComponent(email)}`
+  );
+  return response.message || "Reset link sent to your email.";
 }

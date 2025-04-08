@@ -30,3 +30,10 @@ export async function registerUser({ first_name, last_name, email, password }) {
   });
   return response.data;
 }
+
+export async function sendPasswordReset(email) {
+  const { response } = await apiClient.post(
+    `/forgot-password?email=${encodeURIComponent(email)}`
+  );
+  return response.message || "Reset link sent to your email.";
+}

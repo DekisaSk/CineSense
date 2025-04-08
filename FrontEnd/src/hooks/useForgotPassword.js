@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import axios from "axios";
+import { sendPasswordReset } from "../api/user";
 
 export default function useForgotPassword(initialEmail = "") {
   const [resetEmail, setResetEmail] = useState(initialEmail);
@@ -7,12 +7,8 @@ export default function useForgotPassword(initialEmail = "") {
 
   const handleResetPassword = useCallback(async () => {
     try {
-      const { data } = await axios.post(
-        `http://localhost:8000/forgot-password?email=${encodeURIComponent(
-          resetEmail
-        )}`
-      );
-      setNotification(data.message || "Reset link sent to your email.");
+      const message = await sendPasswordReset(resetEmail);
+      setNotification(message);
     } catch (error) {
       if (error.response && error.response.data?.detail) {
         setNotification(error.response.data.detail);

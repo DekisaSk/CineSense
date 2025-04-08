@@ -6,7 +6,7 @@ export const getAdmin = async () => {
       ?.split("=")[1];
     console.log("1");
     if (token) {
-      const response = await fetch("http://localhost:8000s/auth/admin-access", {
+      const response = await fetch("http://localhost:8000/auth/admin-access", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
