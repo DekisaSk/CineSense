@@ -51,6 +51,7 @@ const ProfilePage = () => {
     setLastName,
     email,
     setEmail,
+    avatarPath,
   } = useProfile();
 
   if (!isLoaded || auth.loading) {

@@ -51,6 +51,7 @@ async def get_user(db: AsyncSession, username: str):
             role_id=role_obj.id,
             is_disabled=user.is_disabled,
             hashed_password=user.hashed_password,
+            avatar_path=user.avatar_path,
         )
 
     return None

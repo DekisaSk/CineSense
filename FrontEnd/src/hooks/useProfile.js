@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getUserInfo, updateUserInfo } from "../api/user";
-
+import axios from "axios";
 export default function useProfile() {
   const [userData, setUserData] = useState({
     name: "",
@@ -9,18 +9,34 @@ export default function useProfile() {
     avatar: "",
   });
 
+  const getTokenFromCookie = () => {
+    const match = document.cookie.match(/(?:^|;\s*)access_token=([^;]*)/);
+    return match ? match[1] : null;
+  };
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-
+  const [avatarPath, setAvatarPath] = useState("");
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         const data = await getUserInfo();
-        setUserData(data);
+
+        const fullAvatarUrl = data.avatar_path
+          ? `http://localhost:8000${data.avatar_path}`
+          : "";
+
+        setUserData((prev) => ({
+          ...prev,
+          ...data,
+          avatar: fullAvatarUrl,
+        }));
+
         setFirstName(data.name || "");
         setLastName(data.last_name || "");
         setEmail(data.email || "");
+        setAvatarPath(fullAvatarUrl);
       } catch (error) {
         console.error("Failed to fetch user info:", error);
       }
@@ -35,21 +51,35 @@ export default function useProfile() {
       [key]: value,
     }));
   };
-
-  const handleAvatarChange = (event) => {
+  const handleAvatarChange = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/upload-avatar",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${getTokenFromCookie()}`,
+          },
+        }
+      );
+
+      const avatarUrl = `http://localhost:8000${res.data.avatar_url}`;
+      setAvatarPath(avatarUrl);
       setUserData((prev) => ({
         ...prev,
-        avatar: reader.result,
+        avatar: avatarUrl,
       }));
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error("Failed to upload avatar", err);
+    }
   };
-
   const handleUpdateProfile = async () => {
     try {
       const token = document.cookie
@@ -103,5 +133,6 @@ export default function useProfile() {
     setLastName,
     email,
     setEmail,
+    avatarPath,
   };
 }

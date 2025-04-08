@@ -12,6 +12,7 @@ from apis.disable_user import router as disable_user_router
 from apis.add_admin import router as add_admin_router
 from apis.forgot_password import router as forgot_password_router
 from apis.forgot_password import router as reset_password_router
+from apis.upload_avatar import router as avatar_router
 
 app = FastAPI()
 
@@ -28,7 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(tmdb_router, tags=["TMDB"])
@@ -41,6 +42,7 @@ app.include_router(disable_user_router, tags=["disable_user"])
 app.include_router(add_admin_router, tags=["add_admin"])
 app.include_router(forgot_password_router, tags=["forgot_password"])
 app.include_router(reset_password_router, tags=["reset_password"])
+app.include_router(avatar_router, tags=["upload_avatar"])
 
 
 if __name__ == "__main__":
