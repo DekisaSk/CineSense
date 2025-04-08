@@ -3,10 +3,10 @@ import { addAdmin } from "../api/addAdmin";
 export default function useAddAdmin() {
   const [email, setEmail] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      response = addAdmin(email);
+      response = await addAdmin(email);
       setEmail("");
     } catch {
       console.log("Could not add admin");
