@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../api/auth";
 
 export default function useLogin(initialEmail = "", initialPassword = "") {
   const [email, setEmail] = useState(initialEmail);
@@ -11,23 +12,7 @@ export default function useLogin(initialEmail = "", initialPassword = "") {
 
   const handleLogin = async (email, password) => {
     try {
-      const response = await fetch("https://api.cinesense.dzuverovic.me/auth/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          grant_type: "password",
-          username: email,
-          password: password,
-        }),
-      });
-      console.log(email, password);
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
+      const data = await loginUser(email, password);
       const token = data.access_token;
 
       document.cookie = `access_token=${token}; path=/; secure`;

@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Card, CardContent, Typography, Modal, Box, IconButton } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Modal,
+  Box,
+  IconButton,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Line } from "react-chartjs-2";
 import { useTheme } from "@mui/material/styles";
@@ -36,7 +43,7 @@ const GAStatsCard = ({ title, metric }) => {
 
   const formattedLabels = data
     ? data.labels.map((label) => {
-        // label is in "YYYYMMDD" format
+        // label format: "YYYYMMDD"
         const day = label.slice(6, 8);
         const month = label.slice(4, 6);
         return `${day}/${month}`;
@@ -55,7 +62,6 @@ const GAStatsCard = ({ title, metric }) => {
       },
     ],
   };
-
 
   const options = {
     maintainAspectRatio: false,

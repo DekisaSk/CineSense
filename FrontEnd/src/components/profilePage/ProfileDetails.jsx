@@ -26,7 +26,7 @@ const ProfileDetails = ({
         required
         value={userData.name}
         onChange={(event) => {
-          onInputChange("firstName", event.target.value);
+          onInputChange("name", event.target.value);
           setFirstName(event.target.value);
         }}
       />
@@ -37,7 +37,7 @@ const ProfileDetails = ({
         required
         value={userData.last_name}
         onChange={(event) => {
-          onInputChange("lastName", event.target.value);
+          onInputChange("last_name", event.target.value);
           setLastName(event.target.value);
         }}
       />

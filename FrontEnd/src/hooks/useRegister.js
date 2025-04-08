@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../api/auth";
 
 export default function useRegister() {
   const navigate = useNavigate();
@@ -25,17 +25,17 @@ export default function useRegister() {
       }
 
       try {
-        const response = await axios.post("https://api.cinesense.dzuverovic.me/register", {
+        const data = await registerUser({
           first_name: firstName,
           last_name: lastName,
-          email: email,
-          password: password,
+          email,
+          password,
         });
 
-        alert(response.data.message || "Registration successful!");
+        alert(data.message || "Registration successful!");
         navigate("/login");
       } catch (error) {
-        if (error.response) {
+        if (error.response?.data?.message) {
           alert(error.response.data.message);
         } else {
           console.error("Registration error:", error);

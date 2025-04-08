@@ -2,7 +2,6 @@ import { Card, CardContent, Typography, Box, IconButton } from "@mui/material";
 import { Delete, Block } from "@mui/icons-material";
 import { getAllUsers } from "../../api/getAllUsers";
 import { useEffect } from "react";
-import { use } from "react";
 import { useState } from "react";
 
 const UserManagementCard = () => {
