@@ -26,6 +26,7 @@ class UserCreate(BaseModel):
 class UserInDB(UserBase):
     hashed_password: str
     role: str
+    avatar_path: Optional[str] = None
 
 
 class Token(BaseModel):

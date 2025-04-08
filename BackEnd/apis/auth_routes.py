@@ -37,7 +37,8 @@ async def user_info(session: SessionChecker = Depends()):
         "role": session.current_user.role,
         "name": session.current_user.first_name,
         "last_name": session.current_user.last_name,
-        "is_disabled": session.current_user.is_disabled
+        "is_disabled": session.current_user.is_disabled,
+        "avatar_path": session.current_user.avatar_path
     }
 
 
