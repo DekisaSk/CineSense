@@ -6,10 +6,16 @@ export default function useAddAdmin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      response = await addAdmin(email);
+      const response = await addAdmin(email);
       setEmail("");
-    } catch {
-      console.log("Could not add admin");
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const message =
+          error.response.data.detail || JSON.stringify(error.response.data);
+        alert(`${message}`);
+      } else {
+        alert(`${error.message}`);
+      }
     }
   };
 
