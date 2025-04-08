@@ -4,10 +4,9 @@ import { getAllUsers } from "../../api/getAllUsers";
 import { useEffect } from "react";
 import { use } from "react";
 import { useState } from "react";
-
+import useManageUsers from "../../hooks/useManageUsers";
 const UserManagementCard = () => {
   const [users, setUsers] = useState([]);
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -21,6 +20,8 @@ const UserManagementCard = () => {
 
     fetchUsers();
   }, []);
+
+  const { handleDisable, handleDelete } = useManageUsers(setUsers);
 
   return (
     <Card className="mb-4">
@@ -36,10 +37,13 @@ const UserManagementCard = () => {
             >
               <Typography>{user.email}</Typography>
               <Box>
-                <IconButton color="error">
+                <IconButton color="error" onClick={() => handleDelete(user.id)}>
                   <Delete />
                 </IconButton>
-                <IconButton color={user.blocked ? "error" : "default"}>
+                <IconButton
+                  color={user.is_disabled ? "error" : "default"}
+                  onClick={() => handleDisable(user.id)}
+                >
                   <Block />
                 </IconButton>
               </Box>

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from services.session_checker import SessionChecker
 from schemas.user import UserToUpdate
 from models.user import User
@@ -15,6 +15,11 @@ async def update_user_info(
     session: AsyncSession = Depends(get_db),
     session_checker: SessionChecker = Depends()
 ):
+    if not session.check_permissions("user"):
+        raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Not authorised"
+    )
     current_user = session_checker.current_user
     user = await get_user_by_id(current_user.id, session)
     if not user:

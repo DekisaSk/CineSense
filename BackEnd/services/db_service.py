@@ -60,7 +60,7 @@ async def create_user(user: UserCreate,
         first_name=user.first_name,
         last_name=user.last_name,
         email=user.email,
-        username="proba",#to be removed!!!!
+        username="user",
         hashed_password=get_password_hash(user.password),
         is_disabled=False
     )

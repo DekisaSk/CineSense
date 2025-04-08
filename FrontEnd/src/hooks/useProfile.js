@@ -49,7 +49,6 @@ export default function useProfile() {
 
   const handleUpdateProfile = async (firstName, lastName, email) => {
     try {
-      // Retrieve the token from cookies
       const token = document.cookie
         .split("; ")
         .find((row) => row.startsWith("access_token="))
@@ -73,6 +72,7 @@ export default function useProfile() {
 
         if (response.ok) {
           const data = await response.json();
+          alert("Profile updated successfully!");
           return data;
         } else {
           const errorData = await response.json();
