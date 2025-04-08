@@ -38,7 +38,7 @@ export default function useRegister() {
         if (error.response?.data?.message) {
           alert(error.response.data.message);
         } else {
-          console.error("Registration error:", error);
+          alert("Account with this email already exists.");
         }
       }
     },
