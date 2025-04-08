@@ -7,15 +7,17 @@ export default function useForgotPassword(initialEmail = "") {
 
   const handleResetPassword = useCallback(async () => {
     try {
-      const { data } = await axios.post("...", { email: resetEmail });
-      alert(data.message);
-      setNotification(
-        "A password reset link has been sent to your email address. (Simulated)"
+      const { data } = await axios.post(
+        `http://localhost:8000/forgot-password?email=${encodeURIComponent(
+          resetEmail
+        )}`
       );
+      setNotification(data.message || "Reset link sent to your email.");
     } catch (error) {
-      if (error.response) {
-        alert(error.response.data.message);
+      if (error.response && error.response.data?.detail) {
+        setNotification(error.response.data.detail);
       } else {
+        setNotification("An error occurred while sending the reset link.");
         console.error("Error sending reset link:", error);
       }
     }

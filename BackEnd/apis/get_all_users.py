@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from schemas.user import UserCreate
 from services.db_service import get_all_users
@@ -8,17 +8,13 @@ from dependecies.session import SessionChecker
 
 router = APIRouter()
 
-@router.get("/get-all-users")
-async def fetch_all_users(db: AsyncSession = Depends(get_db), session: SessionChecker = Depends()):
-    try:
-        print("Before permission check")
-        result = session.check_permissions("admin")
-        print("After permission check:", result)
-        
-        users = await get_all_users(db)
-        print("Fetched users:", users)
-        
-        return users
-    except Exception as e:
-        print("Exception caught:", repr(e))
-        return {"message": "Not authorised"}
+@router.get("/get-all-users", status_code=status.HTTP_200_OK)
+async def fetch_all_users(
+    db: AsyncSession = Depends(get_db),
+    session: SessionChecker = Depends()
+):
+    if not session.check_permissions("admin"):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorised")
+
+    users = await get_all_users(db)
+    return users
