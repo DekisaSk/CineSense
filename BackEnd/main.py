@@ -6,6 +6,7 @@ from apis.edit_profile import router as edit_profile_router
 from apis.create_user import router as create_user_router
 from apis.get_all_users import router as get_all_users_router
 from apis.analytics_api import router as analytics_router
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
@@ -21,6 +22,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(tmdb_router, tags=["TMDB"])
