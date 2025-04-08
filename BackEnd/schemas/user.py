@@ -12,7 +12,6 @@ class UserBase(BaseModel):
     email: str
     role_id: int
     is_disabled: bool | None  # to be changed to bool once the db is updated
-    avatar_path: Optional[str]
 
 
 class UserCreate(BaseModel):
