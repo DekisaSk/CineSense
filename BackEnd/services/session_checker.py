@@ -9,8 +9,6 @@ class SessionChecker():
         self.current_user = current_user
         self.db = db
     def check_access_by_role(self, required_role: str):
-        print(self.current_user.role)
-        print("-------->>>")
         user_role = self.current_user.role
         if user_role == 'admin':
             return True

@@ -15,7 +15,7 @@ async def update_user_info(
     session: AsyncSession = Depends(get_db),
     session_checker: SessionChecker = Depends()
 ):
-    if not session.check_permissions("user"):
+    if not session_checker.check_access_by_role("user"):
         raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="Not authorised"

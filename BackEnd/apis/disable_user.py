@@ -2,14 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from dependecies.db import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.user import User
-from dependecies.session import SessionChecker
+from services.session_checker import SessionChecker
 
 router = APIRouter()
 
 
 @router.put("/disable-user/{user_id}")
 async def disable_user(user_id: int, db: AsyncSession = Depends(get_db), session: SessionChecker = Depends()):
-    if not session.check_permissions("admin"):
+    if not session.check_access_by_role("admin"):
         raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="Not authorised"
