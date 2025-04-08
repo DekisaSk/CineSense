@@ -52,12 +52,40 @@ export default function useProfile() {
 
   const handleUpdateProfile = async () => {
     try {
-      const data = await updateUserInfo({
-        first_name: firstName,
-        last_name: lastName,
-        email,
-      });
-      return data;
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("access_token="))
+        ?.split("=")[1];
+
+      if (token) {
+        const userData = {
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+        };
+
+        const response = await fetch("http://localhost:8000/update-user-info", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(userData),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          alert("Profile updated successfully!");
+          return data;
+        } else {
+          const errorData = await response.json();
+          console.error("Error updating profile:", errorData.detail);
+          return null;
+        }
+      } else {
+        console.error("Authorization token not found.");
+        return null;
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
       return null;

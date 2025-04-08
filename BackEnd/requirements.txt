@@ -13,3 +13,6 @@ pyjwt
 argon2_cffi
 openai
 google-analytics-data
+aiosmtplib 
+python-dotenv 
+email-validator

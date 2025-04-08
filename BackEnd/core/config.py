@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "Algorithm"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     model_config = SettingsConfigDict(env_file=".env")
-
+    email_username: str
+    email_password: str
 
 settings = Settings()

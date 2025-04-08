@@ -24,22 +24,16 @@ const ProfileDetails = ({
         label="First Name"
         variant="outlined"
         required
-        value={userData.name}
-        onChange={(event) => {
-          onInputChange("name", event.target.value);
-          setFirstName(event.target.value);
-        }}
+        value={firstName}
+        onChange={(event) => setFirstName(event.target.value)}
       />
 
       <TextField
         label="Last Name"
         variant="outlined"
         required
-        value={userData.last_name}
-        onChange={(event) => {
-          onInputChange("last_name", event.target.value);
-          setLastName(event.target.value);
-        }}
+        value={lastName}
+        onChange={(event) => setLastName(event.target.value)}
       />
 
       <TextField
@@ -48,10 +42,6 @@ const ProfileDetails = ({
         type="email"
         required
         value={userData.email}
-        onChange={(event) => {
-          onInputChange("email", event.target.value);
-          setEmail(event.target.value);
-        }}
       />
 
       <Button
