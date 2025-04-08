@@ -12,6 +12,7 @@ import { Line } from "react-chartjs-2";
 import { useTheme } from "@mui/material/styles";
 import useGAData from "../../hooks/useGAData";
 
+// Import and register the newest Chart.js modules
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -41,21 +42,32 @@ const GAStatsCard = ({ title, metric }) => {
   const openBigChart = () => setIsOpen(true);
   const closeBigChart = () => setIsOpen(false);
 
-  const formattedLabels = data
-    ? data.labels.map((label) => {
-        // label format: "YYYYMMDD"
-        const day = label.slice(6, 8);
-        const month = label.slice(4, 6);
-        return `${day}/${month}`;
-      })
-    : [];
+  let formattedLabels = [];
+  let sortedValues = [];
+  if (data && data.labels && data.values) {
+    const combined = data.labels.map((label, index) => ({
+      label,
+      value: data.values[index],
+    }));
+
+    // format is YYYYMMDD, sorting data.
+    combined.sort((a, b) => a.label.localeCompare(b.label));
+
+    // Map the sorted array into formatted labels ("06/04")
+    formattedLabels = combined.map((item) => {
+      const day = item.label.slice(6, 8);
+      const month = item.label.slice(4, 6);
+      return `${day}/${month}`;
+    });
+    sortedValues = combined.map((item) => item.value);
+  }
 
   const chartData = {
     labels: formattedLabels,
     datasets: [
       {
         label: title,
-        data: data ? data.values : [],
+        data: sortedValues,
         fill: true,
         borderColor: "white",
         tension: 0.2,
