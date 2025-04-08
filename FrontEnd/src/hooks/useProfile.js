@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getUserInfo } from "../api/getUserInfo";
+import { getUserInfo, updateUserInfo } from "../api/user";
 
 export default function useProfile() {
   const [userData, setUserData] = useState({
@@ -9,15 +9,18 @@ export default function useProfile() {
     avatar: "",
   });
 
-  const [firstName, setFirstName] = useState(userData.name);
-  const [lastName, setLastName] = useState(userData.last_name);
-  const [email, setEmail] = useState(userData.email);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await getUserInfo();
-        setUserData(response);
+        const data = await getUserInfo();
+        setUserData(data);
+        setFirstName(data.name || "");
+        setLastName(data.last_name || "");
+        setEmail(data.email || "");
       } catch (error) {
         console.error("Failed to fetch user info:", error);
       }
@@ -47,42 +50,18 @@ export default function useProfile() {
     reader.readAsDataURL(file);
   };
 
-  const handleUpdateProfile = async (firstName, lastName, email) => {
+  const handleUpdateProfile = async () => {
     try {
-      const token = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("access_token="))
-        ?.split("=")[1];
+      const updatedUser = {
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        //avatar: userData.avatar
+      };
 
-      if (token) {
-        const userData = {
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-        };
-
-        const response = await fetch("http://localhost:8000/update-user-info", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(userData),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          alert("Profile updated successfully!");
-          return data;
-        } else {
-          const errorData = await response.json();
-          console.error("Error updating profile:", errorData.detail);
-          return null;
-        }
-      } else {
-        console.error("Authorization token not found.");
-        return null;
-      }
+      const data = await updateUserInfo(updatedUser);
+      alert("Profile updated successfully!");
+      return data;
     } catch (error) {
       console.error("Error updating profile:", error);
       return null;
