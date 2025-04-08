@@ -6,13 +6,13 @@ from services.db_service import get_user_by_email
 from sqlalchemy import select
 from models.user import User
 from sqlalchemy.orm import selectinload
-from dependecies.session import SessionChecker
+from services.session_checker import SessionChecker
 
 router = APIRouter()
 
 @router.put("/add-admin/{email}")
 async def set_admin_role(email: str, db: AsyncSession = Depends(get_db), session: SessionChecker = Depends()):
-    if not session.check_permissions("admin"):
+    if not session.check_access_by_role("admin"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorised")
     result = await db.execute(
         select(User)

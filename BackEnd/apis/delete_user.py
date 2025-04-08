@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from services.db_service import delete_user
 from dependecies.db import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
-from dependecies.session import SessionChecker
+from services.session_checker import SessionChecker
 
 router = APIRouter()
 
@@ -13,7 +13,7 @@ async def delete_user_by_id(
     db: AsyncSession = Depends(get_db),
     session: SessionChecker = Depends()
 ):
-    if not session.check_permissions("admin"):
+    if not session.check_access_by_role("admin"):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorised"

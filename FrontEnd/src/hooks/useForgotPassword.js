@@ -7,8 +7,12 @@ export default function useForgotPassword(initialEmail = "") {
 
   const handleResetPassword = useCallback(async () => {
     try {
-      const message = await sendPasswordReset(resetEmail);
-      setNotification(message);
+      const { data } = await axios.post(
+        `http://localhost:8000/forgot-password?email=${encodeURIComponent(
+          resetEmail
+        )}`
+      );
+      setNotification(data.message || "Reset link sent to your email.");
     } catch (error) {
       if (error.response && error.response.data?.detail) {
         setNotification(error.response.data.detail);
