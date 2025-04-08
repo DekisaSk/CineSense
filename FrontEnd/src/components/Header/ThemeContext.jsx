@@ -8,7 +8,7 @@ const ThemeToggleContext = createContext();
 export const useThemeToggle = () => useContext(ThemeToggleContext);
 
 export function CustomThemeProvider({ children }) {
-  // ⬇ Load theme from localStorage or fallback to 'dark'
+  // Load theme from localStorage or fallback to 'dark'
   const [mode, setMode] = useState(() => {
     const storedMode = localStorage.getItem("themeMode");
     return storedMode === "light" ? "light" : "dark";

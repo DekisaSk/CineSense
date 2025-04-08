@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import axios from "axios";
+import { sendPasswordReset } from "../api/user";
 
 export default function useForgotPassword(initialEmail = "") {
   const [resetEmail, setResetEmail] = useState(initialEmail);

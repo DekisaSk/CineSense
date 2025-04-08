@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getUserInfo } from "../api/getUserInfo";
+import { getUserInfo, updateUserInfo } from "../api/user";
 
 export default function useProfile() {
   const [userData, setUserData] = useState({
@@ -9,15 +9,18 @@ export default function useProfile() {
     avatar: "",
   });
 
-  const [firstName, setFirstName] = useState(userData.name);
-  const [lastName, setLastName] = useState(userData.last_name);
-  const [email, setEmail] = useState(userData.email);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await getUserInfo();
-        setUserData(response);
+        const data = await getUserInfo();
+        setUserData(data);
+        setFirstName(data.name || "");
+        setLastName(data.last_name || "");
+        setEmail(data.email || "");
       } catch (error) {
         console.error("Failed to fetch user info:", error);
       }
@@ -47,7 +50,7 @@ export default function useProfile() {
     reader.readAsDataURL(file);
   };
 
-  const handleUpdateProfile = async (firstName, lastName, email) => {
+  const handleUpdateProfile = async () => {
     try {
       const token = document.cookie
         .split("; ")

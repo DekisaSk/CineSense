@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getUserInfo } from "../api/getUserInfo";
+import { getUserInfo } from "../api/user";
 
 export function useUserRole() {
   const [role, setRole] = useState(null);
